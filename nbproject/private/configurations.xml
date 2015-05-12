@@ -29,10 +29,6 @@
           <df name="test">
           </df>
         </df>
-        <df name="Progress">
-        </df>
-      </df>
-      <df name="core">
       </df>
       <df name="LabVIEW">
         <df name="bck">
@@ -54,8 +50,9 @@
       </df>
       <df name="models">
         <df name="Libera">
-          <in>LiberaBrillianceSlow.cpp</in>
-          <in>LiberaBrillianceSlow.h</in>
+          <in>LiberaBrillianceSlowDriver.cpp</in>
+          <in>LiberaBrillianceSlowDriver.h</in>
+          <in>LiberaData.h</in>
         </df>
       </df>
       <df name="test">

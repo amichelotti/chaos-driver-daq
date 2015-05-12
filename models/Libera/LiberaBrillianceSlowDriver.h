@@ -19,13 +19,20 @@ limitations under the License.
 #ifndef __LiberaBrillianceSlow_H__
 #define __LiberaBrillianceSlow_H__
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
-DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceSlow);
+#include "LiberaData.h"
 
-class LiberaBrillianceSlow : public chaos::cu::driver_manager::driver::BasicIODriver {
+DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceSlowDriver);
+
+class LiberaBrillianceSlowDriver : public chaos::cu::driver_manager::driver::BasicIODriver {
+protected:
+    int driver_mode;
+    int nacquire;
+    liberaData_t*data;
+    int read_libera(liberaData_t *data,int size);
 public:
-    LiberaBrillianceSlow();
+    LiberaBrillianceSlowDriver();
 
-    ~LiberaBrillianceSlow();
+    ~LiberaBrillianceSlowDriver();
     //! Execute a command
 
     /**

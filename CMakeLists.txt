@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(DAQ)
 include($ENV{CHAOS_BUNDLE}/tools/project_template/CMakeChaos.txt)
 
-SET(DAQ_src models/Libera/LiberaBrillianceSlow.cpp)
+SET(DAQ_src models/Libera/LiberaBrillianceSlowDriver.cpp)
 
 SET(BasicDAQClient_src test/DAQClient.cpp)
 
