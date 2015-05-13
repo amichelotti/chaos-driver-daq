@@ -1,0 +1,9 @@
+bbfp.o: bbfp.c cspi.h libera.h ebpp.h lplld.h cspi_impl.h debug.h bbfp.h
+cordic.o: cordic.c cordic.h
+cspi_events.o: cspi_events.c eventd.h debug.h cspi.h libera.h ebpp.h \
+ lplld.h cspi_impl.h
+ebpp.o: ebpp.c cordic.h cspi.h libera.h ebpp.h lplld.h cspi_impl.h \
+ debug.h dscd.h
+eventd.o: eventd.c libera.h ebpp.h lplld.h debug.h eventd.h
+hbpp.o: hbpp.c cspi.h libera.h ebpp.h lplld.h cspi_impl.h debug.h hbpp.h
+pool.o: pool.c pool.h

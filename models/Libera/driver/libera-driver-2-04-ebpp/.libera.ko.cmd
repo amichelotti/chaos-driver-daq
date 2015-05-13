@@ -1,0 +1,1 @@
+cmd_/home/hinko/libera/RELEASE-2_00-PATCHES/sbc/core/driver/src/libera.ko := ld -EL  -r -o /home/hinko/libera/RELEASE-2_00-PATCHES/sbc/core/driver/src/libera.ko /home/hinko/libera/RELEASE-2_00-PATCHES/sbc/core/driver/src/libera.o /home/hinko/libera/RELEASE-2_00-PATCHES/sbc/core/driver/src/libera.mod.o

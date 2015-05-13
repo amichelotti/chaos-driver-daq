@@ -1,0 +1,11 @@
+Source: libera-driver
+Section: libera
+Priority: optional
+Maintainer: Instrumentation Technologies <support@i-tech.si>
+Build-Depends: debhelper (>= 4.0.0)
+Standards-Version: 3.6.0
+
+Package: libera-driver
+Architecture: any
+Depends: libera-fpga-design, ${shlibs:Depends}, ${misc:Depends}
+Description: Libera device driver.

@@ -1,0 +1,12 @@
+2006-10-04  Ales Bardorfer <ales@i-tech.si>  
+        * Initial MSP driver skeleton.
+
+2006-10-17  Ales Bardorfer <ales@i-tech.si>
+        * Fixed /dev/ttyS2 opening.
+
+2007-03-06  Ales Bardorfer <ales@i-tech.si>
+        * New rewritten MSP ADC part.
+        * Driver adapted to new MSP ADC with proper sync.
+
+2007-04-15  Ales Bardorfer <ales@i-tech.si>
+        * Fixed msp interruptible bug.
