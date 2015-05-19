@@ -8,39 +8,92 @@
 #ifndef LIBERADATA_H
 #define	LIBERADATA_H
 
-#define LIBERA_IOP_TURN_BY_TURN_DATA 0x1
-#define LIBERA_IOP_TURN_BY_TURN_DATA_TRIGGERED 0x2
-#define LIBERA_IOP_DATA_DECIMATED 0x4
-#define LIBERA_IOP_DATA_SLOW_DAQ 0x8
-#define LIBERA_IOP_DATA_ADC_OUT 0x10
-#define LIBERA_IO_DATA_ACQUIRE 0x20
+#define LIBERA_IOP_MODE_DD 0x1 // data acquire on demand
+#define LIBERA_IOP_MODE_SA 0x2 // streaming data acquire
+#define LIBERA_IOP_MODE_ADC 0x4 // ADC data acquire
+#define LIBERA_IOP_MODE_PM 0x8 // Post Mortem data acquire
+#define LIBERA_IOP_MODE_AVG 0x10 // Average data acquire
 
+#define LIBERA_IOP_MODE_TRIGGERED 0x100
+#define LIBERA_IOP_MODE_DECIMATED 0x200
+#define LIBERA_IOP_MODE_CONTINUOUS 0x400
+#define LIBERA_IOP_MODE_SINGLEPASS 0x800
 
+#define LIBERA_IOP_CMD_ACQUIRE 0x1
+#define LIBERA_IOP_CMD_SETENV 0x2 // Setting environment
+#define LIBERA_IOP_CMD_GETENV 0x3 // getting environment
+#define LIBERA_IOP_CMD_SETTIME 0x4 // Setting Time
+#define LIBERA_IOP_CMD_SET_OFFSET 0x5 // set offset in buffer
+#define LIBERA_IOP_CMD_SET_SAMPLES 0x6 // set offset in buffer
+#define LIBERA_IOP_CMD_STOP 0x7
 
+#include <ostream>
+#include <vector>
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
-
-    struct LiberaData{
-        int32_t va;
-        int32_t vb;
-        int32_t vc;
-        int32_t vd;
-        int32_t x,y,q;
-        int32_t sum;
-        int32_t q1,q2;
-    } ;
+#define DECLARE_DESC(_T) \
+typedef struct _T: public libera_desc {\
+static const char* desc[];\
+static int size;\
+public:\
+_T():libera_desc(std::vector<const char*>(desc,desc+size)){}\
+} _T ##_t;
     
-    typedef union {
-        struct LiberaData libera;
-        int32_t raw[10];
-    } liberaData_t;
-
     
-#ifdef	__cplusplus
-}
-#endif
+#define DEFINE_DESC(_T,...) \
+const char*_T::desc[]=__VA_ARGS__;\
+int _T::size=sizeof(desc)/sizeof(const char*);
+   
+   
+#define CHANNEL_DD 0
+#define CHANNEL_SA 1
+#define CHANNEL_SP 2
+#define CHANNEL_AVG 3
+#define CHANNEL_ENV 4
+    
 
+#ifdef CSPI
+#include "cspi.h"
+
+    typedef CSPI_DD_ATOM libera_dd_t;
+    typedef CSPI_SA_ATOM libera_sa_t;
+    typedef CSPI_ADC_CW_ATOM libera_cw_t;
+    typedef CSPI_ADC_SP_ATOM libera_sp_t;
+    typedef CSPI_AVERAGE_ATOM libera_avg_t;
+    
+    class libera_desc{
+    protected:
+        std::vector<const char*>p;
+    public:
+        libera_desc(std::vector< const char* > desc){
+            int cnt=0;
+            p=desc;
+            
+        }
+        
+        friend std::ostream& operator<<(std::ostream&os,libera_desc&data);
+        
+    };
+    
+    std::ostream& operator<<(std::ostream&os,libera_desc&data);
+    
+    
+    DECLARE_DESC(libera_dd_desc);
+    DECLARE_DESC(libera_sa_desc);
+    DECLARE_DESC(libera_cw_desc);
+    DECLARE_DESC(libera_sp_desc);
+    DECLARE_DESC(libera_avg_desc);
+
+    std::ostream& operator <<(std::ostream&os,libera_dd_t& data);   
+    std::ostream& operator <<(std::ostream&os,libera_sa_t& data);  
+    std::ostream& operator <<(std::ostream&os,libera_cw_t& data);
+    std::ostream& operator <<(std::ostream&os,libera_sp_t& data); 
+    std::ostream& operator <<(std::ostream&os,libera_avg_t& data);
+   
+#else
+#error "NO LIBERA PLATFORM SPECIFIED"
+#endif
+            
+    
+    
 #endif	/* LIBERADATA_H */
 

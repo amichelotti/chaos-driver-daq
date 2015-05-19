@@ -20,8 +20,8 @@
 
 
 #include <chaos/cu_toolkit/ControlManager/IOCU.h>
-#include "driver/daq/models/Libera/LiberaBrillianceSlowDriver.h"
-
+#include "driver/daq/models/Libera/LiberaBrillianceCSPIDriver.h"
+#include "SCLiberaCU.h"
 #include <string>
 
 #include <chaos/cu_toolkit/ChaosCUToolkit.h>
@@ -39,9 +39,10 @@ int main(int argc, char *argv[])
 		ChaosCUToolkit::getInstance()->init(argc, argv);
 
 		// allocate the instance and inspector for driver
-		REGISTER_DRIVER(,LiberaBrillianceSlowDriver);
+		REGISTER_DRIVER(,LiberaBrillianceCSPIDriver);
+		//                REGISTER_CU(IOCU);
 
-                REGISTER_CU(IOCU);
+                REGISTER_CU(::driver::daq::libera::SCLiberaCU);
 		
 		// start control unit toolkit until someone will close it
 		ChaosCUToolkit::getInstance()->start();

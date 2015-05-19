@@ -21,7 +21,6 @@ limitations under the License.
 #define __LiberaBrillianceCSPIDriver_H__
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
 #include "LiberaData.h"
-#include "cspi.h"
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceCSPIDriver);
 
 struct liberaconfig
@@ -31,10 +30,11 @@ struct liberaconfig
 		mode(CSPI_MODE_UNKNOWN),
 		atom_count(0),
 		loop_count(1),
-		mask(0)
+		mask(0),
+                offset(0)
 		{}
 
-	enum {unknown=0, acquire, setenv, listenv, settime};
+	enum {unknown=0, init,deinit,acquire, setenv, listenv, settime};
 	size_t operation;		// Main operation mode
 
 	size_t mode;			// Acquisition mode
@@ -60,7 +60,8 @@ struct liberaconfig
 
 	size_t atom_count;		// number of samples to retrieve
 	size_t loop_count;		// number of iterations (repetitions)
-
+        size_t offset;
+        size_t datasize;
 	struct settime_specific
 	{
 		settime_specific() : mt(0), st(0) {}
@@ -87,12 +88,15 @@ class LiberaBrillianceCSPIDriver : public chaos::cu::driver_manager::driver::Bas
 protected:
     int driver_mode;
     int nacquire;
-    liberaData_t*data;
+    char*raw_data;
     CSPIHENV env_handle;
     CSPIHCON con_handle;
-    struct liberaconfig cfg;
-    int read_libera(liberaData_t *data,int size);
+    CSPI_LIBPARAMS lib;
+    CSPI_ENVPARAMS ep;
+    CSPI_CONPARAMS p;
     
+    struct liberaconfig cfg;
+    void wait_trigger();
 public:
     LiberaBrillianceCSPIDriver();
 

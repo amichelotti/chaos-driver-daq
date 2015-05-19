@@ -174,11 +174,24 @@
               <in>msp_main.c</in>
             </df>
           </df>
+          <in>CmdLiberaAcquire.cpp</in>
+          <in>CmdLiberaAcquire.h</in>
+          <in>CmdLiberaDefault.cpp</in>
+          <in>CmdLiberaDefault.h</in>
+          <in>CmdLiberaEnv.cpp</in>
+          <in>CmdLiberaEnv.h</in>
+          <in>CmdLiberaTime.cpp</in>
+          <in>CmdLiberaTime.h</in>
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceCSPIDriver.h</in>
+          <in>LiberaBrillianceCSPIDriver.orig.cpp</in>
+          <in>LiberaBrillianceCSPIDriver.orig.h</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>
           <in>LiberaBrillianceSlowDriver.h</in>
+          <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
+          <in>SCLiberaCU.cpp</in>
+          <in>SCLiberaCU.h</in>
         </df>
       </df>
       <df name="test">

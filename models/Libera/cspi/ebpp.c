@@ -356,7 +356,7 @@ int custom_initop()
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to Kx or Ky.
  */
-inline int ebpp_is_validcoef( const void *p )
+static int ebpp_is_validcoef( const void *p )
 {
 	const int max = INT_MAX/4;
 
@@ -372,7 +372,7 @@ inline int ebpp_is_validcoef( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to offset value.
  */
-inline int ebpp_is_validoffset( const void *p )
+static int ebpp_is_validoffset( const void *p )
 {
 	const int min = INT_MIN/4;
 	const int max = INT_MAX/4;
@@ -389,7 +389,7 @@ inline int ebpp_is_validoffset( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with decimation to validate.
  */
-inline int ebpp_is_validdec( const void *p )
+static int ebpp_is_validdec( const void *p )
 {
 	const size_t dec = *(size_t *)p;
 	return ( dec == 1 || dec == MAX_DEC );
@@ -403,7 +403,7 @@ inline int ebpp_is_validdec( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with switch value to validate.
  */
-inline int ebpp_is_validswitch( const void *p )
+static int ebpp_is_validswitch( const void *p )
 {
 	const size_t switches = *(size_t *)p;
 	return switches == CSPI_SWITCH_AUTO ||
@@ -420,7 +420,7 @@ inline int ebpp_is_validswitch( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a int variable with gain value to validate.
  */
-inline int ebpp_is_validgain( const void *p )
+static int ebpp_is_validgain( const void *p )
 {
 	const int MIN = -80, MAX = 0;
 
@@ -436,7 +436,7 @@ inline int ebpp_is_validgain( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with AGC value to validate.
  */
-inline int ebpp_is_validagc( const void *p )
+static int ebpp_is_validagc( const void *p )
 {
 	const size_t agc = *(size_t *)p;
 	return CSPI_AGC_AUTO == agc || CSPI_AGC_MANUAL == agc;
@@ -450,7 +450,7 @@ inline int ebpp_is_validagc( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with DSC value to validate.
  */
-inline int ebpp_is_validdsc( const void *p )
+static int ebpp_is_validdsc( const void *p )
 {
 	const size_t dsc = *(size_t *)p;
 	return dsc == CSPI_DSC_OFF    ||
@@ -468,7 +468,7 @@ inline int ebpp_is_validdsc( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_validilk( const void *p )
+static int ebpp_is_validilk( const void *p )
 {
 	const size_t mode = *(size_t *)p;
 	return mode == CSPI_ILK_DISABLE ||
@@ -484,7 +484,7 @@ inline int ebpp_is_validilk( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with offset to validate.
  */
-inline int ebpp_is_validpmoffset( const void *p )
+static int ebpp_is_validpmoffset( const void *p )
 {
 	const long offset = *(long *)p;
 	return (-512*1024 < offset) && (offset < 512*1024);
@@ -498,7 +498,7 @@ inline int ebpp_is_validpmoffset( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with decimation to validate.
  */
-inline int ebpp_is_validdecimation( const void *p )
+static int ebpp_is_validdecimation( const void *p )
 {
 	const long param = *(long *)p;
 	return (param == 1) || (param == 64);
@@ -512,7 +512,7 @@ inline int ebpp_is_validdecimation( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with delay to validate.
  */
-inline int ebpp_is_validtrigdelay( const void *p )
+static int ebpp_is_validtrigdelay( const void *p )
 {
 	const long offset = *(long *)p;
 	return (0 <= offset) && (offset <= 0x3fff);
@@ -526,7 +526,7 @@ inline int ebpp_is_validtrigdelay( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_validmafparameter( const void *p )
+static int ebpp_is_validmafparameter( const void *p )
 {
 	const long param = *(long *)p;
 	return (param >= 0) && (param < g_decimation);
@@ -540,7 +540,7 @@ inline int ebpp_is_validmafparameter( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_int25( const void *p )
+static int ebpp_is_valid_int25( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= -0x1000000) && (param <= 0xFFFFFF);
@@ -554,7 +554,7 @@ inline int ebpp_is_valid_int25( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_int5( const void *p )
+static int ebpp_is_valid_int5( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= -16) && (param <= 15);
@@ -569,7 +569,7 @@ inline int ebpp_is_valid_int5( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_averagewindow( const void *p )
+static int ebpp_is_valid_averagewindow( const void *p )
 {
 	const unsigned int param = *(unsigned int *)p;
 	unsigned int val;
@@ -586,7 +586,7 @@ inline int ebpp_is_valid_averagewindow( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_uint7( const void *p )
+static int ebpp_is_valid_uint7( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= 0) && (param <= SCHAR_MAX);
@@ -600,7 +600,7 @@ inline int ebpp_is_valid_uint7( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_int16( const void *p )
+static int ebpp_is_valid_int16( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= SHRT_MIN) && (param <= SHRT_MAX);
@@ -614,7 +614,7 @@ inline int ebpp_is_valid_int16( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_bool( const void *p )
+static int ebpp_is_valid_bool( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= 0) && (param <= 1);
@@ -628,7 +628,7 @@ inline int ebpp_is_valid_bool( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_pmmode( const void *p )
+static int ebpp_is_valid_pmmode( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= 0) && (param < 3);
@@ -642,7 +642,7 @@ inline int ebpp_is_valid_pmmode( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a long variable with parameter to validate.
  */
-inline int ebpp_is_valid_spint( const void *p )
+static int ebpp_is_valid_spint( const void *p )
 {
 	const int param = *(int *)p;
 	return (param >= 0) && (param < 1024);
@@ -656,7 +656,7 @@ inline int ebpp_is_valid_spint( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a int variable with overflow limit to adapt.
  */
-inline int ebpp_is_valid_overflowlimit( const void *p )
+static int ebpp_is_valid_overflowlimit( const void *p )
 {
 	/* Checks made in Libera driver due to Brilliance dependency. */
 	const int param = *(int *)p;
@@ -671,7 +671,7 @@ inline int ebpp_is_valid_overflowlimit( const void *p )
  *  Returns 1.
  *  @param p Pointer to a int variable with overflow limit to adapt.
  */
-inline int ebpp_get_overflowlimit( const void *p )
+static int ebpp_get_overflowlimit( const void *p )
 {
 	unsigned int *limit = (unsigned int *)p;	// cast away const
 	*limit >>= 16;
@@ -684,7 +684,7 @@ inline int ebpp_get_overflowlimit( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a int variable with overflow duration to adapt.
  */
-inline int ebpp_is_validoverflowdur( const void *p )
+static int ebpp_is_validoverflowdur( const void *p )
 {
 	/* Checks made in Libera driver due to DDC decimation dependency. */
 	const int param = *(int *)p;
@@ -699,7 +699,7 @@ inline int ebpp_is_validoverflowdur( const void *p )
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a int variable with gain limit to adapt.
  */
-inline int ebpp_set_gainlimit( const void *p )
+static int ebpp_set_gainlimit( const void *p )
 {
 	int *limit = (int *)p;	// cast away const
 	const int attn = ebpp_toattn( *limit );
@@ -717,7 +717,7 @@ inline int ebpp_set_gainlimit( const void *p )
  *  Returns 1.
  *  @param p Pointer to a int variable with gain limit to adapt.
  */
-inline int ebpp_get_gainlimit( const void *p )
+static int ebpp_get_gainlimit( const void *p )
 {
 	int *limit = (int *)p;	// cast away const
 	*limit >>= 16;
@@ -884,7 +884,7 @@ PLL_param_map;
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_valid_mtvcxoffset(const void *p)
+static int ebpp_is_valid_mtvcxoffset(const void *p)
 {
 	int val = *(int *) p;  // get value.
 
@@ -899,7 +899,7 @@ inline int ebpp_is_valid_mtvcxoffset(const void *p)
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_valid_mtncoshft(const void *p)
+static int ebpp_is_valid_mtncoshft(const void *p)
 {
 	int val = *(int *) p;  // get value.
 
@@ -914,7 +914,7 @@ inline int ebpp_is_valid_mtncoshft(const void *p)
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_valid_mtphsoffs(const void *p)
+static int ebpp_is_valid_mtphsoffs(const void *p)
 {
 	int val = *(int *) p;  // get value.
 
@@ -929,7 +929,7 @@ inline int ebpp_is_valid_mtphsoffs(const void *p)
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_valid_mtunlcktr(const void *p)
+static int ebpp_is_valid_mtunlcktr(const void *p)
 {
 	int val = *(int *) p;  // get value.
 
@@ -944,7 +944,7 @@ inline int ebpp_is_valid_mtunlcktr(const void *p)
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_valid_mtsyncin(const void *p)
+static int ebpp_is_valid_mtsyncin(const void *p)
 {
 	int val = *(int *) p;  // get value.
 
@@ -959,7 +959,7 @@ inline int ebpp_is_valid_mtsyncin(const void *p)
  *  On success, returns 1. Otherwise, returns 0.
  *  @param p Pointer to a size_t variable with mode to validate.
  */
-inline int ebpp_is_valid_stunlcktr(const void *p)
+static int ebpp_is_valid_stunlcktr(const void *p)
 {
 	int val = *(int *) p;  // get value.
 
@@ -1758,7 +1758,7 @@ int ebpp_transform_dd_remove_spikes( const void *in, void *out, size_t count )
  *  @param in Not used.
  *  @param out Pointer to the CSPI_ADC_ATOM to transform.
  */
-inline int ebpp_transform_adc( const void *in, void *out, size_t count )
+static int ebpp_transform_adc( const void *in, void *out, size_t count )
 {
 	/* ADC transform moved to driver due to
 	 * Libera Brilliance introduction.
@@ -1775,7 +1775,7 @@ inline int ebpp_transform_adc( const void *in, void *out, size_t count )
  *  @param in Not used.
  *  @param out Pointer to the CSPI_ADC_ATOM to transform.
  */
-inline int ebpp_transform_adc_cw( const void *in, void *out, size_t count )
+static int ebpp_transform_adc_cw( const void *in, void *out, size_t count )
 {
 	//* CW
 	CSPI_ADC_ATOM *curr, *prev;
@@ -1883,7 +1883,7 @@ typedef void (*SP_POS_FNC)(double *x, double *y, double *sum,
  *  @param in Not used.
  *  @param out Pointer to the CSPI_ADC_ATOM to transform.
  */
-inline int ebpp_transform_adc_common( const void *in, void *out, size_t count,
+static int ebpp_transform_adc_common( const void *in, void *out, size_t count,
 	SP_POS_FNC sp_pos)
 {
 	CSPI_ADC_ATOM *buffer = (CSPI_ADC_ATOM*)in;
@@ -1973,12 +1973,12 @@ void sp_pos_rot(double *x, double *y, double *sum,
 		*y = ( ab - ad ) / ( ab + ad );
 }
 
-inline int ebpp_transform_adc_sp( const void *in, void *out, size_t count )
+static int ebpp_transform_adc_sp( const void *in, void *out, size_t count )
 {
 	return ebpp_transform_adc_common(in, out, count, sp_pos_straight);
 }
 
-inline int ebpp_transform_adc_sp_rot( const void *in, void *out, size_t count )
+static int ebpp_transform_adc_sp_rot( const void *in, void *out, size_t count )
 {
 	return ebpp_transform_adc_common(in, out, count, sp_pos_rot);
 }
