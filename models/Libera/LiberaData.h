@@ -68,13 +68,14 @@ int _T::size=sizeof(desc)/sizeof(const char*);
             int cnt=0;
             p=desc;
             
+            
         }
-        
-        friend std::ostream& operator<<(std::ostream&os,libera_desc&data);
+        std::vector<const char*> getDesc() const {return p;}
+        friend std::ostream& operator<<(std::ostream&os,const libera_desc&data);
         
     };
     
-    std::ostream& operator<<(std::ostream&os,libera_desc&data);
+    std::ostream& operator<<(std::ostream&os,const libera_desc&data);
     
     
     DECLARE_DESC(libera_dd_desc);
@@ -83,11 +84,11 @@ int _T::size=sizeof(desc)/sizeof(const char*);
     DECLARE_DESC(libera_sp_desc);
     DECLARE_DESC(libera_avg_desc);
 
-    std::ostream& operator <<(std::ostream&os,libera_dd_t& data);   
-    std::ostream& operator <<(std::ostream&os,libera_sa_t& data);  
-    std::ostream& operator <<(std::ostream&os,libera_cw_t& data);
-    std::ostream& operator <<(std::ostream&os,libera_sp_t& data); 
-    std::ostream& operator <<(std::ostream&os,libera_avg_t& data);
+    std::ostream& operator <<(std::ostream&os,const libera_dd_t& data);   
+    std::ostream& operator <<(std::ostream&os,const libera_sa_t& data);  
+    std::ostream& operator <<(std::ostream&os,const libera_cw_t& data);
+    std::ostream& operator <<(std::ostream&os,const libera_sp_t& data); 
+    std::ostream& operator <<(std::ostream&os,const libera_avg_t& data);
    
 #else
 #error "NO LIBERA PLATFORM SPECIFIED"

@@ -49,10 +49,12 @@ driver::daq::libera::CmdLiberaAcquire::CmdLiberaAcquire():CmdLiberaDefault(){
 driver::daq::libera::CmdLiberaAcquire::~CmdLiberaAcquire(){
 }
 void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *data) {
-	CMDCUDBG_ << "Executing acquire set handler";
-        int tloop=-1,tsamples=-1,toffset=-1,tmode=-1;
+	CMDCUDBG_ << "Executing acquire set handler:"<<data->getJSONString();
+        int tsamples=-1,toffset=-1,tmode=-1;
 	int ret;
         mode =0;
+        offset =0;
+        loops=1;
         CmdLiberaDefault::setHandler(data);
         
         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
@@ -62,7 +64,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	//requested mode
 	if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
-             
+                loops=0;
+             	CMDCUDBG_ << "Disable acquire";
+
                 BC_END_RUNNIG_PROPERTY;
                 return;
             }
@@ -74,10 +78,10 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         }
         
         if(mode&LIBERA_IOP_MODE_SA){
-            tloop=0;
+            loops=-1;
         }
         if(data->hasKey("samples")) {
-            tsamples = std::min(data->getInt32Value("samples"),1); 
+            tsamples = std::min(data->getInt32Value("samples"),64000); 
 	}
         
          if(data->hasKey("offset")) {
@@ -85,40 +89,40 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          }
 	
         if(data->hasKey("loops")) {
-            tloop = data->getInt32Value("loops");
+            loops = data->getInt32Value("loops");
          }	
         
          if(tmode&LIBERA_IOP_MODE_DD){
              if(tsamples>0){
-                getAttributeCache()->setOutputAttributeNewSize("DD", samples*sizeof(libera_dd_t));
+                getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
                 driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                 samples=tsamples;
 
              }
             } else if (mode&LIBERA_IOP_MODE_SA){
                 if(tsamples>0){
-                    getAttributeCache()->setOutputAttributeNewSize("SA", samples*sizeof(libera_sa_t));
+                    getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
                     driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                     samples=tsamples;
 
                 }
             } else if (mode&LIBERA_IOP_MODE_CONTINUOUS){
                 if(tsamples>0){
-                    getAttributeCache()->setOutputAttributeNewSize("ADC_CW", samples*sizeof(libera_cw_t));
+                    getAttributeCache()->setOutputAttributeNewSize("ADC_CW", tsamples*sizeof(libera_cw_t));
                     driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                     samples=tsamples;
 
                 }
             } else if (mode&LIBERA_IOP_MODE_SINGLEPASS){
                 if(tsamples>0){
-                    getAttributeCache()->setOutputAttributeNewSize("ADC_SP", samples*sizeof(libera_sp_t));
+                    getAttributeCache()->setOutputAttributeNewSize("ADC_SP", tsamples*sizeof(libera_sp_t));
                     driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                     samples=tsamples;
 
                 }
             } else if (mode&LIBERA_IOP_MODE_AVG){
                   if(tsamples>0){
-                        getAttributeCache()->setOutputAttributeNewSize("ADC_AVG", samples*sizeof(libera_avg_t));
+                        getAttributeCache()->setOutputAttributeNewSize("ADC_AVG", tsamples*sizeof(libera_avg_t));
                        driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                        samples=tsamples;
                }
@@ -140,9 +144,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
         }
         
-        if(tloop>0){
-            loops = tloop;
-        }
+      
          mode = tmode;
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
          vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
@@ -154,15 +156,25 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          sum = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM");
          q1 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
          q2 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
-
+         psamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SAMPLES");
+         pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
+         acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
+         *pmode=mode;
+         *psamples=samples;
+         *acquire_loops=0;
+         getAttributeCache()->setOutputDomainAsChanged();
         CMDCU_<<" start acquiring mode:"<<mode<<" samples:"<<samples<<" offset:"<<offset<<" loops:"<<loops;
       BC_EXEC_RUNNIG_PROPERTY
 }
 
 void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
     if(mode&LIBERA_IOP_MODE_DD){
+        CMDCUDBG_ << "Acquiring DD";
         libera_dd_t*pnt=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
-        
+        if(pnt==NULL){
+            CMDCUERR_<<"cannot retrieve dataset \"DD\"";
+            return;
+        }
         if(driver->read((void*)pnt,0,samples*sizeof(libera_dd_t))>0){
             
             *va = pnt[0].Va;
@@ -175,6 +187,8 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             *sum  = pnt[0].Sum;
             *q1 = 0;
             *q2 = 0;
+             CMDCUDBG_ << "read:"<<pnt[0];
+             (*acquire_loops)++;
             getAttributeCache()->setOutputDomainAsChanged();
         } else {
             CMDCUERR_<<"Error reading DD, mode:"<<mode<<" samples:"<<samples;
@@ -219,10 +233,21 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
         
     
     if(loops==0){
+        int ret;
+        CMDCUDBG_ << "Acquiring loop ended after:"<<*acquire_loops<<" acquisitions.";
+        if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+            throw chaos::CException(ret, "Cannot stop acquire", __FUNCTION__);
+
+        }
+        *pmode=0;
+        getAttributeCache()->setOutputDomainAsChanged();
         BC_END_RUNNIG_PROPERTY;
+        return;
     } else if(loops>0){
         loops--;
     }
+    CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
+
    
 }
 //void CmdLiberaAcquire::ccHandler() {

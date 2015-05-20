@@ -349,10 +349,10 @@ int LiberaBrillianceCSPIDriver::deinitIO() {
           LiberaBrillianceCSPILERR_<<"Already de-initializad";
     }
     cfg.operation =liberaconfig::deinit;
-    if(raw_data){
+   /* if(raw_data){
         free(raw_data);
         raw_data=NULL;
-    }
+    }*/
     if(env_handle){
         int rc = cspi_freehandle(CSPI_HANDLE_ENV, env_handle);
         if (CSPI_OK != rc) {
@@ -402,11 +402,15 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
             
     switch(operation){
         case LIBERA_IOP_CMD_STOP:
+            LiberaBrillianceCSPILDBG_<<"IOP STOP"<<driver_mode;
+
             cspi_disconnect(con_handle);
             cfg.operation = liberaconfig::unknown;
+
             break;
         case LIBERA_IOP_CMD_ACQUIRE:
             driver_mode = *(int*)data;
+            LiberaBrillianceCSPILDBG_<<"IOP Acquire driver mode:"<<driver_mode;
             if(driver_mode&LIBERA_IOP_MODE_TRIGGERED){
                 cfg.mask|=cfg.want_trigger;
                 LiberaBrillianceCSPILDBG_<<"Enable Trigger";
@@ -433,25 +437,25 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
               cfg.datasize=sizeof(CSPI_DD_ATOM);
 
             }
-            if(operation&LIBERA_IOP_MODE_SA){
+            if(driver_mode&LIBERA_IOP_MODE_SA){
                 cfg.mode =CSPI_MODE_SA;
                 LiberaBrillianceCSPILDBG_<<"Acquire Data on Streaming";
                 cfg.operation = liberaconfig::acquire;
                 cfg.datasize=sizeof(CSPI_SA_ATOM);
             }
-            if(operation&LIBERA_IOP_MODE_PM){
+            if(driver_mode&LIBERA_IOP_MODE_PM){
                 cfg.mode =CSPI_MODE_PM;
                 LiberaBrillianceCSPILDBG_<<"Acquire Data Post Mortem";
                 cfg.operation = liberaconfig::acquire;
                 cfg.datasize=sizeof(CSPI_DD_ATOM);
             }
-            if(operation&LIBERA_IOP_MODE_ADC){
+            if(driver_mode&LIBERA_IOP_MODE_ADC){
                 cfg.mode =CSPI_MODE_ADC;
                 LiberaBrillianceCSPILDBG_<<"Acquire ADC Data";
                 cfg.datasize=sizeof(CSPI_ADC_ATOM);
                 cfg.operation = liberaconfig::acquire;
 
-                if(operation&LIBERA_IOP_MODE_CONTINUOUS){
+                if(driver_mode&LIBERA_IOP_MODE_CONTINUOUS){
                     cfg.adc.mode|=liberaconfig::adc_specific::cw;
                     cfg.mode = CSPI_MODE_ADC_CW;
                     LiberaBrillianceCSPILDBG_<<"Acquire ADC Data Continuous";
@@ -461,7 +465,7 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
                 } else {
                     cfg.adc.mode&=~liberaconfig::adc_specific::cw;
                 }
-                if(operation&LIBERA_IOP_MODE_SINGLEPASS){
+                if(driver_mode&LIBERA_IOP_MODE_SINGLEPASS){
                     cfg.adc.mode|=liberaconfig::adc_specific::sp;
                     cfg.mode = CSPI_MODE_ADC_SP;
                     LiberaBrillianceCSPILDBG_<<"Acquire ADC Data Single Pass";
@@ -521,35 +525,44 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
     }
     
     if(cfg.operation == liberaconfig::acquire){
-        
+        CSPI_CONPARAMS p;
         CSPI_BITMASK event_mask=0;
-        if (cfg.mask & liberaconfig::want_trigger) event_mask |= CSPI_EVENT_TRIGGET;
+        if (cfg.mask & liberaconfig::want_trigger) {
+            event_mask |= CSPI_EVENT_TRIGGET;
+            p.handler = event_callback;
 
-	CSPI_CONPARAMS p;
-        raw_data = (char*)realloc(raw_data,cfg.atom_count*cfg.datasize);
+        }
+
+	
+        LiberaBrillianceCSPILDBG_<<"connecting to HW..";
+
+       /* raw_data = (char*)realloc(raw_data,cfg.atom_count*cfg.datasize);
         if(raw_data==NULL){
             cfg.operation = liberaconfig::unknown;
              LiberaBrillianceCSPILERR_<<"Cannot allocate buffer of:"<<cfg.atom_count*cfg.datasize <<" bytes";
              return -100;
-        }
+        }*/
 	p.mode = cfg.mode;
-	p.handler = event_callback;
 	p.event_mask = event_mask;
         
 	CSPI_BITMASK param_mask = CSPI_CON_MODE;
 	if (event_mask) param_mask |= (CSPI_CON_HANDLER|CSPI_CON_EVENTMASK);
+        LiberaBrillianceCSPILDBG_<<"Setting connection parameters on:"<<con_handle<<" :"<<param_mask;
 
 	int rc = cspi_setconparam(con_handle, &p, param_mask);
 	if (CSPI_OK != rc) {
             LiberaBrillianceCSPILERR_<<"Error setting connection parameters on acquire"<<rc;
             return rc;
         }
-        
+        LiberaBrillianceCSPILDBG_<<"connecting to HW..";
+
         rc = cspi_connect(con_handle);
         if (CSPI_OK != rc) {
             LiberaBrillianceCSPILERR_<<"Error connecting to the HW acquire"<<rc;
             return rc;   
         }
+        LiberaBrillianceCSPILDBG_<<"Connected with HW mode:"<<cfg.mode;
+
     }
   
     return 0;

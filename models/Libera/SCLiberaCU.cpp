@@ -89,7 +89,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  "Samples to acquire",
 						  DataType::TYPE_INT32,
 						  DataType::Output);
-	
+	addAttributeToDataSet("ACQUISITION",
+						  "Acquisition number",
+						  DataType::TYPE_INT64,
+						  DataType::Output);
         
         addAttributeToDataSet("VA","Volt A",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VB","Volt B",DataType::TYPE_INT32,chaos::DataType::Output);

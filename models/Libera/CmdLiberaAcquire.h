@@ -33,7 +33,8 @@ namespace driver {
                     int mode,samples,loops,offset;
     
                     int32_t* va,*vb,*vc,*vd,*x,*y,*q,*sum,*q1,*q2;
-
+                    int32_t* psamples,*pmode;
+                    int64_t*acquire_loops;
 		protected:
 			//implemented handler
 		    //			uint8_t implementedHandler();
