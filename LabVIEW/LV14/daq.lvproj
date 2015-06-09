@@ -25,10 +25,10 @@
 				<Item Name="PathToUNIXPathString.vi" Type="VI" URL="/&lt;vilib&gt;/Platform/CFURL.llb/PathToUNIXPathString.vi"/>
 				<Item Name="Search and Replace Pattern.vi" Type="VI" URL="/&lt;vilib&gt;/Utility/error.llb/Search and Replace Pattern.vi"/>
 			</Item>
-			<Item Name="ChaosDevState.ctl" Type="VI" URL="../chaosui-crest/VIs/ChaosDevState.ctl"/>
-			<Item Name="chaosui-crest-cu-setstate.vi" Type="VI" URL="../chaosui-crest/VIs/chaosui-crest-cu-setstate.vi"/>
-			<Item Name="chaosui-crest.lvlib" Type="Library" URL="../chaosui-crest/chaosui-crest.lvlib"/>
-			<Item Name="chaosui-default-decode.vi" Type="VI" URL="../chaosui-crest/VIs/chaosui-default-decode.vi"/>
+			<Item Name="ChaosDevState.ctl" Type="VI" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/VIs/ChaosDevState.ctl"/>
+			<Item Name="chaosui-crest-cu-setstate.vi" Type="VI" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/VIs/chaosui-crest-cu-setstate.vi"/>
+			<Item Name="chaosui-crest.lvlib" Type="Library" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/chaosui-crest.lvlib"/>
+			<Item Name="chaosui-default-decode.vi" Type="VI" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/VIs/chaosui-default-decode.vi"/>
 			<Item Name="libcommon-crest.so" Type="Document" URL="libcommon-crest.so">
 				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
 			</Item>
