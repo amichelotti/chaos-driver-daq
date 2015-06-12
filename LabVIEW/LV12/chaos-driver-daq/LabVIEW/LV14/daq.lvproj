@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='UTF-8'?>
-<Project Type="Project" LVVersion="14008000">
+<Project Type="Project" LVVersion="12008004">
 	<Item Name="My Computer" Type="My Computer">
 		<Property Name="server.app.propertiesEnabled" Type="Bool">true</Property>
 		<Property Name="server.control.propertiesEnabled" Type="Bool">true</Property>
@@ -63,6 +63,9 @@
 			<Item Name="chaosui-crest-cu-setstate.vi" Type="VI" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/VIs/chaosui-crest-cu-setstate.vi"/>
 			<Item Name="chaosui-crest.lvlib" Type="Library" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/chaosui-crest.lvlib"/>
 			<Item Name="chaosui-default-decode.vi" Type="VI" URL="../../../../chaos-common-crest/LabVIEW/LV14/chaosui-crest/VIs/chaosui-default-decode.vi"/>
+			<Item Name="libcommon-crest.so" Type="Document" URL="../../../../../../../../libcommon-crest.so">
+				<Property Name="NI.PreserveRelativePath" Type="Bool">true</Property>
+			</Item>
 			<Item Name="libera_env.ctl" Type="VI" URL="../daq/libera_env.ctl"/>
 		</Item>
 		<Item Name="Build Specifications" Type="Build"/>
