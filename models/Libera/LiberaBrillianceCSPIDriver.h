@@ -96,7 +96,8 @@ protected:
     CSPI_CONPARAMS p;
     
     struct liberaconfig cfg;
-    void wait_trigger();
+    int wait_trigger();
+    int assign_time(const char*time );
 public:
     LiberaBrillianceCSPIDriver();
 

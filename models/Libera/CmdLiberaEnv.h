@@ -39,10 +39,14 @@ namespace driver {
 			void setHandler(c_data::CDataWrapper *data);
 			
 			//Correlation and commit phase
-			void ccHandler();
-			
+			//void ccHandler();
+			void acquireHandler();
 			//manage the timeout
-			bool timeoutHandler();
+			//bool timeoutHandler();
+                public:
+                   CmdLiberaEnv();
+
+			~CmdLiberaEnv(); 
 		};
 	}
         }

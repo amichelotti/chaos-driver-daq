@@ -1,123 +1,103 @@
 //
-//  CmdPSMode.cpp
-//  PowerSupply
+//  CmdLiberaEnv.cpp
+//  Commands to set environment
 //
-//  Created by Claudio Bisegni on 06/11/13.
+//  Created by Andrea Michelotti on 11/06/15.
 //  Copyright (c) 2013 infn. All rights reserved.
 //
 
-#include "CmdPSMode.h"
+#include "CmdLiberaEnv.h"
 
 #include <boost/format.hpp>
+#define CMDCU_ LAPP_ << "[CmdLiberaEnv]"
+#define CMDCUDBG_ LDBG_ <<"[CmdLiberaEnv]"
+#define CMDCUERR_ LERR_ <<"[CmdLiberaEnv]"
 
-#define LOG_HEAD_CmdPSMode LOG_TAIL(CmdPSMode)
-
-#define CMDCU_ LAPP_ << LOG_HEAD_CmdPSMode
-
-namespace own =  driver::powersupply;
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
 
-// return the implemented handler
-uint8_t own::CmdPSMode::implementedHandler() {
-    return	AbstractPowerSupplyCommand::implementedHandler();
+uint8_t driver::daq::libera::CmdLiberaEnv::implementedHandler() {
+    return chaos_batch::HandlerType::HT_Set  ;
 }
 
-void own::CmdPSMode::setHandler(c_data::CDataWrapper *data) {
-	CMDCU_ << "Executing set handler";
-	BC_EXEC_RUNNIG_PROPERTY
-	AbstractPowerSupplyCommand::setHandler(data);
-	i_command_timeout = getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "command_timeout");
 
-	//requested mode
-	if(!data->hasKey(CMD_PS_MODE_TYPE)) {
-		throw chaos::CException(0, "Mode type not present", __FUNCTION__);
-	}
-	state_to_go = data->getInt32Value(CMD_PS_MODE_TYPE);
-	if(state_to_go>1) {
-		throw chaos::CException(1, "Requeste mode type not implemented", __FUNCTION__);
-	}
-		
-	switch (state_to_go) {
-		case 0://to standby
-			//i need to be in operational to exec
-			CMDCU_ << "Request to go to stanby";
-			if(*o_status_id &  common::powersupply::POWER_SUPPLY_STATE_STANDBY){
-			  CMDCU_ << "Already in standby";
-			} else if((*o_status_id != common::powersupply::POWER_SUPPLY_STATE_OPEN) &&
-			   (*o_status_id != common::powersupply::POWER_SUPPLY_STATE_ON)) {
-				TROW_ERROR(2, boost::str( boost::format("Can't go to standby, current state is %1%[%2%]") % o_status % *o_status_id), std::string(__FUNCTION__))
-			}
-			if(powersupply_drv->standby() != 0) {
-				TROW_ERROR(3, "Error issuing standby on powersupply", std::string(__FUNCTION__))
-			}
-			CMDCU_ << "Can go to stanby";
-			break;
-			
-		case 1://to operational
-			CMDCU_ << "Request to go to operational";
-			if((*o_status_id != common::powersupply::POWER_SUPPLY_STATE_STANDBY)) {
-				TROW_ERROR(3, boost::str( boost::format("Cant go to operational, current state is %1%[%2%]") % o_status % *o_status_id), std::string(__FUNCTION__))
-			}
-			if(powersupply_drv->poweron() != 0) {
-				TROW_ERROR(5, "Error issuing poweron on powersupply", std::string(__FUNCTION__))
-			}
-			CMDCU_ << "Can go to operational";
-			break;
-	}
-	
-	
-	//set comamnd timeout for this instance
-	if(*i_command_timeout) {
-		CMDCU_ << "Set time out in "<< *i_command_timeout << "milliseconds";
-		//we have a timeout for command so apply it to this instance
-		setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_COMMAND_TIMEOUT, *i_command_timeout);
-	}
-	
-	//send comamnd to driver
-	setWorkState(true);
+driver::daq::libera::CmdLiberaEnv::CmdLiberaEnv():CmdLiberaDefault(){
 }
-
-void own::CmdPSMode::ccHandler() {
-	AbstractPowerSupplyCommand::ccHandler();
-	
-	BC_EXEC_RUNNIG_PROPERTY
-	CMDCU_ << "Check if we are gone";
-	switch(state_to_go) {
-		case 0://we need to go in stanby
-			if(*o_status_id == common::powersupply::POWER_SUPPLY_STATE_STANDBY) {
-				setWorkState(false);
-				//we are terminated the command
-				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-				BC_END_RUNNIG_PROPERTY
-				return;
-			}
-			break;
-			
-		case 1://we need to go on operational
-			if(*o_status_id == common::powersupply::POWER_SUPPLY_STATE_STANDBY ||
-			   *o_status_id == common::powersupply::POWER_SUPPLY_STATE_ON) {
-				setWorkState(false);
-				//we are terminated the command
-				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-				BC_END_RUNNIG_PROPERTY
-				return;
-			}
-			break;
-	}
-	
-	
-	if(*o_status_id == common::powersupply::POWER_SUPPLY_STATE_ALARM ||
-	   *o_status_id == common::powersupply::POWER_SUPPLY_STATE_ERROR ||
-	   *o_status_id == common::powersupply::POWER_SUPPLY_STATE_UKN ) {
-		setWorkState(false);
-		TROW_ERROR(1, boost::str( boost::format("Bad state got = %1% - [%2%]") % *o_status_id % o_status), std::string(__FUNCTION__))
-	}
+driver::daq::libera::CmdLiberaEnv::~CmdLiberaEnv(){
 }
+void driver::daq::libera::CmdLiberaEnv::acquireHandler() {
+    CMDCUDBG_<<"Acquire not implemented ";
 
-bool own::CmdPSMode::timeoutHandler() {
-	//move the state machine on fault
-	setWorkState(false);
-	TROW_ERROR(1, "Command operation has gone on timeout", std::string(__FUNCTION__))
-	return true;
+}
+void driver::daq::libera::CmdLiberaEnv::setHandler(c_data::CDataWrapper *data) {
+	int32_t *perr;
+        int ret;
+        
+        CmdLiberaDefault::setHandler(data);
+//        setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
+
+        
+#define ADD_ENV_PARAM(param) \
+CMDCUDBG_<<"checking environment "<< # param; \
+        if(data->hasKey(# param )) {\
+            libera_env_t env;\
+            env.value = data->getInt64Value(# param);\
+            env.selector=CSPI_ENV_## param;\
+            CMDCUDBG_<<"Setting env \""<< # param <<"\" ("<<std::hex<<env.selector<<dec<<")="<<env.value ;\
+            if((ret=driver->iop(LIBERA_IOP_CMD_SETENV,&env,sizeof(libera_env_t)))!=0){\
+                *perr|=LIBERA_ERROR_SETTING_ENV;\
+                getAttributeCache()->setOutputDomainAsChanged();\
+                BC_END_RUNNIG_PROPERTY;\
+                throw chaos::CException(ret, "Cannot set environment", __FUNCTION__);\
+            }\
+            CMDCUDBG_<<"Sucessfully applied \""<< # param <<"\" ("<<std::hex<<env.selector<<dec<<")="<<env.value ;\
+	}
+        
+        perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
+        *perr=0;
+       
+         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+            *perr|=LIBERA_ERROR_STOP_ACQUIRE;
+            getAttributeCache()->setOutputDomainAsChanged();
+
+            BC_END_RUNNIG_PROPERTY;
+            throw chaos::CException(ret, "Cannot stop acquire", __FUNCTION__);
+        }
+        
+        ADD_ENV_PARAM(TRIGMODE);
+        ADD_ENV_PARAM(KX);
+        ADD_ENV_PARAM(KY);
+        ADD_ENV_PARAM(XOFFSET);
+        ADD_ENV_PARAM(YOFFSET);
+        ADD_ENV_PARAM(QOFFSET);
+        ADD_ENV_PARAM(SWITCH);
+        ADD_ENV_PARAM(GAIN);
+        ADD_ENV_PARAM(AGC);
+        ADD_ENV_PARAM(DSC);
+        ADD_ENV_PARAM(PMOFFSET);
+        ADD_ENV_PARAM(PMDEC);
+        ADD_ENV_PARAM(TRIGDELAY);
+        ADD_ENV_PARAM(EXTSWITCH);
+        ADD_ENV_PARAM(SWDELAY);
+        ADD_ENV_PARAM(DDC_MAFLENGTH);
+        ADD_ENV_PARAM(DDC_MAFDELAY);
+        ADD_ENV_PARAM(NOTCH1);
+        ADD_ENV_PARAM(NOTCH2);
+        ADD_ENV_PARAM(POLYPHASE_FIR);
+        ADD_ENV_PARAM(MTVCXOFFS);
+        ADD_ENV_PARAM(MTNCOSHFT);
+        ADD_ENV_PARAM(MTPHSOFFS);
+        ADD_ENV_PARAM(MTUNLCKTR);
+        ADD_ENV_PARAM(MTSYNCIN);
+        ADD_ENV_PARAM(STUNLCKTR);
+        ADD_ENV_PARAM(PM);
+        ADD_ENV_PARAM(SR);
+        ADD_ENV_PARAM(SP);
+        
+        char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
+	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)==0){
+            CMDCUDBG_<<"STATUS:"<<status;
+            getAttributeCache()->setOutputDomainAsChanged();
+        }
+        BC_END_RUNNIG_PROPERTY;
 }

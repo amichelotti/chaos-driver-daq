@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(DAQ)
 include($ENV{CHAOS_BUNDLE}/tools/project_template/CMakeChaos.txt)
 
-SET(DAQ_src models/Libera/LiberaData.cpp models/Libera/LiberaBrillianceCSPIDriver.cpp models/Libera/CmdLiberaAcquire.cpp models/Libera/CmdLiberaDefault.cpp models/Libera/SCLiberaCU.cpp  )
+SET(DAQ_src models/Libera/LiberaData.cpp models/Libera/LiberaBrillianceCSPIDriver.cpp models/Libera/CmdLiberaAcquire.cpp models/Libera/CmdLiberaDefault.cpp models/Libera/CmdLiberaEnv.cpp models/Libera/CmdLiberaTime.cpp models/Libera/SCLiberaCU.cpp  )
 set (CMAKE_C_FLAGS "-std=gnu99 -DEBPP -DCORDIC_IGNORE_GAIN -D_REENTRANT -Imodels/Libera/driver/libera-driver-2-04-ebpp -Imodels/Libera/msp/src -Imodels/Libera/cspi")
 SET(BasicDAQClient_src test/DAQClient.cpp)
 INCLUDE_DIRECTORIES(models/Libera/ models/Libera/cspi models/Libera/driver/libera-driver-2-04-ebpp models/Libera/msp/src)

@@ -25,8 +25,8 @@
 //---comands----
 #include "CmdLiberaDefault.h"
 #include "CmdLiberaAcquire.h"
-//#include "CmdLiberaEnv.h"
-//#include "CmdLiberaTime.h"
+#include "CmdLiberaEnv.h"
+#include "CmdLiberaTime.h"
 
 using namespace chaos;
 
@@ -74,8 +74,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 	//install all command
 	installCommand<CmdLiberaDefault>("default");
 	installCommand<CmdLiberaAcquire>("acquire");
-	//installCommand<CmdLiberaEnv>("env");
-	//installCommand<CmdLiberaSetTime>("time");
+	installCommand<CmdLiberaEnv>("env");
+	installCommand<CmdLiberaTime>("time");
 	
 	//set it has default
 	setDefaultCommand("default");
@@ -111,6 +111,11 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::TYPE_INT32,
 						  DataType::Input);
         
+        
+        addAttributeToDataSet("error",
+						  "error status",
+						  DataType::TYPE_INT32,
+						  DataType::Output);
         addAttributeToDataSet("STATUS",
 						  "status",
 						  DataType::TYPE_STRING,

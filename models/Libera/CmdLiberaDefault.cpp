@@ -67,7 +67,8 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	}
 	CMDCUDBG<< "retrived BasicIODriver:"<<driver;
 
-	
+	 int32_t *perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
+        *perr=0;
     
 	BC_NORMAL_RUNNIG_PROPERTY
     
