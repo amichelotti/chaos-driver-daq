@@ -7,7 +7,7 @@
 
 #ifndef LIBERADATA_H
 #define	LIBERADATA_H
-
+#include <stdint.h>
 #define LIBERA_IOP_MODE_DD 0x1 // data acquire on demand
 #define LIBERA_IOP_MODE_SA 0x2 // streaming data acquire
 #define LIBERA_IOP_MODE_ADC 0x4 // ADC data acquire
@@ -26,10 +26,16 @@
 #define LIBERA_IOP_CMD_SET_OFFSET 0x5 // set offset in buffer
 #define LIBERA_IOP_CMD_SET_SAMPLES 0x6 // set offset in buffer
 #define LIBERA_IOP_CMD_STOP 0x7
-
+// ERROR
+#define LIBERA_ERROR_READING 0x1
+#define LIBERA_ERROR_WRITING 0x2
+#define LIBERA_ERROR_STOP_ACQUIRE 0x4
+#define LIBERA_ERROR_SWCONFIG 0x8
+#define LIBERA_ERROR_ALLOCATE_DATASET 0x10
+#define LIBERA_ERROR_SETTING_ENV 0x20
 #include <ostream>
 #include <vector>
-
+#include <iostream>
 #define DECLARE_DESC(_T) \
 typedef struct _T: public libera_desc {\
 static const char* desc[];\
@@ -51,6 +57,10 @@ int _T::size=sizeof(desc)/sizeof(const char*);
 #define CHANNEL_ENV 4
     
 
+typedef struct libera_env {
+    uint64_t selector;
+    int32_t value;
+} libera_env_t;
 #ifdef CSPI
 #include "cspi.h"
 

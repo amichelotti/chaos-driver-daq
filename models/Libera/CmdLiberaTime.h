@@ -30,25 +30,24 @@ namespace driver {
 	namespace daq {
             namespace libera{
 
-		class CmdLiberaTime : ppublic CmdLiberaDefault {
+		class CmdLiberaTime : public CmdLiberaDefault {
 			
 
 		protected:
 			//implemented handler
 			uint8_t implementedHandler();
-			
+			void acquireHandler();
 			// Set handler
 			void setHandler(c_data::CDataWrapper *data);
+                public:
+                    
+                CmdLiberaTime();
+                ~CmdLiberaTime();
 			
-			//Correlation and commit phase
-			void ccHandler();
-			
-			//manage the timeout
-			bool timeoutHandler();
 		};
 	}
             
-    }
+        }
 }
 
 #endif 

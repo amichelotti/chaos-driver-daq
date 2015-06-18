@@ -18,7 +18,8 @@ DEFINE_DESC(libera_avg_desc,{"AVG"});
             for (std::vector<const char*>::iterator i=data.getDesc().begin();i!=data.getDesc().end();i++){
                 os<<*i<<",";
             }
-            return os<<std::endl;
+            os<<std::endl;
+            return os;
    
     }
 
@@ -27,7 +28,8 @@ DEFINE_DESC(libera_avg_desc,{"AVG"});
           
     
     std::ostream& operator <<(std::ostream&os,const libera_dd_t& data){
-        return os<<std::dec<<data.Va<<","<<data.Vb<<","<<data.Vc<<","<<data.Vd<<","<<data.X<<","<<data.Y<<","<<data.Q<<","<<data.Sum<<std::endl;
+        os<<std::dec<<data.Va<<","<<data.Vb<<","<<data.Vc<<","<<data.Vd<<","<<data.X<<","<<data.Y<<","<<data.Q<<","<<data.Sum<<std::endl;
+        return os;
         
     }
     

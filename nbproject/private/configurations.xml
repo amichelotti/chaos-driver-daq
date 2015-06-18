@@ -37,8 +37,6 @@
           <df name="test">
           </df>
         </df>
-        <df name="Progress">
-        </df>
       </df>
       <df name="LabVIEW">
         <df name="bck">
@@ -184,8 +182,6 @@
           <in>CmdLiberaTime.h</in>
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceCSPIDriver.h</in>
-          <in>LiberaBrillianceCSPIDriver.orig.cpp</in>
-          <in>LiberaBrillianceCSPIDriver.orig.h</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>
           <in>LiberaBrillianceSlowDriver.h</in>
           <in>LiberaData.cpp</in>

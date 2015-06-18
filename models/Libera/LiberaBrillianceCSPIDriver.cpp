@@ -240,7 +240,7 @@ std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj){
 LiberaBrillianceCSPIDriver::~LiberaBrillianceCSPIDriver() {
   deinitIO();  
 }
-void LiberaBrillianceCSPIDriver::wait_trigger(){
+int LiberaBrillianceCSPIDriver::wait_trigger(){
     	int rc = 0;
 	struct timeval  now;
 	struct timespec timeout;
@@ -260,9 +260,11 @@ void LiberaBrillianceCSPIDriver::wait_trigger(){
 	pthread_mutex_unlock(&eventm);
 
 	if (ETIMEDOUT==rc) {
-                    throw chaos::CException(rc,"trigger timeout","LiberaBrillianceCSPIDriver::wait_trigger");    
+                                 LiberaBrillianceCSPILERR_<<"trigger timeout:"<<rc;
+                                 return rc;
 
         }
+        return 0;
 }
 int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount) {
   	int rc;
@@ -282,23 +284,29 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount) {
           }
           int count = std::min(bcount/cfg.datasize,cfg.atom_count);
           
-          if (cfg.mask & liberaconfig::want_trigger) 
-               wait_trigger();
-               rc = cfg.mask & liberaconfig::want_trigger ? CSPI_SEEK_TR : CSPI_SEEK_MT;
-              
-            if(addr==CHANNEL_DD){
-                rc = cspi_seek(con_handle, &cfg.dd.offset, rc);
-                if (CSPI_OK != rc) {
-                    LiberaBrillianceCSPILERR_<<"Error seeking"<<rc;
-                    return -rc;
-                }
-                rc=cspi_read(con_handle,buffer,count,&nread);
-                if (CSPI_OK != rc) {
-                     LiberaBrillianceCSPILERR_<<"Error reading"<<rc;
-                     return -rc;
-                }
-                return nread;
+          if (cfg.mask & liberaconfig::want_trigger) {
+	    if(wait_trigger()!=0){
+                LiberaBrillianceCSPILERR_<<"Error waiting trigger:"<<rc;
+
+                return -rc;
             }
+          }
+	  rc = (cfg.mask & liberaconfig::want_trigger) ? CSPI_SEEK_TR : CSPI_SEEK_MT;
+              
+	  if(addr==CHANNEL_DD){
+            //  LiberaBrillianceCSPILDBG_ << "DD seeeking off: "<<std::dec<<cfg.dd.offset<<" tr:"<<rc;
+	    rc = cspi_seek(con_handle, &cfg.dd.offset, rc);
+	    if (CSPI_OK != rc) {
+	      LiberaBrillianceCSPILERR_<<"Error seeking"<<rc;
+	      return -rc;
+	    }
+	    rc=cspi_read(con_handle,buffer,count,&nread);
+	    if (CSPI_OK != rc) {
+	      LiberaBrillianceCSPILERR_<<"Error reading"<<rc;
+	      return -rc;
+	    }
+	    return nread;
+	  }
          }
         
         
@@ -309,6 +317,66 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount) {
 int LiberaBrillianceCSPIDriver::write(void *buffer, int addr, int bcount) {
     //TODO: implement the method
     return 0;
+}
+// assign MT and ST from a string formatted as [MT]:[YYYYMMDDhhmm.ss]
+
+int LiberaBrillianceCSPIDriver::assign_time(const char*time ){
+      const char delim = ':';
+        const char delim_phase = '.';
+        std::string s(time);
+
+        size_t p = s.find(delim);
+        if (std::string::npos == p) {
+            LiberaBrillianceCSPILERR_<<"Invalid argument -- 'TIME' missing delimiter \":\"" ;
+             return -4;
+        }
+        std::string s2(s.substr(0, p-0));
+        if (!s2.empty()) {
+
+                cfg.mask |= liberaconfig::want_setmt;
+
+                size_t p_phase = s2.find(delim_phase);
+                if (std::string::npos == p_phase) {
+                        // No LMT Phase specified
+                        cfg.time.mt = atoll(s2.c_str());
+                        cfg.time.phase = 0;
+
+                } else {
+                        // MT + LMT Phase specified
+                        std::string s_mt(s2.substr(0, p_phase-0));
+                        std::string s_phase(s2.substr(p_phase+1));
+
+                        cfg.time.mt = atoll(s_mt.c_str());
+                        if (!s_phase.empty())
+                                cfg.time.phase = atoll(s_phase.c_str());
+                        else
+                                cfg.time.phase = 0;
+                }
+        }
+
+        s2 = s.substr(p+1);
+        if (!s2.empty()) {
+
+                for (p=4; p < (s2.size()-3); ++p)
+                        if (p%3 == 1) s2.insert(p, 1, delim);
+
+                         struct tm t;
+                if (!strptime(s2.c_str(), "%Y:%m:%d:%H:%M.%S", &t)){
+                    LiberaBrillianceCSPILERR_<<"Invalid argument -- 'strptime'";
+                    return -1;
+                }
+                cfg.time.st = mktime(&t);
+                if (-1 == cfg.time.st){
+                         LiberaBrillianceCSPILERR_<<"Invalid argument -- 'mkTIME'";
+
+                    return -2;
+                }
+
+                cfg.mask |= liberaconfig::want_setst;
+        }
+        
+        return 0;
+       
 }
 
 int LiberaBrillianceCSPIDriver::initIO(void *buffer, int sizeb) {
@@ -398,7 +466,12 @@ int LiberaBrillianceCSPIDriver::deinitIO() {
  */
 int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
     int rc;
-   
+#define SET_ENV(cpimask,param) \
+if(cmd_env->selector & CSPI_ENV_## cpimask ){\
+    env.param =cmd_env->value;\
+    LiberaBrillianceCSPILDBG_<<"IO SET ENV \""<<#cpimask<<"\" bitmask:"<<cmd_env->selector<<" value="<<cmd_env->value;\
+}
+    
             
     switch(operation){
         case LIBERA_IOP_CMD_STOP:
@@ -495,10 +568,56 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
                LiberaBrillianceCSPILDBG_<<"Setting Offset:"<<cfg.dd.offset;
 
                break;
-        case LIBERA_IOP_CMD_SETENV:
+        case LIBERA_IOP_CMD_SETENV:{
             cfg.operation = liberaconfig::setenv;
-             LiberaBrillianceCSPILDBG_<<"Set ENV";
+            libera_env_t* cmd_env=(libera_env_t*)data;
+            CSPI_ENVPARAMS env;
+            
+            SET_ENV(KX,Kx);
+            SET_ENV(KY,Ky);
+            SET_ENV(XOFFSET,Xoffset);
+            SET_ENV(YOFFSET,Yoffset);
+            SET_ENV(QOFFSET,Qoffset);
+            SET_ENV(SWITCH,switches);
+            SET_ENV(GAIN,gain);
+            SET_ENV(AGC,agc);
+            SET_ENV(DSC,dsc);
+            SET_ENV(ILK,ilk.mode);
+            
+                SET_ENV(ILKSTATUS, ilk_status);
+                SET_ENV(PMOFFSET, PMoffset);
+                
+                SET_ENV(PMDEC, PMdec);
 
+               SET_ENV(TRIGDELAY, trig_delay);
+               
+                SET_ENV(EXTSWITCH, external_switching);
+                SET_ENV(SWDELAY, switching_delay);
+                SET_ENV(TRIGMODE,trig_mode);
+                SET_ENV(DDC_MAFLENGTH, ddc_maflength);
+               SET_ENV(DDC_MAFDELAY, ddc_mafdelay);
+
+               SET_ENV(NOTCH1, notch1[0]);
+               SET_ENV( NOTCH2, notch2[0]);
+                SET_ENV(POLYPHASE_FIR, polyphase_fir[0]);
+
+                SET_ENV(MTVCXOFFS, mtvcxoffs);
+                SET_ENV(MTNCOSHFT, mtncoshft);
+                SET_ENV(MTPHSOFFS, mtphsoffs);
+                SET_ENV( MTUNLCKTR, mtunlcktr);
+                SET_ENV( MTSYNCIN, mtsyncin);
+                SET_ENV(STUNLCKTR, stunlcktr);
+
+                SET_ENV( PM, pm.mode);
+               SET_ENV( SR, sr.enable);
+                SET_ENV(SP, sp.threshold);
+                rc = cspi_setenvparam(env_handle,(CSPI_ENVPARAMS*) &env, cmd_env->selector);
+            
+                if (CSPI_OK != rc) {
+                 LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc;
+                 return rc;
+            }
+        }
             break;
         case LIBERA_IOP_CMD_GETENV:{
             char *pdata=(char*)data;
@@ -518,9 +637,51 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
             strncpy(pdata,ss.str().c_str(),sizeb);
             break;
         }
-        case LIBERA_IOP_CMD_SETTIME:
+        case LIBERA_IOP_CMD_SETTIME:{
+            CSPI_SETTIMESTAMP ts;
+            CSPI_BITMASK mask = 0LL;
+
             cfg.operation = liberaconfig::settime;
+            char*t=(char*)data;
+            LiberaBrillianceCSPILDBG_<<"set time to:"<<t;
+
+            if((rc=assign_time(t))!=0){
+                 LiberaBrillianceCSPILERR_<<"Error setting time:"<<rc;
+                 return rc;
+            }
+            if (cfg.mask & liberaconfig::want_setmt) {
+
+                mask |= CSPI_TIME_MT;
+                ts.mt    = cfg.time.mt;
+                ts.phase = cfg.time.phase;
+        }
+        if (cfg.mask & liberaconfig::want_setst) {
+
+                mask |= CSPI_TIME_ST;
+                ts.st.tv_sec = cfg.time.st;
+                ts.st.tv_nsec = 0;
+        }
+
+        CSPI_ENVPARAMS ep;
+        ep.trig_mode = CSPI_TRIGMODE_SET;
+
+        rc = cspi_setenvparam(env_handle, &ep, CSPI_ENV_TRIGMODE);
+        if (CSPI_OK != rc) {
+                 LiberaBrillianceCSPILERR_<<"Error setting time: setting trigger mode:"<<rc;
+                 return rc;
+        }
+
+        rc = cspi_settime(env_handle, &ts, mask);
+        if (CSPI_OK != rc) {
+            LiberaBrillianceCSPILERR_<<"Error setting time: setting time:"<<rc;
+              return rc;        
+        }
+        LiberaBrillianceCSPILDBG_<<"set time OK:"<<t;
+
+        return 0;
+
             break;
+        }
          
     }
     

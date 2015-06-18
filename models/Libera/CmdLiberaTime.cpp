@@ -9,115 +9,54 @@
 #include "CmdLiberaTime.h"
 
 #include <boost/format.hpp>
+#define CMDCU_ LAPP_ << "[CmdLiberaTime]"
+#define CMDCUDBG_ LDBG_ <<"[CmdLiberaTime]"
+#define CMDCUERR_ LERR_ <<"[CmdLiberaTime]"
 
-#define LOG_HEAD_CmdLiberaTime LOG_TAIL(CmdLiberaTime)
 
-#define CMDCU_ LAPP_ << LOG_HEAD_CmdLiberaTime
-
-namespace own =  driver::powersupply;
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
 
 // return the implemented handler
-uint8_t own::CmdLiberaTime::implementedHandler() {
-    return	AbstractPowerSupplyCommand::implementedHandler();
+uint8_t driver::daq::libera::CmdLiberaTime::implementedHandler() {
+    return chaos_batch::HandlerType::HT_Set  ;
 }
 
-void own::CmdLiberaTime::setHandler(c_data::CDataWrapper *data) {
-	CMDCU_ << "Executing set handler";
-	BC_EXEC_RUNNIG_PROPERTY
-	AbstractPowerSupplyCommand::setHandler(data);
-	i_command_timeout = getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "command_timeout");
 
-	//requested mode
-	if(!data->hasKey(CMD_PS_MODE_TYPE)) {
-		throw chaos::CException(0, "Mode type not present", __FUNCTION__);
-	}
-	state_to_go = data->getInt32Value(CMD_PS_MODE_TYPE);
-	if(state_to_go>1) {
-		throw chaos::CException(1, "Requeste mode type not implemented", __FUNCTION__);
-	}
-		
-	switch (state_to_go) {
-		case 0://to standby
-			//i need to be in operational to exec
-			CMDCU_ << "Request to go to stanby";
-			if(*o_status_id &  common::powersupply::POWER_SUPPLY_STATE_STANDBY){
-			  CMDCU_ << "Already in standby";
-			} else if((*o_status_id != common::powersupply::POWER_SUPPLY_STATE_OPEN) &&
-			   (*o_status_id != common::powersupply::POWER_SUPPLY_STATE_ON)) {
-				TROW_ERROR(2, boost::str( boost::format("Can't go to standby, current state is %1%[%2%]") % o_status % *o_status_id), std::string(__FUNCTION__))
-			}
-			if(powersupply_drv->standby() != 0) {
-				TROW_ERROR(3, "Error issuing standby on powersupply", std::string(__FUNCTION__))
-			}
-			CMDCU_ << "Can go to stanby";
-			break;
-			
-		case 1://to operational
-			CMDCU_ << "Request to go to operational";
-			if((*o_status_id != common::powersupply::POWER_SUPPLY_STATE_STANDBY)) {
-				TROW_ERROR(3, boost::str( boost::format("Cant go to operational, current state is %1%[%2%]") % o_status % *o_status_id), std::string(__FUNCTION__))
-			}
-			if(powersupply_drv->poweron() != 0) {
-				TROW_ERROR(5, "Error issuing poweron on powersupply", std::string(__FUNCTION__))
-			}
-			CMDCU_ << "Can go to operational";
-			break;
-	}
-	
-	
-	//set comamnd timeout for this instance
-	if(*i_command_timeout) {
-		CMDCU_ << "Set time out in "<< *i_command_timeout << "milliseconds";
-		//we have a timeout for command so apply it to this instance
-		setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_COMMAND_TIMEOUT, *i_command_timeout);
-	}
-	
-	//send comamnd to driver
-	setWorkState(true);
+driver::daq::libera::CmdLiberaTime::CmdLiberaTime():CmdLiberaDefault(){
+}
+driver::daq::libera::CmdLiberaTime::~CmdLiberaTime(){
+}
+void driver::daq::libera::CmdLiberaTime::acquireHandler() {
+    CMDCUDBG_<<"Acquire not implemented ";
+     BC_END_RUNNIG_PROPERTY;
+
 }
 
-void own::CmdLiberaTime::ccHandler() {
-	AbstractPowerSupplyCommand::ccHandler();
-	
-	BC_EXEC_RUNNIG_PROPERTY
-	CMDCU_ << "Check if we are gone";
-	switch(state_to_go) {
-		case 0://we need to go in stanby
-			if(*o_status_id == common::powersupply::POWER_SUPPLY_STATE_STANDBY) {
-				setWorkState(false);
-				//we are terminated the command
-				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-				BC_END_RUNNIG_PROPERTY
-				return;
-			}
-			break;
-			
-		case 1://we need to go on operational
-			if(*o_status_id == common::powersupply::POWER_SUPPLY_STATE_STANDBY ||
-			   *o_status_id == common::powersupply::POWER_SUPPLY_STATE_ON) {
-				setWorkState(false);
-				//we are terminated the command
-				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-				BC_END_RUNNIG_PROPERTY
-				return;
-			}
-			break;
-	}
-	
-	
-	if(*o_status_id == common::powersupply::POWER_SUPPLY_STATE_ALARM ||
-	   *o_status_id == common::powersupply::POWER_SUPPLY_STATE_ERROR ||
-	   *o_status_id == common::powersupply::POWER_SUPPLY_STATE_UKN ) {
-		setWorkState(false);
-		TROW_ERROR(1, boost::str( boost::format("Bad state got = %1% - [%2%]") % *o_status_id % o_status), std::string(__FUNCTION__))
-	}
-}
+void driver::daq::libera::CmdLiberaTime::setHandler(c_data::CDataWrapper *data) {
+    int32_t*perr;
+    int ret;
+    CmdLiberaDefault::setHandler(data);
+       CMDCUDBG_<<"Setting time...";
 
-bool own::CmdLiberaTime::timeoutHandler() {
-	//move the state machine on fault
-	setWorkState(false);
-	TROW_ERROR(1, "Command operation has gone on timeout", std::string(__FUNCTION__))
-	return true;
+     perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
+        *perr=0;
+        
+        if(data->hasKey("time" )) {
+            
+            const char* t=data->getCStringValue("time");
+            CMDCUDBG_<<"Setting time to:"<<t;
+
+            if((ret=driver->iop(LIBERA_IOP_CMD_SETTIME,(void*)t,strlen(t)+1))!=0){
+                *perr|=LIBERA_ERROR_SETTING_ENV;
+              
+                BC_END_RUNNIG_PROPERTY;
+                CMDCUERR_<<"cannot set time:\""<<t<<"\" ret: "<<ret;
+            }else {
+                 CMDCUERR_<<"setting time ok:\""<<t<<"\" ret: "<<ret;
+            }
+        }
+        
+          getAttributeCache()->setOutputDomainAsChanged();
+        
 }
