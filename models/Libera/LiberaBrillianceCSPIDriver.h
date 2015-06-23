@@ -20,6 +20,7 @@ limitations under the License.
 #ifndef __LiberaBrillianceCSPIDriver_H__
 #define __LiberaBrillianceCSPIDriver_H__
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
+#define CSPI
 #include "LiberaData.h"
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceCSPIDriver);
 

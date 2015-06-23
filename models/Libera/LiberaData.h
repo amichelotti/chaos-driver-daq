@@ -61,8 +61,9 @@ typedef struct libera_env {
     uint64_t selector;
     int32_t value;
 } libera_env_t;
+
 #ifdef CSPI
-#include "cspi.h"
+#include "models/Libera/cspi/cspi.h"
 
     typedef CSPI_DD_ATOM libera_dd_t;
     typedef CSPI_SA_ATOM libera_sa_t;

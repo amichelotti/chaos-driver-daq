@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
-project(DAQ)
+project(daq)
+SET(CHAOS_INSTALL_DIRS models/Libera models/Libera/cspi)
 include($ENV{CHAOS_BUNDLE}/tools/project_template/CMakeChaos.txt)
 
 SET(DAQ_src models/Libera/LiberaData.cpp models/Libera/LiberaBrillianceCSPIDriver.cpp models/Libera/CmdLiberaAcquire.cpp models/Libera/CmdLiberaDefault.cpp models/Libera/CmdLiberaEnv.cpp models/Libera/CmdLiberaTime.cpp models/Libera/SCLiberaCU.cpp  )
@@ -26,11 +27,15 @@ ENDIF()
 
  TARGET_LINK_LIBRARIES(chaos_driver_DAQ chaos_cutoolkit chaos_common common_serial ${FrameworkLib})
  TARGET_LINK_LIBRARIES(daqServer chaos_driver_DAQ chaos_driver_libera chaos_cutoolkit chaos_common common_serial ${FrameworkLib})
- TARGET_LINK_LIBRARIES(daqClient chaos_uitoolkit chaos_common chaos_driver_DAQ  ${FrameworkLib})
+ TARGET_LINK_LIBRARIES(daqClient chaos_uitoolkit chaos_common chaos_driver_DAQ chaos_driver_libera ${FrameworkLib})
 
  INSTALL_TARGETS(/bin daqServer)
  INSTALL_TARGETS(/bin daqClient)
  INSTALL_TARGETS(/lib chaos_driver_DAQ)
  INSTALL_TARGETS(/lib chaos_driver_libera)
-
+ FILE(GLOB ss models/Libera/*.h)
+ INSTALL(FILES ${ss} DESTINATION include/models/Libera)
+ FILE(GLOB ss models/Libera/cspi/*.h)
+ INSTALL(FILES ${ss} DESTINATION include/models/Libera/cspi)
+   
 
