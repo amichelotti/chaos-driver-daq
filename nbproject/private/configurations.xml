@@ -51,7 +51,25 @@
             </df>
           </df>
         </df>
+        <df name="builds">
+          <df name="daq">
+            <df name="liberaui">
+            </df>
+          </df>
+        </df>
+        <df name="LV10">
+          <df name="daq">
+          </df>
+        </df>
+        <df name="LV12">
+          <df name="chaos-driver-daq">
+            <df name="daq">
+            </df>
+          </df>
+        </df>
         <df name="LV14">
+          <df name="daq">
+          </df>
           <df name="GUI">
           </df>
         </df>
@@ -183,7 +201,6 @@
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceCSPIDriver.h</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>
-          <in>LiberaBrillianceSlowDriver.h</in>
           <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
           <in>SCLiberaCU.cpp</in>
