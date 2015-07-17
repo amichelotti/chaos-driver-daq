@@ -28,7 +28,9 @@
 //#include <fstream>
 #include "LiberaData.h"
 using namespace chaos;
+using namespace chaos::common::data;
 using namespace chaos::ui;
+using namespace chaos::common::batch_command;
 template <typename T>
 void print_header(int ts_enable,std::ofstream &fout){
     T h;
@@ -50,7 +52,7 @@ void print_data(T data,int ts_enable,int samples,uint64_t tstamp,std::ofstream &
             fout<<data[cnt]<<flush;
             LDBG_<<data[cnt];
     }
-   
+
 }
 void print_state(CUStateKey::ControlUnitState state) {
   switch (state) {
@@ -82,7 +84,7 @@ int main (int argc, char* argv[] ) {
   std::string device_name;
   uint64_t old_acquisition=0;
   try{
-    
+
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("acquire", po::value<int>(&mode)->default_value(0), "acquire [0=OFF,1=DD,2=SA,3=ADC_SP,4=ADC_CW]");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("triggered", po::value<bool>(&triggered)->default_value(false), "trigger on/off");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("samples", po::value<int>(&samples)->default_value(1), "acquires samples");
@@ -95,12 +97,12 @@ int main (int argc, char* argv[] ) {
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("max_acquire_time", po::value<int>(&max_acquire_time)->default_value(0), "max acquire time in seconds 0=continuos ");
 
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(1000000), "acquire time");
-    
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("device", po::value<std::string>(&device_name), "libera device name");
-    
-    
 
-      
+    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("device", po::value<std::string>(&device_name), "libera device name");
+
+
+
+
       //init UIToolkit client
     ChaosUIToolkit::getInstance()->init(argc, argv);
 
@@ -117,7 +119,7 @@ int main (int argc, char* argv[] ) {
     //init device
     err = controller->getState(device_state);
     if(err == ErrorCode::EC_TIMEOUT) return -1;
-    
+
     if(device_state == CUStateKey::DEINIT){
         err = controller->initDevice();
         if(err == ErrorCode::EC_TIMEOUT) {
@@ -135,7 +137,7 @@ int main (int argc, char* argv[] ) {
     if(err == ErrorCode::EC_TIMEOUT) {
         throw CException(2, "Initialization", "timeout");
     }
-    
+
     if(device_state != CUStateKey::START){
         err = controller->startDevice();
         if(err == ErrorCode::EC_TIMEOUT) {
@@ -145,7 +147,7 @@ int main (int argc, char* argv[] ) {
         sleep(2);
     }
     //std::cout << "Start the device" << std::endl;
-   
+
 
     //check the state
     err = controller->getState(device_state);
@@ -159,33 +161,33 @@ int main (int argc, char* argv[] ) {
     if(triggered){
         mode_dev=LIBERA_IOP_MODE_TRIGGERED;
     }
-    
+
     if(decimated){
         mode_dev|=LIBERA_IOP_MODE_DECIMATED;
     }
     CDataWrapper param_mode;
 
-   	
+
     switch(mode){
         case 0:
             param_mode.addInt32Value("enable",0);
             break;
-            
+
        case 1:
            mode_dev|=LIBERA_IOP_MODE_DD;
             break;
         case 2:
            mode_dev|=LIBERA_IOP_MODE_SA;
             break;
-            
+
         case 3:
             mode_dev|=LIBERA_IOP_MODE_SINGLEPASS;
             break;
         case 4:
             mode_dev|=LIBERA_IOP_MODE_CONTINUOUS;
             break;
-            
-            
+
+
     }
     param_mode.addInt32Value("mode",mode_dev);
     if(mode_dev && (samples>=0)){
@@ -195,8 +197,8 @@ int main (int argc, char* argv[] ) {
     param_mode.addInt32Value("loops",loops);
 
     err = controller->submitSlowControlCommand("acquire",
-     //         					       chaos_batch::SubmissionRuleType::SUBMIT_AND_Stack,
-              chaos_batch::SubmissionRuleType::SUBMIT_AND_Kill,
+     //         					       SubmissionRuleType::SUBMIT_AND_Stack,
+              SubmissionRuleType::SUBMIT_AND_Kill,
               100,
               command_id,
               0,
@@ -208,32 +210,32 @@ int main (int argc, char* argv[] ) {
     sleep(1);
     if(mode==0){
          err = controller->submitSlowControlCommand("default",
-     //         					       chaos_batch::SubmissionRuleType::SUBMIT_AND_Stack,
-              chaos_batch::SubmissionRuleType::SUBMIT_AND_Kill,
+     //         					       SubmissionRuleType::SUBMIT_AND_Stack,
+              SubmissionRuleType::SUBMIT_AND_Kill,
               100,
               command_id,
               0,
               sched, // delay
               0,
               &param_mode);
-         
+
      if(err == ErrorCode::EC_TIMEOUT) throw CException(2, "Time out on connection", "Set device to deinit state");
         sleep(1);
-        
+
         return 0;
     }
     //print all dataset
     if(!ofile.empty()){
            LAPP_<<"opening "<<ofile;
-           
+
            ofs_out.open(ofile.c_str(),std::ofstream::out );
            if((ofs_out.good()==false) || (ofs_out == NULL)){
                 LERR_<<" cannot open :"<<ofile <<" for write";
                 return -3;
            }
            LAPP_<<"opening "<<ofile << " for writing.";
-          
-      } 
+
+      }
     LAPP_<<"dumping:"<<mode << " samples:"<<samples;
 
     int*pmode;
@@ -249,11 +251,11 @@ int main (int argc, char* argv[] ) {
     controller->fetchCurrentDeviceValue();
 
       CDataWrapper *wrapped_data =controller->getCurrentData();
-      
+
        if(wrapped_data==NULL){
-          throw CException(2, "Error fetching", "Dataset"); 
+          throw CException(2, "Error fetching", "Dataset");
       }
-      
+
       pmode=(int*)wrapped_data->getRawValuePtr("MODE");
       controller->getTimeStamp(tstamp);
       data1=(libera_dd_t*)wrapped_data->getRawValuePtr("DD");
@@ -261,11 +263,11 @@ int main (int argc, char* argv[] ) {
       data3=(libera_cw_t*)wrapped_data->getRawValuePtr("ADC_CW");
       data4=(libera_sp_t*)wrapped_data->getRawValuePtr("ADC_SP");
       data5=(libera_avg_t*)wrapped_data->getRawValuePtr("AVG");
-      
+
       acquisition=(uint64_t*)wrapped_data->getRawValuePtr("ACQUISITION");
 
       if(!(data1 && data2 && data3 && data4 && data5&&acquisition&& pmode )){
-          throw CException(2, "Error fetching", "pointers"); 
+          throw CException(2, "Error fetching", "pointers");
 
       }
       int samp=wrapped_data->getInt32Value("SAMPLES");
@@ -278,60 +280,60 @@ int main (int argc, char* argv[] ) {
        LDBG_<<" no new data received, old acquire:"<<old_acquisition<<" current:"<<*acquisition;
        continue;
 
-    }   
+    }
 
       switch(mode){
-            
+
        case 1:
            if(counter==0){
                print_header<libera_dd_desc_t> (timestamp,ofs_out);
            }
-           print_data(data1,timestamp,samples,tstamp,ofs_out); 
-        
-        
+           print_data(data1,timestamp,samples,tstamp,ofs_out);
+
+
        break;
-       
+
          case 2:
          if(counter==0){
                print_header<libera_sa_desc_t> (timestamp,ofs_out);
            }
-           print_data(data2,timestamp,samples,tstamp,ofs_out); 
-        
+           print_data(data2,timestamp,samples,tstamp,ofs_out);
+
         break;
-        case 3:        
+        case 3:
          if(counter==0){
                print_header<libera_cw_desc_t> (timestamp,ofs_out);
            }
-           print_data(data3,timestamp,samples,tstamp,ofs_out); 
-         
+           print_data(data3,timestamp,samples,tstamp,ofs_out);
+
        break;
-       case 4:        
+       case 4:
         if(counter==0){
                print_header<libera_sp_desc_t> (timestamp,ofs_out);
            }
-           print_data(data4,timestamp,samples,tstamp,ofs_out); 
-         
+           print_data(data4,timestamp,samples,tstamp,ofs_out);
+
        break;
-       
+
          case 5:
              if(counter==0){
                print_header<libera_avg_desc_t> (timestamp,ofs_out);
            }
-           print_data(data5,timestamp,samples,tstamp,ofs_out); 
-         
+           print_data(data5,timestamp,samples,tstamp,ofs_out);
+
        break;
-      
+
       }
       LDBG_<<" mode:"<<*pmode<<" acquisition:"<<*acquisition<<" timestamp:"<<tstamp;
       old_acquisition=*acquisition;
       counter++;
     } while (*pmode!=0);
      // std::cout << controller->getCurrentDatasetForDomain((DatasetDomain)0)->getJSONString() <<std::endl;
-    
-          ofs_out.close();
-  
 
-   
+          ofs_out.close();
+
+
+
   } catch(CException& e) {
     std::cerr << e.errorCode << " - "<< e.errorDomain << " - " << e.errorMessage << std::endl;
     return -3;
