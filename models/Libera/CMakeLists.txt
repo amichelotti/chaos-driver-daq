@@ -1,6 +1,4 @@
 cmake_minimum_required(VERSION 2.6)
-SET(CHAOS_INSTALL_DIRS models/Libera models/Libera/cspi)
-include($ENV{CHAOS_BUNDLE}/tools/project_template/CMakeChaos.txt)
 
 SET(DAQ_src LiberaData.cpp LiberaBrillianceCSPIDriver.cpp CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  )
 set (CMAKE_C_FLAGS "-std=gnu99 -DEBPP -DCORDIC_IGNORE_GAIN -D_REENTRANT -Idriver/libera-driver-2-04-ebpp -Imsp/src -I/cspi")

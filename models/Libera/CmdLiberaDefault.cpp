@@ -1,7 +1,7 @@
 /*
  *	CmdLiberaDefault.cpp
- *	!CHOAS
- *	Created by Claudio Bisegni.
+ *	!CHAOS
+ *	Created by Andrea Michelotti
  *
  *    	Copyright 2013 INFN, National Institute of Nuclear Physics
  *
