@@ -13,29 +13,7 @@
             <in>CMakeCXXCompilerId.cpp</in>
           </df>
         </df>
-        <df name="chaos_driver_DAQ.dir">
-          <df name="models">
-            <df name="Libera">
-            </df>
-          </df>
-        </df>
-        <df name="chaos_driver_libera.dir">
-          <df name="models">
-            <df name="Libera">
-              <df name="cspi">
-              </df>
-            </df>
-          </df>
-        </df>
         <df name="CMakeTmp">
-        </df>
-        <df name="daqClient.dir">
-          <df name="test">
-          </df>
-        </df>
-        <df name="daqServer.dir">
-          <df name="test">
-          </df>
         </df>
       </df>
       <df name="LabVIEW">
@@ -76,6 +54,22 @@
       </df>
       <df name="models">
         <df name="Libera">
+          <df name="CMakeFiles">
+            <df name="chaos_driver_libera.dir">
+            </df>
+            <df name="chaos_driver_libera_cspi.dir">
+              <df name="cspi">
+              </df>
+            </df>
+            <df name="daqLiberaClient.dir">
+              <df name="test">
+              </df>
+            </df>
+            <df name="daqLiberaServer.dir">
+              <df name="test">
+              </df>
+            </df>
+          </df>
           <df name="cspi">
             <in>bbfp.c</in>
             <in>bbfp.h</in>
@@ -190,6 +184,10 @@
               <in>msp_main.c</in>
             </df>
           </df>
+          <df name="test">
+            <in>daqLiberaClient.cpp</in>
+            <in>daqLiberaServer.cpp</in>
+          </df>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaAcquire.h</in>
           <in>CmdLiberaDefault.cpp</in>
@@ -206,10 +204,6 @@
           <in>SCLiberaCU.cpp</in>
           <in>SCLiberaCU.h</in>
         </df>
-      </df>
-      <df name="test">
-        <in>daqClient.cpp</in>
-        <in>daqServer.cpp</in>
       </df>
     </df>
     <itemPath>models/Libera/newchaosdriver.html</itemPath>
