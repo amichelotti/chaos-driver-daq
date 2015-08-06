@@ -1,41 +1,15 @@
 cmake_minimum_required(VERSION 2.6)
 project(daq)
-SET(CHAOS_INSTALL_DIRS models/Libera models/Libera/cspi)
 include($ENV{CHAOS_BUNDLE}/tools/project_template/CMakeChaos.txt)
 
-SET(DAQ_src models/Libera/LiberaData.cpp models/Libera/LiberaBrillianceCSPIDriver.cpp models/Libera/CmdLiberaAcquire.cpp models/Libera/CmdLiberaDefault.cpp models/Libera/CmdLiberaEnv.cpp models/Libera/CmdLiberaTime.cpp models/Libera/SCLiberaCU.cpp  )
-set (CMAKE_C_FLAGS "-std=gnu99 -DEBPP -DCORDIC_IGNORE_GAIN -D_REENTRANT -Imodels/Libera/driver/libera-driver-2-04-ebpp -Imodels/Libera/msp/src -Imodels/Libera/cspi")
-SET(BasicDAQClient_src test/DAQClient.cpp)
-INCLUDE_DIRECTORIES(models/Libera/ models/Libera/cspi models/Libera/driver/libera-driver-2-04-ebpp models/Libera/msp/src)
-ADD_DEFINITIONS(-DEBPP -DCSPI -DCORDIC_IGNORE_GAIN -D_REENTRANT)
-SET(LiberaCSPI_src models/Libera/cspi/cordic.c models/Libera/cspi/pool.c models/Libera/cspi/cspi.c models/Libera/cspi/cspi_events.c models/Libera/cspi/ebpp.c)
-
- ADD_EXECUTABLE(daqServer test/daqServer.cpp)
- ADD_EXECUTABLE(daqClient test/daqClient.cpp)
-
-IF(BUILD_FORCE_STATIC)
-  SET(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
-   ADD_LIBRARY(chaos_driver_DAQ STATIC ${DAQ_src} )
-   ADD_LIBRARY(chaos_driver_libera STATIC ${LiberaCSPI_src})
-
-ELSE()
-    ADD_LIBRARY(chaos_driver_DAQ SHARED ${DAQ_src})	
-   ADD_LIBRARY(chaos_driver_libera SHARED ${LiberaCSPI_src})
-	 
-
+IF("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux") 
+  message(STATUS "Including Libera")
+  SET(CHAOS_INSTALL_DIRS models/Libera models/Libera/cspi)
+  ADD_SUBDIRECTORY(models/Libera)
+  ADD_DEFINITIONS(-DLIBERA)
 ENDIF()
 
- TARGET_LINK_LIBRARIES(chaos_driver_DAQ chaos_cutoolkit chaos_common common_serial ${FrameworkLib})
- TARGET_LINK_LIBRARIES(daqServer chaos_driver_DAQ chaos_driver_libera chaos_cutoolkit chaos_common common_serial ${FrameworkLib})
- TARGET_LINK_LIBRARIES(daqClient chaos_uitoolkit chaos_common chaos_driver_DAQ chaos_driver_libera ${FrameworkLib})
 
- INSTALL_TARGETS(/bin daqServer)
- INSTALL_TARGETS(/bin daqClient)
- INSTALL_TARGETS(/lib chaos_driver_DAQ)
- INSTALL_TARGETS(/lib chaos_driver_libera)
- FILE(GLOB ss models/Libera/*.h)
- INSTALL(FILES ${ss} DESTINATION include/models/Libera)
- FILE(GLOB ss models/Libera/cspi/*.h)
- INSTALL(FILES ${ss} DESTINATION include/models/Libera/cspi)
-   
+# install(DIRECTORY DESTINATION include/driver/daq)  
+
 

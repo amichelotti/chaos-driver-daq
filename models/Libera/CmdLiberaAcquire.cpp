@@ -1,8 +1,8 @@
 //
 //  CmdLiberaAcquire.cpp
-//  PowerSupply
+//  
 //
-//  Created by Claudio Bisegni on 06/11/13.
+//  Created by Andrea Michelotti 2015
 //  Copyright (c) 2013 infn. All rights reserved.
 //
 
