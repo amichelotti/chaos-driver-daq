@@ -21,5 +21,6 @@
             <file>file:/home/michelo/chaos_bundle_master/driver/daq/models/Libera/SCLiberaCU.cpp</file>
             <file>file:/home/michelo/chaos_bundle_master/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
         </group>
+        <group name="CHAOS_BUNDLE_DEVELOPMENT"/>
     </open-files>
 </project-private>
