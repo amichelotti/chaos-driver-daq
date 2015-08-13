@@ -107,10 +107,16 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         if(data->hasKey("loops")) {
             loops = data->getInt32Value("loops");
          }	
-        
+
+         getAttributeCache()->setOutputAttributeNewSize("SA", 0);
+         getAttributeCache()->setOutputAttributeNewSize("DD", 0);
+         getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
+         getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
+
          if(tmode&LIBERA_IOP_MODE_DD){
              if(tsamples>0){
                 getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
+
                 driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                 samples=tsamples;
 

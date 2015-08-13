@@ -71,6 +71,7 @@ static pthread_mutex_t eventm = PTHREAD_MUTEX_INITIALIZER;
 int event_callback(CSPI_EVENT *p)
 {
 	_event_id = p->hdr.id;
+        LiberaBrillianceCSPILDBG_<<"Trigger Event arised:"<<_event_id;
 	pthread_cond_signal(&eventc);
 
 	return 0;
@@ -245,23 +246,24 @@ int LiberaBrillianceCSPIDriver::wait_trigger(){
 	struct timeval  now;
 	struct timespec timeout;
 
-	pthread_mutex_lock(&eventm);
 
 	do {
 
 		gettimeofday( &now, 0 );
 		timeout.tv_sec = now.tv_sec + 30;
 		timeout.tv_nsec = now.tv_usec * 1000;
-
+                LiberaBrillianceCSPILDBG_<<" waiting Trigger";
+                pthread_mutex_lock(&eventm);
 		rc = pthread_cond_timedwait( &eventc, &eventm, &timeout );
-	}
-	while((0 == rc) && (CSPI_EVENT_TRIGGET != _event_id));
+                pthread_mutex_unlock(&eventm);
 
-	pthread_mutex_unlock(&eventm);
+                LiberaBrillianceCSPILDBG_<<" exit wait stat:"<<rc;
+	} while((0 == rc) && (CSPI_EVENT_TRIGGET != _event_id));
+
 
 	if (ETIMEDOUT==rc) {
-                                 LiberaBrillianceCSPILERR_<<"trigger timeout:"<<rc;
-                                 return rc;
+            LiberaBrillianceCSPILERR_<<"trigger timeout:"<<rc;
+            return rc;
 
         }
         return 0;
@@ -271,6 +273,14 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount) {
 	// Allways seek(), not just the first time.
          if((cfg.operation == liberaconfig::acquire)&& (cfg.datasize>0)){
           size_t nread=0; //initialize variable to 0
+          
+          if (cfg.mask & liberaconfig::want_trigger) {
+	    if((rc=wait_trigger())!=0){
+                LiberaBrillianceCSPILERR_<<"Error waiting trigger:"<<rc;
+
+                return -rc;
+            }
+          }
           if(cfg.mode ==CSPI_MODE_SA){
               rc= cspi_get(con_handle,buffer);
                if (CSPI_OK != rc) {
@@ -284,13 +294,8 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount) {
           }
           int count = std::min(bcount/cfg.datasize,cfg.atom_count);
           
-          if (cfg.mask & liberaconfig::want_trigger) {
-	    if(wait_trigger()!=0){
-                LiberaBrillianceCSPILERR_<<"Error waiting trigger:"<<rc;
-
-                return -rc;
-            }
-          }
+          
+          
 	  rc = (cfg.mask & liberaconfig::want_trigger) ? CSPI_SEEK_TR : CSPI_SEEK_MT;
               
 	  if(addr==CHANNEL_DD){
@@ -466,6 +471,7 @@ int LiberaBrillianceCSPIDriver::deinitIO() {
  */
 int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
     int rc;
+    CSPI_ENVPARAMS ep;
 #define SET_ENV(cpimask,param) \
 if(cmd_env->selector & CSPI_ENV_## cpimask ){\
     env.param =cmd_env->value;\
@@ -487,9 +493,14 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             if(driver_mode&LIBERA_IOP_MODE_TRIGGERED){
                 cfg.mask|=cfg.want_trigger;
                 LiberaBrillianceCSPILDBG_<<"Enable Trigger";
+                /*ep.trig_mode = CSPI_TRIGMODE_SET;
+                cspi_setenvparam(env_handle, &ep, CSPI_ENV_TRIGMODE);
+                 */
             } else {
                 cfg.mask&=~cfg.want_trigger;
                 LiberaBrillianceCSPILDBG_<<"Disable Trigger";
+                 ep.trig_mode = 0;
+                cspi_setenvparam(env_handle, &ep, CSPI_ENV_TRIGMODE);
 
             }
             if(driver_mode&LIBERA_IOP_MODE_DECIMATED){
@@ -623,7 +634,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             char *pdata=(char*)data;
             CSPI_BITMASK mask = ~(0LL);
             cfg.operation = liberaconfig::listenv;
-            LiberaBrillianceCSPILDBG_<<"Get ENV";
+            LiberaBrillianceCSPILDBG_<<"GET ENV";
             CSPI_ENVPARAMS env;
             rc = cspi_getenvparam(env_handle,(CSPI_ENVPARAMS*) &env, mask);
             if(data && sizeb) *pdata=0;
@@ -662,7 +673,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
                 ts.st.tv_nsec = 0;
         }
 
-        CSPI_ENVPARAMS ep;
+        
         ep.trig_mode = CSPI_TRIGMODE_SET;
 
         rc = cspi_setenvparam(env_handle, &ep, CSPI_ENV_TRIGMODE);
@@ -686,16 +697,13 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
     }
     
     if(cfg.operation == liberaconfig::acquire){
-        CSPI_CONPARAMS p;
         CSPI_BITMASK event_mask=0;
         if (cfg.mask & liberaconfig::want_trigger) {
             event_mask |= CSPI_EVENT_TRIGGET;
-            p.handler = event_callback;
-
         }
 
 	
-        LiberaBrillianceCSPILDBG_<<"connecting to HW..";
+        LiberaBrillianceCSPILDBG_<<"connecting to HW..cfg:x"<<std::hex<<cfg.mask<<std::dec;
 
        /* raw_data = (char*)realloc(raw_data,cfg.atom_count*cfg.datasize);
         if(raw_data==NULL){
@@ -703,6 +711,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
              LiberaBrillianceCSPILERR_<<"Cannot allocate buffer of:"<<cfg.atom_count*cfg.datasize <<" bytes";
              return -100;
         }*/
+        p.handler = event_callback;
 	p.mode = cfg.mode;
 	p.event_mask = event_mask;
         
@@ -715,8 +724,6 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             LiberaBrillianceCSPILERR_<<"Error setting connection parameters on acquire"<<rc;
             return rc;
         }
-        LiberaBrillianceCSPILDBG_<<"connecting to HW..";
-
         rc = cspi_connect(con_handle);
         if (CSPI_OK != rc) {
             LiberaBrillianceCSPILERR_<<"Error connecting to the HW acquire"<<rc;
