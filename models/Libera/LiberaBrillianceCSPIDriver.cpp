@@ -480,6 +480,19 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
     
             
     switch(operation){
+        case LIBERA_IOP_CMD_GET_TS:
+            CSPI_TIMESTAMP ts;
+             rc = cspi_gettimestamp(con_handle,&ts);
+             if(rc==CSPI_OK){
+                 LiberaBrillianceCSPILDBG_<<" TS:"<<ts.st.tv_sec<<" :"<<ts.st.tv_nsec;
+                 memcpy(data,&ts,std::min((unsigned int)sizeb,sizeof(CSPI_TIMESTAMP)));
+                 return 0;
+             } else {
+                 LiberaBrillianceCSPILERR_<<"# Error getting timestamp err:"<<rc;
+                 return rc;
+             }
+             
+            break;
         case LIBERA_IOP_CMD_STOP:
             LiberaBrillianceCSPILDBG_<<"IOP STOP"<<driver_mode;
 
@@ -645,7 +658,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             }
             std::stringstream ss;
             ss<<env;
-            strncpy(pdata,ss.str().c_str(),sizeb);
+            strncpy(pdata,ss.str().c_str(),std::min((unsigned int)sizeb,ss.str().size()));
             break;
         }
         case LIBERA_IOP_CMD_SETTIME:{

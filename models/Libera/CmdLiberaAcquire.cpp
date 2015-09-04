@@ -182,7 +182,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          q2 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
          psamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SAMPLES");
          pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
-       
+        mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
+         st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
 
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
          *pmode=mode;
@@ -198,6 +199,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
      boost::posix_time::ptime curr;
      int ret;
+     libera_ts_t ts;
+
     if(acquire_duration !=0){
         curr= boost::posix_time::microsec_clock::local_time();
         if((curr.time_of_day().total_milliseconds() - start_acquire) > (acquire_duration*1000)){
@@ -209,7 +212,15 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 
         }
     }
-     
+    if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
+            if(mt)
+                *mt = ts.mt;
+            if(st)
+                *st=((uint64_t)ts.st.tv_sec)*1000000ULL + ts.st.tv_nsec/1000;
+            
+            CMDCUDBG_<<"MT:"<<*mt<<" ST:"<<*st <<" TV_sec:"<<ts.st.tv_sec<<" TV_NSEC:"<<ts.st.tv_nsec;
+
+     }
     if(mode&LIBERA_IOP_MODE_DD){
         CMDCUDBG_ << "Acquiring DD";
         libera_dd_t*pnt=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");

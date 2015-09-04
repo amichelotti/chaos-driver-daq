@@ -26,6 +26,8 @@
 #define LIBERA_IOP_CMD_SET_OFFSET 0x5 // set offset in buffer
 #define LIBERA_IOP_CMD_SET_SAMPLES 0x6 // set offset in buffer
 #define LIBERA_IOP_CMD_STOP 0x7
+#define LIBERA_IOP_CMD_GET_TS 0x8 // get time stamps
+
 // ERROR
 #define LIBERA_ERROR_READING 0x1
 #define LIBERA_ERROR_WRITING 0x2
@@ -70,6 +72,8 @@ typedef struct libera_env {
     typedef CSPI_ADC_CW_ATOM libera_cw_t;
     typedef CSPI_ADC_SP_ATOM libera_sp_t;
     typedef CSPI_AVERAGE_ATOM libera_avg_t;
+    typedef CSPI_AVERAGE_ATOM libera_avg_t;
+    typedef CSPI_TIMESTAMP libera_ts_t;
     
     class libera_desc{
     protected:

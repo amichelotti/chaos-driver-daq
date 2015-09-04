@@ -22,5 +22,15 @@
             <file>file:/home/michelo/chaos_bundle_master/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
         </group>
         <group name="CHAOS_BUNDLE_DEVELOPMENT"/>
+        <group name="HW/CHAOS_BUNDLE">
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/SCLiberaCU.cpp</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/CmdLiberaDefault.cpp</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/CmdLiberaDefault.h</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/CmdLiberaAcquire.h</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/LiberaBrillianceCSPIDriver.h</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/LiberaBrillianceCSPIDriver.cpp</file>
+            <file>file:/hw/chaos_bundle/driver/daq/models/Libera/LiberaData.h</file>
+        </group>
     </open-files>
 </project-private>

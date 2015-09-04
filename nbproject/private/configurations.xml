@@ -70,6 +70,14 @@
               </df>
             </df>
           </df>
+          <df name="conf">
+            <df name="etc">
+              <df name="default">
+              </df>
+              <df name="init.d">
+              </df>
+            </df>
+          </df>
           <df name="cspi">
             <in>bbfp.c</in>
             <in>bbfp.h</in>
@@ -188,6 +196,8 @@
             <in>daqLiberaClient.cpp</in>
             <in>daqLiberaServer.cpp</in>
           </df>
+          <in>ChaosAttribute.cpp</in>
+          <in>ChaosAttribute.h</in>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaAcquire.h</in>
           <in>CmdLiberaDefault.cpp</in>
@@ -201,6 +211,8 @@
           <in>LiberaBrillianceSlowDriver.cpp</in>
           <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
+          <in>RTBPMLibera.cpp</in>
+          <in>RTBPMLibera.h</in>
           <in>SCLiberaCU.cpp</in>
           <in>SCLiberaCU.h</in>
         </df>

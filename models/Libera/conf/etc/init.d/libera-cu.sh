@@ -14,7 +14,7 @@ case "$1" in
     start)
         # Start Libera CHAOS CU server
         echo -n "Starting Libera CHAOS CU server: $EXEC"
-        start-stop-daemon --start --quiet --exec $EXEC -- --conf-file $CONFIG&
+        start-stop-daemon --start --quiet --exec $EXEC -- --conf-file $CONFIG 2>&1 > $EXEC.std.out & 
         echo "."
         ;;
 

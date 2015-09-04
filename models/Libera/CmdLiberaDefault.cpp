@@ -33,6 +33,8 @@ using namespace driver::daq::libera;
 CmdLiberaDefault::CmdLiberaDefault() {
   CMDCUDBG<< "Created command default:"<<driverAccessorsErogator;
   driver =NULL;
+  mt= NULL;
+  st=NULL;
 }
 
 CmdLiberaDefault::~CmdLiberaDefault() {
@@ -68,6 +70,8 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 
 	 int32_t *perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
+	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
+         st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
 
 	BC_NORMAL_RUNNIG_PROPERTY
 
@@ -79,12 +83,19 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
  \return the mask for the runnign state
  */
 void CmdLiberaDefault::acquireHandler() {
-
+        libera_ts_t ts;
 	CMDCUDBG << "Default Acquiring libera status";
 	char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
 	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)==0){
             CMDCUDBG<<"STATUS:"<<status;
-            getAttributeCache()->setOutputDomainAsChanged();
         }
+        if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
+            CMDCUDBG<<"MT:"<<ts.mt<<" ST:"<<ts.st.tv_sec;
+            if(mt)
+                *mt = ts.mt;
+            if(st)
+                *st=ts.st.tv_sec*1000000 + ts.st.tv_nsec/1000;
+        }
+        getAttributeCache()->setOutputDomainAsChanged();
 	//force output dataset as changed
 }

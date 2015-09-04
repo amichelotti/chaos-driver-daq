@@ -93,6 +93,14 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  "Acquisition number",
 						  DataType::TYPE_INT64,
 						  DataType::Output);
+        addAttributeToDataSet("MT",
+						  "Machine Time",
+						  DataType::TYPE_INT64,
+						  DataType::Output);
+        addAttributeToDataSet("ST",
+						  "System Time",
+						  DataType::TYPE_INT64,
+						  DataType::Output);
         
         addAttributeToDataSet("VA","Volt A",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VB","Volt B",DataType::TYPE_INT32,chaos::DataType::Output);

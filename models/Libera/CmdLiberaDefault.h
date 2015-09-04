@@ -36,6 +36,9 @@ namespace driver {
                    
                 protected:
                      const uint32_t	*i_command_timeout;
+                     uint64_t     *mt; // machine time
+                      uint64_t     *st; // system time
+                     
                     chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
                 
 			// return the implemented handler
