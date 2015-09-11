@@ -11,10 +11,18 @@
             <in>ebpp.c</in>
             <in>pool.c</in>
           </df>
+          <df name="test">
+            <in>daqLiberaClient.cpp</in>
+            <in>daqLiberaServer.cpp</in>
+          </df>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaDefault.cpp</in>
+          <in>CmdLiberaEnv.cpp</in>
+          <in>CmdLiberaTime.cpp</in>
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>
+          <in>RTBPMLibera.cpp</in>
+          <in>SCLiberaCU.cpp</in>
         </df>
       </df>
     </df>
@@ -42,8 +50,7 @@
       <flagsDictionary>
         <element flagsID="0" commonFlags="-O3 -O2"/>
         <element flagsID="1" commonFlags="-O3 -fPIC -O2"/>
-        <element flagsID="2" commonFlags="-fPIC -O2"/>
-        <element flagsID="3" commonFlags="-std=gnu99 -O3 -g -O2"/>
+        <element flagsID="2" commonFlags="-std=gnu99 -O3 -fPIC -g -O2"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -55,18 +62,27 @@
           <executablePath></executablePath>
           <cTool>
             <incDir>
-              <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
-              <pElem>models/Libera/msp/src</pElem>
+              <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+              <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/msp/src</pElem>
+              <pElem>/cspi</pElem>
               <pElem>.</pElem>
               <pElem>../..</pElem>
-              <pElem>../../chaos-arm-linux-2.6-static-release/include</pElem>
+              <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+              <pElem>models/Libera</pElem>
+              <pElem>models/Libera/cspi</pElem>
+              <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+              <pElem>models/Libera/msp/src</pElem>
+              <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
             </incDir>
             <preprocessorList>
-              <Elem>CHAOS_STATIC</Elem>
+              <Elem>BOOST_ALL_DYN_LINK</Elem>
               <Elem>CORDIC_IGNORE_GAIN</Elem>
+              <Elem>CSPI</Elem>
               <Elem>EBPP</Elem>
+              <Elem>LIBERA</Elem>
               <Elem>NDEBUG</Elem>
               <Elem>_REENTRANT</Elem>
+              <Elem>chaos_driver_libera_cspi_EXPORTS</Elem>
             </preprocessorList>
           </cTool>
           <ccTool>
@@ -74,17 +90,34 @@
               <pElem>.</pElem>
               <pElem>../..</pElem>
             </incDir>
+            <preprocessorList>
+              <Elem>CHAOS</Elem>
+              <Elem>NDEBUG</Elem>
+            </preprocessorList>
           </ccTool>
         </makeTool>
       </makefileType>
-      <folder path="0/models">
+      <folder path="0/models/Libera/test">
         <ccTool>
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
+          </incDir>
           <preprocessorList>
-            <Elem>CHAOS</Elem>
+            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
-      <item path="models/Libera/CmdLiberaAcquire.cpp" ex="false" tool="1" flavor2="0">
+      <item path="models/Libera/CmdLiberaAcquire.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="1">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
@@ -92,19 +125,20 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>LIBERA</Elem>
             <Elem>_REENTRANT</Elem>
-            <Elem>chaos_driver_DAQ_EXPORTS</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="models/Libera/CmdLiberaDefault.cpp" ex="false" tool="1" flavor2="0">
+      <item path="models/Libera/CmdLiberaDefault.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="1">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
@@ -112,15 +146,58 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
-            <Elem>NDEBUG</Elem>
+            <Elem>LIBERA</Elem>
             <Elem>_REENTRANT</Elem>
-            <Elem>chaos_driver_DAQ_EXPORTS</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="models/Libera/CmdLiberaEnv.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="models/Libera/CmdLiberaTime.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -128,19 +205,23 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="1">
           <incDir>
-            <pElem>../../chaos-arm-linux-2.6-static-release/include</pElem>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
             <Elem>_REENTRANT</Elem>
-            <Elem>chaos_driver_DAQ_EXPORTS</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -154,29 +235,84 @@
           </incDir>
           <preprocessorList>
             <Elem>CHAOS_STATIC</Elem>
-            <Elem>NDEBUG</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="models/Libera/RTBPMLibera.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="models/Libera/SCLiberaCU.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="1">
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </item>
       <item path="models/Libera/cspi/cordic.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="3">
+        <cTool flags="2">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="3">
+        <cTool flags="2">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi_events.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="3">
+        <cTool flags="2">
         </cTool>
       </item>
       <item path="models/Libera/cspi/ebpp.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="3">
+        <cTool flags="2">
         </cTool>
       </item>
       <item path="models/Libera/cspi/pool.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="3">
+        <cTool flags="2">
         </cTool>
+      </item>
+      <item path="models/Libera/test/daqLiberaClient.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="models/Libera/test/daqLiberaServer.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
       </item>
     </conf>
   </confs>

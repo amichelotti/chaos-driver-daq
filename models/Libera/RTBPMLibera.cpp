@@ -19,12 +19,12 @@
  */
 
 #include "RTBPMLibera.h"
-#include "RTBPMLiberaDriver.h"
+//#include "RTBPMLiberaDriver.h"
 
 using namespace chaos;
 using namespace chaos::common::data::cache;
 using namespace chaos::cu::driver_manager::driver;
-
+using namespace chaos::driver::daq;
 PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(RTBPMLibera)
 
 #define RTBPMLiberaLAPP_		LAPP_ << "[RTBPMLibera] "
@@ -128,22 +128,7 @@ void RTBPMLibera::unitStart() throw(chaos::CException) {
 //!Execute the Control Unit work
 void RTBPMLibera::unitRun() throw(chaos::CException) {
   //get the output attribute pointer form the internal cache
-  int32_t *out_1_ptr = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "out_1");
-
-  //construct the drivesr message
-  auto_ptr<DrvMsg> driver_message((DrvMsg*)std::calloc(sizeof(DrvMsg), 1));
-
-  //set the opcode for get value from the driver
-  driver_message->opcode = RTBPMLiberaDriverOpcode_GET_CH_1;
-
-  //associate the driver message input data to output attribute pointer
-  driver_message->resultData = out_1_ptr;
-
-  //send message to the driver, at index 0, in async
-  getAccessoInstanceByIndex(0)->send(driver_message.get());
-
-  //! set output dataset as changed
-  getAttributeCache()->setOutputDomainAsChanged();
+ 
 }
 
 //!Execute the Control Unit work
@@ -164,42 +149,7 @@ void RTBPMLibera::unitInputAttributePreChangeHandler() throw(chaos::CException) 
 //! attribute changed handler
 void RTBPMLibera::unitInputAttributeChangedHandler() throw(chaos::CException) {
 
-  //array to managed the changed attribute list
-  std::vector<chaos::cu::control_manager::VariableIndexType> changed_input_attribute;
-
-  //check what attribute has changed
-  getAttributeCache()->getChangedInputAttributeIndex(changed_input_attribute);
-
-  if(changed_input_attribute.size()) {
-    //scsan the changed index
-    for (std::vector<chaos::cu::control_manager::VariableIndexType>::iterator it = changed_input_attribute.begin();
-      it != changed_input_attribute.end();
-      it++) {
-        switch(*it) {
-          case 0: {//int_1 attribute
-            const int32_t *in_1 = getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "in_1");
-
-            //construct the drivesr message
-            auto_ptr<DrvMsg> driver_message((DrvMsg*)std::calloc(sizeof(DrvMsg), 1));
-
-            //set the opcode for get value from the driver
-            driver_message->opcode = RTBPMLiberaDriverOpcode_SET_CH_1;
-
-            //associate the driver message input data to output attribute pointer
-            driver_message->inputData = (int32_t*)in_1;
-            driver_message->inputDataLength = sizeof(int32_t);
-            //send message to the driver, at index 0, in async
-            getAccessoInstanceByIndex(0)->send(driver_message.get());
-
-            break;
-          }
-          default:
-          break;
-        }
-      }
-      //reset the chagned index
-      getAttributeCache()->resetChangedInputIndex();
-  }
+  
 }
 
 /*

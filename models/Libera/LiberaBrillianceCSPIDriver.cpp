@@ -485,7 +485,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
              rc = cspi_gettimestamp(con_handle,&ts);
              if(rc==CSPI_OK){
                  LiberaBrillianceCSPILDBG_<<" TS:"<<ts.st.tv_sec<<" :"<<ts.st.tv_nsec;
-                 memcpy(data,&ts,std::min((unsigned int)sizeb,sizeof(CSPI_TIMESTAMP)));
+                 memcpy(data,&ts,std::min((uint32_t)sizeb,(uint32_t)sizeof(CSPI_TIMESTAMP)));
                  return 0;
              } else {
                  LiberaBrillianceCSPILERR_<<"# Error getting timestamp err:"<<rc;
@@ -658,7 +658,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             }
             std::stringstream ss;
             ss<<env;
-            strncpy(pdata,ss.str().c_str(),std::min((unsigned int)sizeb,ss.str().size()));
+            strncpy(pdata,ss.str().c_str(),std::min((uint32_t)sizeb,(uint32_t)ss.str().size()));
             break;
         }
         case LIBERA_IOP_CMD_SETTIME:{

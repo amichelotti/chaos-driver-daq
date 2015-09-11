@@ -15,6 +15,8 @@
         </df>
         <df name="CMakeTmp">
         </df>
+        <df name="Progress">
+        </df>
       </df>
       <df name="LabVIEW">
         <df name="bck">
@@ -196,8 +198,6 @@
             <in>daqLiberaClient.cpp</in>
             <in>daqLiberaServer.cpp</in>
           </df>
-          <in>ChaosAttribute.cpp</in>
-          <in>ChaosAttribute.h</in>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaAcquire.h</in>
           <in>CmdLiberaDefault.cpp</in>
