@@ -198,6 +198,8 @@
             <in>daqLiberaClient.cpp</in>
             <in>daqLiberaServer.cpp</in>
           </df>
+          <in>ChaosControllerLibera.cpp</in>
+          <in>ChaosControllerLibera.h</in>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaAcquire.h</in>
           <in>CmdLiberaDefault.cpp</in>

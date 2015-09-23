@@ -15,6 +15,7 @@
             <in>daqLiberaClient.cpp</in>
             <in>daqLiberaServer.cpp</in>
           </df>
+          <in>ChaosControllerLibera.cpp</in>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaDefault.cpp</in>
           <in>CmdLiberaEnv.cpp</in>
@@ -117,6 +118,28 @@
           </preprocessorList>
         </ccTool>
       </folder>
+      <item path="models/Libera/ChaosControllerLibera.cpp"
+            ex="false"
+            tool="1"
+            flavor2="0">
+        <ccTool flags="0">
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
       <item path="models/Libera/CmdLiberaAcquire.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="1">
           <incDir>
@@ -167,7 +190,6 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
-            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -238,7 +260,7 @@
           </preprocessorList>
         </ccTool>
       </item>
-      <item path="models/Libera/RTBPMLibera.cpp" ex="false" tool="1" flavor2="0">
+      <item path="models/Libera/RTBPMLibera.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="1">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>

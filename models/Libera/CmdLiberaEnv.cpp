@@ -41,7 +41,7 @@ void driver::daq::libera::CmdLiberaEnv::setHandler(c_data::CDataWrapper *data) {
 CMDCUDBG_<<"checking environment "<< # param; \
         if(data->hasKey(# param )) {\
             libera_env_t env;\
-            env.value = data->getInt64Value(# param);\
+            env.value = data->getInt32Value(# param);\
             env.selector=CSPI_ENV_## param;\
             CMDCUDBG_<<"Setting env \""<< # param <<"\" ("<<std::hex<<env.selector<<dec<<")="<<env.value ;\
             if((ret=driver->iop(LIBERA_IOP_CMD_SETENV,&env,sizeof(libera_env_t)))!=0){\

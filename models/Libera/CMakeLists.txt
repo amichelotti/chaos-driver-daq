@@ -23,10 +23,10 @@ SET(DAQ_LIBRARY chaos_driver_libera chaos_driver_libera_cspi)
 TARGET_LINK_LIBRARIES(chaos_driver_libera chaos_cutoolkit chaos_common common_serial ${FrameworkLib})
 
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
-ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp)
+ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
 
 TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_cutoolkit chaos_common common_serial ${FrameworkLib})
-TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_common ${DAQ_LIBRARY} ${FrameworkLib})
+TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
 
 INSTALL_TARGETS(/bin daqLiberaServer)
 INSTALL_TARGETS(/bin daqLiberaClient)
