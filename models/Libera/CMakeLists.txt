@@ -34,9 +34,9 @@ INSTALL_TARGETS(/bin daqLiberaClient)
 
  INSTALL_TARGETS(/lib chaos_driver_libera_cspi)
  INSTALL_TARGETS(/lib chaos_driver_libera)
- FILE(GLOB ss /*.h)
- INSTALL(FILES ${ss} DESTINATION include/models/Libera)
+ FILE(GLOB ss *.h)
+ INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera)
  FILE(GLOB ss cspi/*.h)
- INSTALL(FILES ${ss} DESTINATION include/models/Libera/cspi)
+ INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera/cspi)
    
 
