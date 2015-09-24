@@ -17,7 +17,7 @@ limitations under the License.
  */
 
 #include "LiberaBrillianceCSPIDriver.h"
-
+#include <boost/thread/mutex.hpp>
 #define ILK_PARAMCOUNT 8
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
 
@@ -27,7 +27,7 @@ limitations under the License.
 #define LiberaBrillianceCSPILDBG_		LDBG_ << "[LiberaBrillianceCSPI] "
 #define LiberaBrillianceCSPILERR_		LERR_ << "[LiberaBrillianceCSPI] "
 using namespace chaos::cu::driver_manager::driver;
-
+static boost::mutex io_mux;
 OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaBrillianceCSPIDriver, 1.0.0, LiberaBrillianceCSPIDriver)
 REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(LiberaBrillianceCSPIDriver, http_address / dnsname : port)
 CLOSE_CU_DRIVER_PLUGIN_CLASS_DEFINITION
@@ -104,7 +104,7 @@ std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj){
 	};
 
 	const int *p = reinterpret_cast<const int*>(&obj);
-
+	
 	// Health
 	os << std::setw(tab) << "Temp [C]" << ": ";
 	os << *p++ << std::endl;
@@ -281,6 +281,8 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount) {
                 return -rc;
             }
           }
+	  boost::mutex::scoped_lock lock(io_mux);
+	  
           if(cfg.mode ==CSPI_MODE_SA){
               rc= cspi_get(con_handle,buffer);
                if (CSPI_OK != rc) {
@@ -472,6 +474,8 @@ int LiberaBrillianceCSPIDriver::deinitIO() {
 int LiberaBrillianceCSPIDriver::iop(int operation, void*data, int sizeb) {
     int rc;
     CSPI_ENVPARAMS ep;
+    boost::mutex::scoped_lock lock(io_mux);
+
 #define SET_ENV(cpimask,param) \
 if(cmd_env->selector & CSPI_ENV_## cpimask ){\
     env.param =cmd_env->value;\

@@ -22,8 +22,6 @@
 #include "CmdLiberaDefault.h"
 
 
-#define CMDCU_ LAPP_ << "[CmdLiberaDefault]"
-#define CMDCUDBG LDBG_ << "[CmdLiberaDefault]"
 
 namespace chaos_batch = chaos::common::batch_command;
 using namespace chaos::common::data;
@@ -31,7 +29,7 @@ using namespace chaos::common::batch_command;
 using namespace chaos::cu::control_manager::slow_command;
 using namespace driver::daq::libera;
 CmdLiberaDefault::CmdLiberaDefault() {
-  CMDCUDBG<< "Created command default:"<<driverAccessorsErogator;
+  CMDCUDBG_<< "Created command default:"<<driverAccessorsErogator;
   driver =NULL;
   mt= NULL;
   st=NULL;
@@ -57,7 +55,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=driverAccessorsErogator->getAccessoInstanceByIndex(0);
-  	CMDCUDBG<< "Created accessor:"<<accessor;
+  	CMDCUDBG_<< "Created accessor:"<<accessor;
 	if(accessor==NULL){
 		throw chaos::CException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
 	}
@@ -66,7 +64,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	if(driver==NULL){
 		throw chaos::CException(-2, "Cannot allocate driver resources", __FUNCTION__);
 	}
-	CMDCUDBG<< "retrived BasicIODriver:"<<driver;
+	CMDCUDBG_<< "retrived BasicIODriver:"<<driver;
 
 	 int32_t *perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
@@ -84,18 +82,20 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
  */
 void CmdLiberaDefault::acquireHandler() {
         libera_ts_t ts;
-	CMDCUDBG << "Default Acquiring libera status";
+	CMDCUDBG_ << "Default Acquiring libera status";
 	char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
 	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)==0){
-            CMDCUDBG<<"STATUS:"<<status;
+            CMDCUDBG_<<"STATUS:"<<status;
         }
-        if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
-            CMDCUDBG<<"MT:"<<ts.mt<<" ST:"<<ts.st.tv_sec;
+	/*        
+		  if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
+            CMDCUDBG_<<"MT:"<<ts.mt<<" ST:"<<ts.st.tv_sec;
             if(mt)
-                *mt = ts.mt;
-            if(st)
-                *st=ts.st.tv_sec*1000000 + ts.st.tv_nsec/1000;
-        }
+	    *mt = ts.mt;
+		if(st)
+	    *st=ts.st.tv_sec*1000000 + ts.st.tv_nsec/1000;
+		}
+	*/
         getAttributeCache()->setOutputDomainAsChanged();
 	//force output dataset as changed
 }

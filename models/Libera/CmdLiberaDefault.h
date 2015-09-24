@@ -24,6 +24,11 @@
 #include <chaos/cu_toolkit/ControlManager/slow_command/SlowCommand.h>
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriverInterface.h>
 #include "LiberaData.h"
+
+#define CMDCU_ LAPP_ << "["<<__FUNCTION__<<"]"
+#define CMDCUDBG_ LDBG_ << "[- "<<__FUNCTION__<<" -]"
+#define CMDCUERR_ LERR_ << "["<<__FUNCTION__<<"]"
+
 namespace c_data = chaos::common::data;
 namespace ccc_slow_command = chaos::cu::control_manager::slow_command;
 #define MAX_STRING 1024

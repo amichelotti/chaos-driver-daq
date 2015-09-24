@@ -11,10 +11,6 @@
 #include <boost/format.hpp>
 
 
-#define CMDCU_ LAPP_ << "[CmdLiberaAcquire]"
-#define CMDCUDBG_ LDBG_ <<"[CmdLiberaAcquire]"
-#define CMDCUERR_ LERR_ <<"[CmdLiberaAcquire]"
-
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
 
