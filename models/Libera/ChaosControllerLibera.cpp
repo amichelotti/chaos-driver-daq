@@ -19,32 +19,37 @@ int ChaosControllerLibera::acquire_disable(){
 }
 
 int ChaosControllerLibera::acquire_dd(int32_t samples,int32_t loop,bool triggered){
-    int32_t mode=0;
-    mode = LIBERA_IOP_MODE_DD | (triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    
+    mode |= LIBERA_IOP_MODE_DD ;
     command_t c = prepareCommand("acquire");
     c->addParameter("enable",1);
+    c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-    
+    c->scheduler_steps_delay=20;
     return executeCmd(c,blocking);
     
 }
 int ChaosControllerLibera::acquire_sa(int32_t samples,int32_t loop,bool triggered){
-    int32_t mode=0;
-    mode = LIBERA_IOP_MODE_SA | (triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    mode |= LIBERA_IOP_MODE_SA;
     command_t c = prepareCommand("acquire");
     c->addParameter("enable",1);
+    c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-    
+     c->scheduler_steps_delay=20;
+
     return executeCmd(c,blocking);
    
 }
 int ChaosControllerLibera::acquire_adc_cw(int32_t samples,int32_t loop,bool triggered){
-    int32_t mode=0;
-    mode = LIBERA_IOP_MODE_CONTINUOUS | (triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    mode |= LIBERA_IOP_MODE_CONTINUOUS;
     command_t c = prepareCommand("acquire");
     c->addParameter("enable",1);
+    c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
     
@@ -53,10 +58,11 @@ int ChaosControllerLibera::acquire_adc_cw(int32_t samples,int32_t loop,bool trig
 }
 
 int ChaosControllerLibera::acquire_adc_sp(int32_t samples,int32_t loop,bool triggered){
-    int32_t mode=0;
-    mode = LIBERA_IOP_MODE_SINGLEPASS | (triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    mode |= LIBERA_IOP_MODE_SINGLEPASS;
     command_t c = prepareCommand("acquire");
     c->addParameter("enable",1);
+    c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
     
@@ -64,10 +70,11 @@ int ChaosControllerLibera::acquire_adc_sp(int32_t samples,int32_t loop,bool trig
    
 }
 int ChaosControllerLibera::acquire_avg(int32_t samples,int32_t loop,bool triggered){
-    int32_t mode=0;
-    mode = LIBERA_IOP_MODE_AVG | (triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
+    mode |= LIBERA_IOP_MODE_AVG;
     command_t c = prepareCommand("acquire");
     c->addParameter("enable",1);
+    c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
       

@@ -26,6 +26,9 @@
 #include <chaos/ui_toolkit/HighLevelApi/HLDataApi.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 #include <driver/misc/ChaosControllerGroup.h>
+#include <driver/misc/ChaosDatasetAttribute.h>
+#include <driver/misc/ChaosDatasetAttributeSyncronizer.h>
+
 
 //#include <fstream>
 #include "LiberaData.h"
@@ -86,7 +89,7 @@ int main (int argc, char* argv[] ) {
   std::vector<std::string> device_name;
   uint64_t old_acquisition=0;
  
-
+  try{
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("acquire", po::value<int>(&mode)->default_value(0), "acquire [0=OFF,1=DD,2=SA,3=ADC_SP,4=ADC_CW]");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("triggered", po::value<bool>(&triggered)->default_value(false), "trigger on/off");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("samples", po::value<int>(&samples)->default_value(1), "acquires samples");
@@ -114,15 +117,34 @@ int main (int argc, char* argv[] ) {
     }
     
     ChaosControllerLibera* libera_devs[device_name.size()];
+    ChaosDatasetAttribute* libera_va[device_name.size()];
+    ChaosDatasetAttribute* libera_vb[device_name.size()];
+    ChaosDatasetAttribute* libera_vc[device_name.size()];
+    ChaosDatasetAttribute* libera_vd[device_name.size()];
     ChaosControllerGroup<ChaosControllerLibera> group;
+    ChaosDatasetAttributeSyncronizer data_group;
     int cu=0;
     for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
         libera_devs[cu] = new ChaosControllerLibera(i->c_str());
+        
+        libera_va[cu] = new ChaosDatasetAttribute(*i + "/VA");
+        libera_vb[cu] = new ChaosDatasetAttribute(*i + "/VB");
+        libera_vc[cu] = new ChaosDatasetAttribute(*i + "/VC");
+        libera_vd[cu] = new ChaosDatasetAttribute(*i + "/VD");
+        data_group.add(*libera_va[cu] );
+        data_group.add(*libera_vb[cu] );
+        data_group.add(*libera_vc[cu] );
+        data_group.add(*libera_vd[cu] );
+        
         if(libera_devs[cu]){
             group.add(*libera_devs[cu]);
         }
     }
     
+    if(group.setSchedule(sched)!=0){
+        std::cout<<" ## cannot set schedule at:"<<sched;
+        return -2;
+    }
     switch(mode){
         case 0:
             group.acquire_disable();
@@ -133,6 +155,7 @@ int main (int argc, char* argv[] ) {
         case 2:
             group.acquire_sa(samples,loops,triggered);
             break;
+         
             
     }
     //print all dataset
@@ -158,7 +181,17 @@ int main (int argc, char* argv[] ) {
     libera_sp_t* data4;
     libera_avg_t* data5;
     uint64_t counter=0;
+    
+    data_group.setInterval(3000000);
+    data_group.setTimeout (6000000);
+    while(loops--){
+        data_group.sync();
+        cu=0;
+        for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
+            ofs_out<<*i<< " " <<libera_va[cu]->getInfo().getTimeStamp()<<":"<<(int32_t)*libera_va[cu] <<" "<<(int32_t)*libera_vb[cu] <<" "<<(int32_t)*libera_vc[cu]<<" "<<(int32_t)*libera_vd[cu]<<std::endl;
 
+        }
+    }
 /*    do {
     controller->fetchCurrentDeviceValue();
 
@@ -245,11 +278,11 @@ int main (int argc, char* argv[] ) {
           ofs_out.close();
 
 
-
+*/
   } catch(CException& e) {
     std::cerr << e.errorCode << " - "<< e.errorDomain << " - " << e.errorMessage << std::endl;
     return -3;
   }
-*/
+
     return 0;
 }

@@ -147,7 +147,6 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
-            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -168,7 +167,6 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
-            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -209,7 +207,6 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
-            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -288,7 +285,6 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
-            <pElem>/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>

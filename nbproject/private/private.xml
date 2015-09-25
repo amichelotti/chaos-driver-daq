@@ -31,6 +31,21 @@
             <file>file:/hw/chaos_bundle/driver/daq/models/Libera/LiberaBrillianceCSPIDriver.cpp</file>
             <file>file:/hw/chaos_bundle/driver/daq/models/Libera/LiberaData.h</file>
         </group>
-        <group name="CHAOS_BUNDLE_DEVELOPMENT"/>
+        <group name="CHAOS_BUNDLE_DEVELOPMENT">
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/ChaosControllerLibera.h</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/ChaosControllerLibera.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaAcquire.h</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaDefault.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/SCLiberaCU.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaDefault.h</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/LiberaData.h</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaTime.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaEnv.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/test/daqLiberaClient.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/LiberaBrillianceCSPIDriver.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/LiberaData.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/RTBPMLibera.cpp</file>
+        </group>
     </open-files>
 </project-private>

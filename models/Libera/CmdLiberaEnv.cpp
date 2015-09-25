@@ -9,9 +9,6 @@
 #include "CmdLiberaEnv.h"
 
 #include <boost/format.hpp>
-#define CMDCU_ LAPP_ << "[CmdLiberaEnv]"
-#define CMDCUDBG_ LDBG_ <<"[CmdLiberaEnv]"
-#define CMDCUERR_ LERR_ <<"[CmdLiberaEnv]"
 
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
@@ -96,7 +93,7 @@ CMDCUDBG_<<"checking environment "<< # param; \
         
         char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
 	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)==0){
-            CMDCUDBG_<<"STATUS:"<<status;
+            CMDCUDBG_<<"AFTER ENV STATUS:"<<status;
             getAttributeCache()->setOutputDomainAsChanged();
         }
         BC_END_RUNNIG_PROPERTY;

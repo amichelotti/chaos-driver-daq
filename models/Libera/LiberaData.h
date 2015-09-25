@@ -65,7 +65,7 @@ typedef struct libera_env {
 } libera_env_t;
 
 #ifdef CSPI
-#include "models/Libera/cspi/cspi.h"
+#include <driver/daq/models/Libera/cspi/cspi.h>
 
     typedef CSPI_DD_ATOM libera_dd_t;
     typedef CSPI_SA_ATOM libera_sa_t;

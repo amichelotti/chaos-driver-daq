@@ -9,9 +9,6 @@
 #include "CmdLiberaTime.h"
 
 #include <boost/format.hpp>
-#define CMDCU_ LAPP_ << "[CmdLiberaTime]"
-#define CMDCUDBG_ LDBG_ <<"[CmdLiberaTime]"
-#define CMDCUERR_ LERR_ <<"[CmdLiberaTime]"
 
 
 namespace c_data = chaos::common::data;
