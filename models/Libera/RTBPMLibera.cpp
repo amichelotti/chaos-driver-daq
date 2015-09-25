@@ -54,56 +54,42 @@ The api that can be called withi this method are listed into
 */
 void RTBPMLibera::unitDefineActionAndDataset() throw(chaos::CException) {
     //insert your definition code here
-    /*
+   
+addAttributeToDataSet("BPBA1001X","BPBA1001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA1001Y","BPBA1001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-    addAttributeToDataSet("<my_double_variable_name>", // this is the name of the variable that is shown in interfaces and in MDS
-			      "variable Description",
-			      DataType::TYPE_DOUBLE,
-			      DataType::Output);
+addAttributeToDataSet("BPSA1001X","BPSA1001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPSA1001Y","BPSA1001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
+addAttributeToDataSet("BPBA1002X","BPBA1002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA1002Y","BPBA1002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-	 addAttributeToDataSet("<my_int32_variable>",
-			      "variable Description",
-			      DataType::TYPE_INT32,
-			      DataType::Output);
+addAttributeToDataSet("BPBA2001X","BPBA2001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA2001Y","BPBA2001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-	 addAttributeToDataSet("<my_int64_variable>",
-			      "variable Description",
-			      DataType::TYPE_INT64,
-			      DataType::Output);
+addAttributeToDataSet("BPSA2001X","BPSA2001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPSA2001Y","BPSA2001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-	 addAttributeToDataSet("<my_string_variable name>",
-			      "variable Description",
-			      DataType::TYPE_STRING,
-			      DataType::Output,256); // max string size
+addAttributeToDataSet("BPBA2002X","BPBA2002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA2002Y","BPBA2002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
+addAttributeToDataSet("BPBA3001X","BPBA3001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA3001Y","BPBA3001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-	 addAttributeToDataSet("< my_buffer name>",
-			      "variable Description",
-			      DataType::TYPE_BYTEARRAY,
-			      DataType::Output,
-			      10000000); // max buffer size
+addAttributeToDataSet("BPSA3001X","BPSA3001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPSA3001Y","BPSA3001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-	 addActionDescritionInstance<RTBPMLibera>(this,
-						       &RTBPMLibera::my_custom_action,
-						       "customFunctionName,
-						       "custom function desctiption");
+addAttributeToDataSet("BPBA3002X","BPBA3002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA3002Y","BPBA3002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-    */
+addAttributeToDataSet("BPBA4001X","BPBA4001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA4001Y","BPBA4001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-    //add two int32_t channel for example
+addAttributeToDataSet("BPBA4002X","BPBA4002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPBA4002Y","BPBA4002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-    //output channel
-    addAttributeToDataSet("out_1",
-                          "Int32 output channel",
-                          DataType::TYPE_INT32,
-                          DataType::Output);
-
-    //input channel
-    addAttributeToDataSet("in_1",
-                          "Int32 output channel",
-                          DataType::TYPE_INT32,
-                          DataType::Input);
+addAttributeToDataSet("BPSA4001X","BPSA4001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
+addAttributeToDataSet("BPSA4001Y","BPSA4001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 }
 
 
@@ -152,9 +138,3 @@ void RTBPMLibera::unitInputAttributeChangedHandler() throw(chaos::CException) {
   
 }
 
-/*
-CDataWrapper *RTBPMLibera::my_custom_action(CDataWrapper *actionParam, bool& detachParam) {
-	CDataWrapper *result =  new CDataWrapper();
-	return result;
-}
-*/

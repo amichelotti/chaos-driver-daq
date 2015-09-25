@@ -206,6 +206,8 @@
           <in>CmdLiberaEnv.h</in>
           <in>CmdLiberaTime.cpp</in>
           <in>CmdLiberaTime.h</in>
+          <in>DafneAccumulatorBPMSync.cpp</in>
+          <in>DafneAccumulatorBPMSync.h</in>
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceCSPIDriver.h</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>

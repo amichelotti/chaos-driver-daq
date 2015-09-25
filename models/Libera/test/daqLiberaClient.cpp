@@ -36,6 +36,47 @@ using namespace chaos;
 using namespace chaos::common::data;
 using namespace chaos::ui;
 using namespace chaos::common::batch_command;
+
+struct bpmpos {
+    double x;
+    double y;
+};
+
+bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
+    bpmpos pos;
+    double x=0,y=0;
+    double U= ((double)va -vb)/(va +vb);
+    double V= ((double)vc -vd)/(vc +vd);
+    double a[2][6]={{28.5574,-0.046125,5.43125e-5,0.0172085,-1.15991e-5,1.94837e-7},{9.8435,-0.022408,0.034859,-1.4584e-6,-9.9279e-6}};
+    double b[2][6]={{28.5574,-0.0172085,1.94837e-7,-0.046125,-1.15991e-5,5.43125e-5},{32/0137,0.0432143,0.000222447,-0.000318269,0.00167884}};
+    if(type>1){
+        return pos;
+    }
+    for(int cnt=0;cnt<7;cnt++){
+        x = a[type][0] * U + a[type][1] * pow(y,2)*U +  a[type][2]*pow(y,4)*U + a[type][3] *pow(x,2)*U +a[type][4]*pow(x,2)*pow(y,2)*U+a[type][5]*pow(x,4)*U;
+        y = b[type][1] * V + b[type][1] * pow(y,2)*V +  b[type][2]*pow(y,4)*V + b[type][3] *pow(x,2)*V +b[type][4]*pow(x,2)*pow(y,2)*V+b[type][5]*pow(x,4)*V;
+    }
+    
+    /*MATLAB*/
+    /*Xs=0;
+Ys=0;
+
+for i=1:7
+
+x=a(1)*U+a(2)*Ys^2*U+a(3)*Ys^4*U+a(4)*Xs^2*U+a(5)*Xs^2*Ys^2*U+a(6)*Xs^4*U;
+y=b(1)*V+b(2)*Ys^2*V+b(3)*Ys^4*V+b(4)*Xs^2*V+b(5)*Xs^2*Ys^2*V+b(6)*Xs^4*V;
+
+Xs=x;
+Ys=y;
+
+end*/
+    
+
+    pos.x=x;
+    pos.y=y;
+    return pos;
+}
+
 template <typename T>
 void print_header(int ts_enable,std::ofstream &fout){
     T h;
@@ -145,6 +186,8 @@ int main (int argc, char* argv[] ) {
         std::cout<<" ## cannot set schedule at:"<<sched;
         return -2;
     }
+    group.init();
+    group.start();
     switch(mode){
         case 0:
             group.acquire_disable();
@@ -184,11 +227,14 @@ int main (int argc, char* argv[] ) {
     
     data_group.setInterval(3000000);
     data_group.setTimeout (6000000);
+    
     while(loops--){
         data_group.sync();
         cu=0;
         for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
-            ofs_out<<*i<< " " <<libera_va[cu]->getInfo().getTimeStamp()<<":"<<(int32_t)*libera_va[cu] <<" "<<(int32_t)*libera_vb[cu] <<" "<<(int32_t)*libera_vc[cu]<<" "<<(int32_t)*libera_vd[cu]<<std::endl;
+            bpmpos mm;
+            mm=bpm_voltage_to_mm(0,*libera_va[cu],*libera_vb[cu],*libera_vc[cu],*libera_vd[cu]);
+            ofs_out<<*i<< " " <<libera_va[cu]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<(int32_t)*libera_va[cu] <<" "<<(int32_t)*libera_vb[cu] <<" "<<(int32_t)*libera_vc[cu]<<" "<<(int32_t)*libera_vd[cu]<<std::endl;
 
         }
     }
