@@ -17,8 +17,8 @@
  *    	See the License for the specific language governing permissions and
  *    	limitations under the License.
  */
-#ifndef __PowerSupply__SCLiberaCU__
-#define __PowerSupply__SCLiberaCU__
+#ifndef __SCLiberaCU__
+#define __SCLiberaCU__
 
 #include <chaos/cu_toolkit/ControlManager/SCAbstractControlUnit.h>
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriverInterface.h>

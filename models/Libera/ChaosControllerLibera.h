@@ -14,9 +14,6 @@
 #include <chaos/ui_toolkit/HighLevelApi/DeviceController.h>
 #include <driver/misc/ChaosController.h>
 
-#define CTRLAPP_ LAPP_ << "[ "<<__FUNCTION__<<" ] ["<<getPath()<<"] "
-#define CTRLDBG_ LDBG_<< "[ "<<__FILE__<<" "<<__FUNCTION__<<" ] ["<<getPath()<<"] "
-#define CTRLERR_ LERR_ << "[ "<<__FILE__<<" "<<__FUNCTION__<<" ] ["<<getPath()<<"] "
 
 
 class ChaosControllerLibera:public ChaosController{
@@ -25,7 +22,7 @@ class ChaosControllerLibera:public ChaosController{
         bool blocking; 
     public:
         ChaosControllerLibera():ChaosController(){blocking =true;}
-    ChaosControllerLibera(const char* path,uint32_t timeo=5000):ChaosController( path,timeo){blocking=true;}
+    ChaosControllerLibera(std::string path,uint32_t timeo=5000):ChaosController( path,timeo){blocking=true;}
 
     void setCommandBlocking(bool t);
     

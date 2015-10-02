@@ -52,7 +52,7 @@ uint8_t CmdLiberaDefault::implementedHandler() {
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 
-	//setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
+	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=driverAccessorsErogator->getAccessoInstanceByIndex(0);
   	CMDCUDBG_<< "Created accessor:"<<accessor;
 	if(accessor==NULL){
