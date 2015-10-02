@@ -52,6 +52,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         offset =0;
         loops=1;
         acquire_duration=0;
+        wait_for_us=0;
         CmdLiberaDefault::setHandler(data);
         perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
@@ -103,7 +104,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         if(data->hasKey("loops")) {
             loops = data->getInt32Value("loops");
          }	
-
+        if(data->hasKey("wait_for")) {
+            wait_for_us = data->getInt64Value("wait_for");
+         }
          getAttributeCache()->setOutputAttributeNewSize("SA", 0);
          getAttributeCache()->setOutputAttributeNewSize("DD", 0);
          getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
@@ -186,7 +189,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          *psamples=samples;
          *acquire_loops=0;
          getAttributeCache()->setOutputDomainAsChanged();
-        CMDCU_<<" start acquiring mode:"<<mode<<" samples:"<<samples<<" offset:"<<offset<<" loops:"<<loops;
+        CMDCU_<<" start acquiring mode:"<<mode<<" samples:"<<samples<<" offset:"<<offset<<" loops:"<<loops<<" WAIT COMMAND FOR:"<<wait_for_us;
          boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
         start_acquire=start_test.time_of_day().total_milliseconds();
         BC_NORMAL_RUNNIG_PROPERTY;
@@ -196,7 +199,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
      boost::posix_time::ptime curr;
      int ret;
      libera_ts_t ts;
-
+     usleep(wait_for_us);
     if(acquire_duration !=0){
         curr= boost::posix_time::microsec_clock::local_time();
         if((curr.time_of_day().total_milliseconds() - start_acquire) > (acquire_duration*1000)){
@@ -208,7 +211,10 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 
         }
     }
-    if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
+    
+    if(mode&LIBERA_IOP_MODE_DD){
+        CMDCUDBG_ << "Acquiring DD";
+        if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
             if(mt)
                 *mt = ts.mt;
             if(st)
@@ -217,8 +223,6 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             CMDCUDBG_<<"MT:"<<*mt<<" ST:"<<*st <<" TV_sec:"<<ts.st.tv_sec<<" TV_NSEC:"<<ts.st.tv_nsec;
 
      }
-    if(mode&LIBERA_IOP_MODE_DD){
-        CMDCUDBG_ << "Acquiring DD";
         libera_dd_t*pnt=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
         if(pnt==NULL){
             CMDCUERR_<<"cannot retrieve dataset \"DD\"";

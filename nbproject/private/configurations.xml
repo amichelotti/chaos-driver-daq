@@ -55,6 +55,10 @@
       <df name="models">
         <df name="Libera">
           <df name="CMakeFiles">
+            <df name="BPMSync.dir">
+              <df name="test">
+              </df>
+            </df>
             <df name="chaos_driver_libera.dir">
             </df>
             <df name="chaos_driver_libera_cspi.dir">
@@ -75,6 +79,8 @@
               <df name="default">
               </df>
               <df name="init.d">
+              </df>
+              <df name="openntpd">
               </df>
             </df>
           </df>
@@ -193,6 +199,7 @@
             </df>
           </df>
           <df name="test">
+            <in>BPMSync.cpp</in>
             <in>daqLiberaClient.cpp</in>
             <in>daqLiberaServer.cpp</in>
           </df>
@@ -214,7 +221,6 @@
           <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
           <in>RTBPMLibera.cpp</in>
-          <in>RTBPMLibera.h</in>
           <in>SCLiberaCU.cpp</in>
           <in>SCLiberaCU.h</in>
         </df>

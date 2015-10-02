@@ -162,6 +162,9 @@ int main (int argc, char* argv[] ) {
     ChaosDatasetAttribute* libera_vb[device_name.size()];
     ChaosDatasetAttribute* libera_vc[device_name.size()];
     ChaosDatasetAttribute* libera_vd[device_name.size()];
+    
+    ChaosDatasetAttribute* libera_acquisition[device_name.size()];
+    
     ChaosControllerGroup<ChaosControllerLibera> group;
     ChaosDatasetAttributeSyncronizer data_group;
     int cu=0;
@@ -172,10 +175,8 @@ int main (int argc, char* argv[] ) {
         libera_vb[cu] = new ChaosDatasetAttribute(*i + "/VB");
         libera_vc[cu] = new ChaosDatasetAttribute(*i + "/VC");
         libera_vd[cu] = new ChaosDatasetAttribute(*i + "/VD");
-        data_group.add(*libera_va[cu] );
-        data_group.add(*libera_vb[cu] );
-        data_group.add(*libera_vc[cu] );
-        data_group.add(*libera_vd[cu] );
+        libera_acquisition[cu] = new ChaosDatasetAttribute(*i + "/ACQUISITION");
+        data_group.add(*libera_acquisition[cu] );
         
         if(libera_devs[cu]){
             group.add(*libera_devs[cu]);
@@ -193,10 +194,10 @@ int main (int argc, char* argv[] ) {
             group.acquire_disable();
             break;
         case 1:
-            group.acquire_dd(samples,loops,triggered);
+            group.acquire_dd(samples,loops,triggered,2000000); //start acquire in 2 s
             break;
         case 2:
-            group.acquire_sa(samples,loops,triggered);
+            group.acquire_sa(samples,loops,triggered,2000000); // start acquire in 2 s
             break;
          
             
@@ -234,7 +235,7 @@ int main (int argc, char* argv[] ) {
         for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
             bpmpos mm;
             mm=bpm_voltage_to_mm(0,*libera_va[cu],*libera_vb[cu],*libera_vc[cu],*libera_vd[cu]);
-            ofs_out<<*i<< " " <<libera_va[cu]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<(int32_t)*libera_va[cu] <<" "<<(int32_t)*libera_vb[cu] <<" "<<(int32_t)*libera_vc[cu]<<" "<<(int32_t)*libera_vd[cu]<<std::endl;
+            ofs_out<<*i<< " [" <<(uint64_t)*libera_acquisition[cu]<<" "<<libera_va[cu]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<(int32_t)*libera_va[cu] <<" "<<(int32_t)*libera_vb[cu] <<" "<<(int32_t)*libera_vc[cu]<<" "<<(int32_t)*libera_vd[cu]<<std::endl;
 
         }
     }

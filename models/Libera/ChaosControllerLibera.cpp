@@ -18,7 +18,7 @@ int ChaosControllerLibera::acquire_disable(){
     return executeCmd(c,blocking);
 }
 
-int ChaosControllerLibera::acquire_dd(int32_t samples,int32_t loop,bool triggered){
+int ChaosControllerLibera::acquire_dd(int32_t samples,int32_t loop,uint64_t wait_for,bool triggered){
     int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
     
     mode |= LIBERA_IOP_MODE_DD ;
@@ -28,10 +28,11 @@ int ChaosControllerLibera::acquire_dd(int32_t samples,int32_t loop,bool triggere
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
     c->scheduler_steps_delay=20;
-    return executeCmd(c,blocking);
+   
+    return executeCmd(c,blocking,0,wait_for);
     
 }
-int ChaosControllerLibera::acquire_sa(int32_t samples,int32_t loop,bool triggered){
+int ChaosControllerLibera::acquire_sa(int32_t samples,int32_t loop,uint64_t wait_for,bool triggered){
     int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
     mode |= LIBERA_IOP_MODE_SA;
     command_t c = prepareCommand("acquire");
@@ -40,11 +41,11 @@ int ChaosControllerLibera::acquire_sa(int32_t samples,int32_t loop,bool triggere
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
      c->scheduler_steps_delay=20;
-
-    return executeCmd(c,blocking);
+   
+    return executeCmd(c,blocking,0,wait_for);
    
 }
-int ChaosControllerLibera::acquire_adc_cw(int32_t samples,int32_t loop,bool triggered){
+int ChaosControllerLibera::acquire_adc_cw(int32_t samples,int32_t loop,uint64_t wait_for,bool triggered){
     int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
     mode |= LIBERA_IOP_MODE_CONTINUOUS;
     command_t c = prepareCommand("acquire");
@@ -52,12 +53,12 @@ int ChaosControllerLibera::acquire_adc_cw(int32_t samples,int32_t loop,bool trig
     c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-    
-    return executeCmd(c,blocking);
+
+    return executeCmd(c,blocking,0,wait_for);
    
 }
 
-int ChaosControllerLibera::acquire_adc_sp(int32_t samples,int32_t loop,bool triggered){
+int ChaosControllerLibera::acquire_adc_sp(int32_t samples,int32_t loop,uint64_t wait_for,bool triggered){
     int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
     mode |= LIBERA_IOP_MODE_SINGLEPASS;
     command_t c = prepareCommand("acquire");
@@ -65,11 +66,11 @@ int ChaosControllerLibera::acquire_adc_sp(int32_t samples,int32_t loop,bool trig
     c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-    
-    return executeCmd(c,blocking);
+
+    return executeCmd(c,blocking,0,wait_for);
    
 }
-int ChaosControllerLibera::acquire_avg(int32_t samples,int32_t loop,bool triggered){
+int ChaosControllerLibera::acquire_avg(int32_t samples,int32_t loop,uint64_t wait_for,bool triggered){
     int32_t mode=(triggered)?LIBERA_IOP_MODE_TRIGGERED:0;
     mode |= LIBERA_IOP_MODE_AVG;
     command_t c = prepareCommand("acquire");
@@ -77,8 +78,8 @@ int ChaosControllerLibera::acquire_avg(int32_t samples,int32_t loop,bool trigger
     c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-      
-    return executeCmd(c,blocking);
+
+    return executeCmd(c,blocking,0,wait_for);
 }
 int ChaosControllerLibera::setDate(std::string dat){
     command_t c = prepareCommand("time");

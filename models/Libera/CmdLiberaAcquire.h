@@ -36,7 +36,7 @@ namespace driver {
                     int32_t* psamples,*pmode,*perr;
                     int64_t*acquire_loops;
                     int acquire_duration;
-                    uint64_t start_acquire;
+                    uint64_t start_acquire,wait_for_us;
 		protected:
 			//implemented handler
 		    //			uint8_t implementedHandler();

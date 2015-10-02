@@ -27,12 +27,12 @@ class ChaosControllerLibera:public ChaosController{
     void setCommandBlocking(bool t);
     
     int acquire_disable();
-    int acquire_dd(int32_t samples,int32_t loop,bool triggered=false);
-    int acquire_sa(int32_t samples,int32_t loop,bool triggered=false);
-    int acquire_adc_cw(int32_t samples,int32_t loop,bool triggered=false);
-    int acquire_adc_sp(int32_t samples,int32_t loop,bool triggered=false);
+    int acquire_dd(int32_t samples,int32_t loop,uint64_t wait_for=0,bool triggered=false);
+    int acquire_sa(int32_t samples,int32_t loop,uint64_t wait_for=0,bool triggered=false);
+    int acquire_adc_cw(int32_t samples,int32_t loop,uint64_t wait_for=0,bool triggered=false);
+    int acquire_adc_sp(int32_t samples,int32_t loop,uint64_t wait_for=0,bool triggered=false);
 
-    int acquire_avg(int32_t samples,int32_t loop,bool triggered=false);
+    int acquire_avg(int32_t samples,int32_t loop,uint64_t wait_for=0,bool triggered=false);
     int setDate(std::string dat);
     int setEnviron(std::string param,int32_t val);
     
