@@ -181,23 +181,43 @@ int main (int argc, char* argv[] ) {
         if(libera_devs[cu]){
             group.add(*libera_devs[cu]);
         }
+        
     }
-    
+    sleep(5);
+    int rett;
+     if(rett=group.init(1)){
+         LERR_<<" error forcing init:"<<rett;
+         return -4;
+     }
+    sleep(5);
+    if(rett=group.start(1)){
+        LERR_<<" error forcing start:"<<rett;
+        return -5;
+    }
+    sleep(5);
+    /*
     if(group.setSchedule(sched)!=0){
-        std::cout<<" ## cannot set schedule at:"<<sched;
+        LERR_<<" ## cannot set schedule at:"<<sched;
         return -2;
-    }
-    group.init();
-    group.start();
+    }*/
+    
+    
     switch(mode){
         case 0:
             group.acquire_disable();
             break;
         case 1:
-            group.acquire_dd(samples,loops,triggered,2000000); //start acquire in 2 s
+            if(group.acquire_dd(samples,loops,2000000,triggered)!=0){
+                LERR_<<" error giving group command DD";
+                return -3;
+                
+            }
             break;
         case 2:
-            group.acquire_sa(samples,loops,triggered,2000000); // start acquire in 2 s
+            if(group.acquire_sa(samples,loops,2000000,triggered)!=0){
+                LERR_<<" error giving group command SA";
+                return -3;
+            }
             break;
          
             
