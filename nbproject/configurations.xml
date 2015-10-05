@@ -131,6 +131,7 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -150,6 +151,7 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -233,6 +235,7 @@
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
             <Elem>BOOST_ALL_DYN_LINK</Elem>
@@ -363,6 +366,9 @@
       </item>
       <item path="models/Libera/test/BPMSync.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="0">
+          <incDir>
+            <pElem>models/Libera/driver/misc</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaClient.cpp"
@@ -370,6 +376,9 @@
             tool="1"
             flavor2="4">
         <ccTool flags="0">
+          <incDir>
+            <pElem>models/Libera/driver/misc</pElem>
+          </incDir>
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaServer.cpp"

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 2.6)
 SET(DAQ_src LiberaData.cpp LiberaBrillianceCSPIDriver.cpp CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  DafneAccumulatorBPMSync.cpp )
 set (CMAKE_C_FLAGS "-std=gnu99 -DEBPP -DCORDIC_IGNORE_GAIN -D_REENTRANT -Idriver/libera-driver-2-04-ebpp -Imsp/src -I/cspi")
 SET(BasicDAQClient_src test/DAQClient.cpp)
-INCLUDE_DIRECTORIES(. cspi driver/libera-driver-2-04-ebpp msp/src)
+INCLUDE_DIRECTORIES(. cspi driver/libera-driver-2-04-ebpp msp/src driver/misc)
 ADD_DEFINITIONS(-DEBPP -DCSPI -DCORDIC_IGNORE_GAIN -D_REENTRANT)
 SET(LiberaCSPI_src cspi/cordic.c cspi/pool.c cspi/cspi.c cspi/cspi_events.c cspi/ebpp.c)
 

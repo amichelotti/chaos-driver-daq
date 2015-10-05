@@ -142,7 +142,7 @@ int main (int argc, char* argv[] ) {
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("timestamp", po::value<bool>(&timestamp)->default_value(false), "dump timestamp");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("max_acquire_time", po::value<int>(&max_acquire_time)->default_value(0), "max acquire time in seconds 0=continuos ");
 
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(1000000), "acquire time");
+    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(100000), "acquire time");
 
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("device,d", po::value<std::vector<std::string> >(&device_name), "libera device name");
 
@@ -190,16 +190,17 @@ int main (int argc, char* argv[] ) {
          return -4;
      }
     sleep(5);
+    if(group.setSchedule(sched)!=0){
+        LERR_<<" ## cannot set schedule at:"<<sched;
+        return -2;
+    }
     if(rett=group.start(1)){
         LERR_<<" error forcing start:"<<rett;
         return -5;
     }
     sleep(5);
-    /*
-    if(group.setSchedule(sched)!=0){
-        LERR_<<" ## cannot set schedule at:"<<sched;
-        return -2;
-    }*/
+   
+    
     
     
     switch(mode){

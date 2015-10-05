@@ -54,6 +54,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         acquire_duration=0;
         wait_for_us=0;
         CmdLiberaDefault::setHandler(data);
+       clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
+
         perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
@@ -193,13 +195,14 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
         start_acquire=start_test.time_of_day().total_milliseconds();
         BC_NORMAL_RUNNIG_PROPERTY;
+        usleep(wait_for_us);
 }
 
 void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
      boost::posix_time::ptime curr;
      int ret;
      libera_ts_t ts;
-     usleep(wait_for_us);
+    
     if(acquire_duration !=0){
         curr= boost::posix_time::microsec_clock::local_time();
         if((curr.time_of_day().total_milliseconds() - start_acquire) > (acquire_duration*1000)){
