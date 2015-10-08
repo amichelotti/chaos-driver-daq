@@ -22,7 +22,7 @@ class ChaosControllerLibera:public ChaosController{
         bool blocking; 
     public:
         ChaosControllerLibera():ChaosController(){blocking =true;}
-    ChaosControllerLibera(std::string path,uint32_t timeo=5000):ChaosController( path,timeo){blocking=true;}
+    ChaosControllerLibera(std::string path,uint32_t timeo=DEFAULT_TIMEOUT_FOR_CONTROLLER):ChaosController( path,timeo){blocking=true;}
 
     void setCommandBlocking(bool t);
     

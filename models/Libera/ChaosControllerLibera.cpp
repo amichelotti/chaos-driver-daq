@@ -27,7 +27,7 @@ int ChaosControllerLibera::acquire_dd(int32_t samples,int32_t loop,uint64_t wait
     c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-    c->scheduler_steps_delay=20;
+    c->scheduler_steps_delay=100;
    
     return executeCmd(c,blocking,0,wait_for);
     
@@ -40,7 +40,7 @@ int ChaosControllerLibera::acquire_sa(int32_t samples,int32_t loop,uint64_t wait
     c->addParameter("mode",mode);
     c->addParameter("samples",samples);
     c->addParameter("loops",loop);
-     c->scheduler_steps_delay=20;
+     c->scheduler_steps_delay=100;
    
     return executeCmd(c,blocking,0,wait_for);
    

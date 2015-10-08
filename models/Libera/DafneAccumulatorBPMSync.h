@@ -43,7 +43,7 @@ public:
     ~DafneAccumulatorBPMSync();
 
 protected:
-ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd;
+ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd,**libera_acquisition;
 ChaosControllerLibera** libera_devs;
 ChaosControllerGroup<ChaosControllerLibera> group;
 ChaosDatasetAttributeSyncronizer data_group;

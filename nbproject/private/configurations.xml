@@ -15,8 +15,6 @@
         </df>
         <df name="CMakeTmp">
         </df>
-        <df name="Progress">
-        </df>
       </df>
       <df name="LabVIEW">
         <df name="bck">
@@ -255,6 +253,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -267,13 +267,16 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>.</rundir>
+        <runcommand>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommand>
+        <rundir>/home/michelo/chaos_bundle_development/chaos-x86_64-dynamic-release/bin/</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>
         <environment>
+          <variable name="LD_LIBRARY_PATH"
+                    value="/home/michelo/chaos_bundle_development/chaos-x86_64-dynamic-release/lib"/>
         </environment>
       </runprofile>
     </conf>

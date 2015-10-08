@@ -21,6 +21,10 @@
 #include "DafneAccumulatorBPMSync.h"
 //#include "DafneAccumulatorBPMSyncDriver.h"
 #include <boost/algorithm/string.hpp>
+#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
+#include <chaos/cu_toolkit/CommandManager/CommandManager.h>
+#include <driver/daq/models/Libera/ChaosControllerLibera.h>
+
 using namespace chaos;
 using namespace chaos::common::data::cache;
 using namespace chaos::cu::driver_manager::driver;
@@ -80,37 +84,42 @@ DafneAccumulatorBPMSync::DafneAccumulatorBPMSync(const string& _control_unit_id,
 RTAbstractControlUnit(_control_unit_id, _control_unit_param, _control_unit_drivers) {
     int cnt=0;
     std::vector<std::string>::iterator i;
-   
-     DafneAccumulatorBPMSyncLDBG_<<" BPMS:"<<_control_unit_param;
-     boost::split(cu_names,_control_unit_param,boost::is_any_of(" "));
+    NetworkBroker * nb=chaos::cu::command_manager::CommandManager::getInstance()->getNetworkBroker();
+    chaos::ui::LLRpcApi::getInstance()->init(nb);
+     boost::split(cu_names,_control_unit_param,boost::is_any_of(" \n"));
      int cu=cu_names.size();
+       DafneAccumulatorBPMSyncLDBG_<<" "<<cu<<" BPMS:"<<_control_unit_param;
+
      if(cu>0){
     
     libera_va = new ChaosDatasetAttribute*[cu];
     libera_vb = new ChaosDatasetAttribute*[cu];
     libera_vc = new ChaosDatasetAttribute*[cu];
     libera_vd = new ChaosDatasetAttribute*[cu];
+    libera_acquisition = new ChaosDatasetAttribute*[cu];
     libera_devs = new ChaosControllerLibera*[cu];
     i=cu_names.begin();
     
     for(cnt=0;cnt<cu;cnt++){
-        DafneAccumulatorBPMSyncLDBG_<<" Adding "<<*i<<" to the set";
+        DafneAccumulatorBPMSyncLDBG_<<" ["<<cnt<<"] Adding "<<*i<<" to the set";
         libera_devs[cnt]= new ChaosControllerLibera(*i+ "/LIBERA_ACQUIRE0");
+        
         libera_va[cnt] = new ChaosDatasetAttribute(*i + "/LIBERA_ACQUIRE0/VA");
         libera_vb[cnt] = new ChaosDatasetAttribute(*i + "/LIBERA_ACQUIRE0/VB");
         libera_vc[cnt] = new ChaosDatasetAttribute(*i + "/LIBERA_ACQUIRE0/VC");
         libera_vd[cnt] = new ChaosDatasetAttribute(*i + "/LIBERA_ACQUIRE0/VD");
-        data_group.add(*libera_va[cnt] );
-        data_group.add(*libera_vb[cnt] );
-        data_group.add(*libera_vc[cnt] );
-        data_group.add(*libera_vd[cnt] );
+        libera_acquisition[cu] = new ChaosDatasetAttribute(*i + "/LIBERA_ACQUIRE0/ACQUISITION");
+
+        
+        data_group.add(*libera_acquisition[cu] );
         
         if(libera_devs[cnt]){
             group.add(*libera_devs[cnt]);
         }
-        cnt++;
         i++;
     }
+    group.setSchedule(200);
+    group.setTimeout(30000000);
     data_group.setInterval(3000000);
     data_group.setTimeout (6000000);
    
@@ -179,21 +188,39 @@ void DafneAccumulatorBPMSync::unitDefineCustomAttribute() {
 
 //!Initialize the Custom Control Unit
 void DafneAccumulatorBPMSync::unitInit() throw(chaos::CException) {
- group.init(1);
+ if(group.init(1)!=0){
+     throw chaos::CException(-100,"## cannot initialize devices",__PRETTY_FUNCTION__);
+ }
+ sleep(5);
+ if(group.start(1)!=0){
+         throw chaos::CException(-101,"## cannot start devices",__PRETTY_FUNCTION__);
+ }
+ sleep(5);
+ group.acquire_sa(1,1000000,2000000,0);
 
 }
 
 //!Execute the work, this is called with a determinated delay, it must be as fast as possible
 void DafneAccumulatorBPMSync::unitStart() throw(chaos::CException) {
- group.start(1);
+    
+ 
 }
 
 //!Execute the Control Unit work
 void DafneAccumulatorBPMSync::unitRun() throw(chaos::CException) {
+    data_group.sync();
     for(int cnt=0,out=0;cnt<cu_names.size();cnt++,out+=2){
-                bpmpos mm;           
-                mm=bpm_voltage_to_mm(0,*libera_va[cnt],*libera_vb[cnt],*libera_vc[cnt],*libera_vd[cnt]);
-                DafneAccumulatorBPMSyncLDBG_<<libera_va[cnt]->getName()<<" "<<libera_va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<(int32_t)*libera_va[cnt] <<" "<<(int32_t)*libera_vb[cnt] <<" "<<(int32_t)*libera_vc[cnt]<<" "<<(int32_t)*libera_vd[cnt]<<std::endl;
+                bpmpos mm; 
+                int32_t va,vb,vc,vd;
+                
+                va= *libera_va[cnt];
+                vb= *libera_vb[cnt];
+                vc= *libera_vc[cnt];
+                vd= *libera_vd[cnt];
+                mm=bpm_voltage_to_mm((cnt>3)?1:0,va,vb,vc,vd);
+
+                DafneAccumulatorBPMSyncLDBG_<<" "<<cnt<<" :"<<libera_va[cnt]->getName()<<" "<<libera_va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<va <<" "<<vb <<" "<<(int32_t)vc<<" "<<vd;
+                
                 getAttributeCache()->setOutputAttributeValue(out,(void*)&mm.x,sizeof(double));
                 getAttributeCache()->setOutputAttributeValue(out+1,(void*)&mm.y,sizeof(double));
     }
@@ -203,12 +230,12 @@ void DafneAccumulatorBPMSync::unitRun() throw(chaos::CException) {
 
 //!Execute the Control Unit work
 void DafneAccumulatorBPMSync::unitStop() throw(chaos::CException) {
-
+group.stop(1);
 }
 
 //!Deinit the Control Unit
 void DafneAccumulatorBPMSync::unitDeinit() throw(chaos::CException) {
-
+group.deinit(1);
 }
 
 //! pre imput attribute change
