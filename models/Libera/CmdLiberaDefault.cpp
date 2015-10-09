@@ -87,18 +87,16 @@ void CmdLiberaDefault::acquireHandler() {
 	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)==0){
             CMDCUDBG_<<"STATUS:"<<status;
         }
-<<<<<<< HEAD
+
 	/*        
 		  if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
-=======
-        if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
->>>>>>> CHSPREMWPT-35-dafne-accumulator-orbit
-            CMDCUDBG_<<"MT:"<<ts.mt<<" ST:"<<ts.st.tv_sec;
-            if(mt)
-	    *mt = ts.mt;
-		if(st)
-	    *st=ts.st.tv_sec*1000000 + ts.st.tv_nsec/1000;
-		}
+
+		  CMDCUDBG_<<"MT:"<<ts.mt<<" ST:"<<ts.st.tv_sec;
+		  if(mt)
+		  *mt = ts.mt;
+		  if(st)
+		  *st=ts.st.tv_sec*1000000 + ts.st.tv_nsec/1000;
+		  }
 	*/
         getAttributeCache()->setOutputDomainAsChanged();
 	//force output dataset as changed
