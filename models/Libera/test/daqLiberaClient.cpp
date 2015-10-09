@@ -24,6 +24,11 @@
 #include <chaos/ui_toolkit/ChaosUIToolkit.h>
 #include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/ui_toolkit/HighLevelApi/HLDataApi.h>
+#include <driver/daq/models/Libera/ChaosControllerLibera.h>
+#include <driver/misc/ChaosControllerGroup.h>
+#include <driver/misc/ChaosDatasetAttribute.h>
+#include <driver/misc/ChaosDatasetAttributeSyncronizer.h>
+
 
 //#include <fstream>
 #include "LiberaData.h"
@@ -31,6 +36,47 @@ using namespace chaos;
 using namespace chaos::common::data;
 using namespace chaos::ui;
 using namespace chaos::common::batch_command;
+
+struct bpmpos {
+    double x;
+    double y;
+};
+
+bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
+    bpmpos pos;
+    double x=0,y=0;
+    double U= ((double)va -vb)/(va +vb);
+    double V= ((double)vc -vd)/(vc +vd);
+    double a[2][6]={{28.5574,-0.046125,5.43125e-5,0.0172085,-1.15991e-5,1.94837e-7},{9.8435,-0.022408,0.034859,-1.4584e-6,-9.9279e-6}};
+    double b[2][6]={{28.5574,-0.0172085,1.94837e-7,-0.046125,-1.15991e-5,5.43125e-5},{32.0137,0.0432143,0.000222447,-0.000318269,0.00167884}};
+    if(type>1){
+        return pos;
+    }
+    for(int cnt=0;cnt<7;cnt++){
+        x = a[type][0] * U + a[type][1] * pow(y,2)*U +  a[type][2]*pow(y,4)*U + a[type][3] *pow(x,2)*U +a[type][4]*pow(x,2)*pow(y,2)*U+a[type][5]*pow(x,4)*U;
+        y = b[type][1] * V + b[type][1] * pow(y,2)*V +  b[type][2]*pow(y,4)*V + b[type][3] *pow(x,2)*V +b[type][4]*pow(x,2)*pow(y,2)*V+b[type][5]*pow(x,4)*V;
+    }
+    
+    /*MATLAB*/
+    /*Xs=0;
+Ys=0;
+
+for i=1:7
+
+x=a(1)*U+a(2)*Ys^2*U+a(3)*Ys^4*U+a(4)*Xs^2*U+a(5)*Xs^2*Ys^2*U+a(6)*Xs^4*U;
+y=b(1)*V+b(2)*Ys^2*V+b(3)*Ys^4*V+b(4)*Xs^2*V+b(5)*Xs^2*Ys^2*V+b(6)*Xs^4*V;
+
+Xs=x;
+Ys=y;
+
+end*/
+    
+
+    pos.x=x;
+    pos.y=y;
+    return pos;
+}
+
 template <typename T>
 void print_header(int ts_enable,std::ofstream &fout){
     T h;
@@ -81,10 +127,10 @@ int main (int argc, char* argv[] ) {
   std::string ofile;
   std::ofstream ofs_out;
   CUStateKey::ControlUnitState device_state;
-  std::string device_name;
+  std::vector<std::string> device_name;
   uint64_t old_acquisition=0;
+ 
   try{
-
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("acquire", po::value<int>(&mode)->default_value(0), "acquire [0=OFF,1=DD,2=SA,3=ADC_SP,4=ADC_CW]");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("triggered", po::value<bool>(&triggered)->default_value(false), "trigger on/off");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("samples", po::value<int>(&samples)->default_value(1), "acquires samples");
@@ -96,9 +142,9 @@ int main (int argc, char* argv[] ) {
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("timestamp", po::value<bool>(&timestamp)->default_value(false), "dump timestamp");
     ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("max_acquire_time", po::value<int>(&max_acquire_time)->default_value(0), "max acquire time in seconds 0=continuos ");
 
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(1000000), "acquire time");
+    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(100000), "acquire time");
 
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("device", po::value<std::string>(&device_name), "libera device name");
+    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("device,d", po::value<std::vector<std::string> >(&device_name), "libera device name");
 
 
 
@@ -110,119 +156,72 @@ int main (int argc, char* argv[] ) {
         std::cerr<<"## device name is required"<<std::endl;
         return -1;
     }
-    DeviceController *controller = HLDataApi::getInstance()->getControllerForDeviceID(device_name, 40000);
-    if(!controller) {
-        std::cerr<<"## cannot connect to "<<device_name<<std::endl;
-
+    
+    ChaosControllerLibera* libera_devs[device_name.size()];
+    ChaosDatasetAttribute* libera_va[device_name.size()];
+    ChaosDatasetAttribute* libera_vb[device_name.size()];
+    ChaosDatasetAttribute* libera_vc[device_name.size()];
+    ChaosDatasetAttribute* libera_vd[device_name.size()];
+    
+    ChaosDatasetAttribute* libera_acquisition[device_name.size()];
+    
+    ChaosControllerGroup<ChaosControllerLibera> group;
+    ChaosDatasetAttributeSyncronizer data_group;
+    int cu=0;
+    for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
+        libera_devs[cu] = new ChaosControllerLibera(i->c_str());
+        
+        libera_va[cu] = new ChaosDatasetAttribute(*i + "/VA");
+        libera_vb[cu] = new ChaosDatasetAttribute(*i + "/VB");
+        libera_vc[cu] = new ChaosDatasetAttribute(*i + "/VC");
+        libera_vd[cu] = new ChaosDatasetAttribute(*i + "/VD");
+        libera_acquisition[cu] = new ChaosDatasetAttribute(*i + "/ACQUISITION");
+        data_group.add(*libera_acquisition[cu] );
+        
+        if(libera_devs[cu]){
+            group.add(*libera_devs[cu]);
+        }
+        
+    }
+    sleep(5);
+    int rett;
+     if(rett=group.init(1)){
+         LERR_<<" error forcing init:"<<rett;
+         return -4;
+     }
+    sleep(5);
+    if(group.setSchedule(sched)!=0){
+        LERR_<<" ## cannot set schedule at:"<<sched;
         return -2;
     }
-    //init device
-    err = controller->getState(device_state);
-    if(err == ErrorCode::EC_TIMEOUT) return -1;
-
-    if(device_state == CUStateKey::DEINIT){
-        err = controller->initDevice();
-        if(err == ErrorCode::EC_TIMEOUT) {
-            throw CException(2, "Initialization", "timeout");
-        }
-        //print_state(device_state);
-        sleep(1);
+    if(rett=group.start(1)){
+        LERR_<<" error forcing start:"<<rett;
+        return -5;
     }
-    //check the state
-    //print_state(device_state);
-    //sleep(2);
-    controller->setScheduleDelay(sched);
-    //start the device
-    err = controller->getState(device_state);
-    if(err == ErrorCode::EC_TIMEOUT) {
-        throw CException(2, "Initialization", "timeout");
-    }
-
-    if(device_state != CUStateKey::START){
-        err = controller->startDevice();
-        if(err == ErrorCode::EC_TIMEOUT) {
-            throw CException(2, "Initialization", "timeout");
-        }
-        //print_state(device_state);
-        sleep(2);
-    }
-    //std::cout << "Start the device" << std::endl;
-
-
-    //check the state
-    err = controller->getState(device_state);
-    if(err == ErrorCode::EC_TIMEOUT || device_state!= CUStateKey::START) {
-        throw CException(2, "Initialization", "device not in run state");
-
-    }
-    //print_state(device_state);
-    uint64_t command_id = 0;
-    int mode_dev=0;
-    if(triggered){
-        mode_dev=LIBERA_IOP_MODE_TRIGGERED;
-    }
-
-    if(decimated){
-        mode_dev|=LIBERA_IOP_MODE_DECIMATED;
-    }
-    CDataWrapper param_mode;
-
-
+    sleep(5);
+   
+    
+    
+    
     switch(mode){
         case 0:
-            param_mode.addInt32Value("enable",0);
+            group.acquire_disable();
             break;
-
-       case 1:
-           mode_dev|=LIBERA_IOP_MODE_DD;
+        case 1:
+            if(group.acquire_dd(samples,loops,2000000,triggered)!=0){
+                LERR_<<" error giving group command DD";
+                return -3;
+                
+            }
             break;
         case 2:
-           mode_dev|=LIBERA_IOP_MODE_SA;
+            if(group.acquire_sa(samples,loops,2000000,triggered)!=0){
+                LERR_<<" error giving group command SA";
+                return -3;
+            }
             break;
-
-        case 3:
-            mode_dev|=LIBERA_IOP_MODE_SINGLEPASS;
-            break;
-        case 4:
-            mode_dev|=LIBERA_IOP_MODE_CONTINUOUS;
-            break;
-
-
-    }
-    param_mode.addInt32Value("mode",mode_dev);
-    if(mode_dev && (samples>=0)){
-        param_mode.addInt32Value("samples",samples);
-    }
-    param_mode.addInt32Value("duration",max_acquire_time);
-    param_mode.addInt32Value("loops",loops);
-
-    err = controller->submitSlowControlCommand("acquire",
-     //         					       SubmissionRuleType::SUBMIT_AND_Stack,
-              SubmissionRuleType::SUBMIT_AND_Kill,
-              100,
-              command_id,
-              0,
-              sched, // delay
-              0,
-              &param_mode);
-
-     if(err == ErrorCode::EC_TIMEOUT) throw CException(2, "Time out on connection", "Set device to deinit state");
-    sleep(1);
-    if(mode==0){
-         err = controller->submitSlowControlCommand("default",
-     //         					       SubmissionRuleType::SUBMIT_AND_Stack,
-              SubmissionRuleType::SUBMIT_AND_Kill,
-              100,
-              command_id,
-              0,
-              sched, // delay
-              0,
-              &param_mode);
-
-     if(err == ErrorCode::EC_TIMEOUT) throw CException(2, "Time out on connection", "Set device to deinit state");
-        sleep(1);
-
-        return 0;
+         
+            
     }
     //print all dataset
     if(!ofile.empty()){
@@ -247,7 +246,21 @@ int main (int argc, char* argv[] ) {
     libera_sp_t* data4;
     libera_avg_t* data5;
     uint64_t counter=0;
-    do {
+    
+    data_group.setInterval(3000000);
+    data_group.setTimeout (6000000);
+    
+    while(loops--){
+        data_group.sync();
+        cu=0;
+        for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
+            bpmpos mm;
+            mm=bpm_voltage_to_mm(0,*libera_va[cu],*libera_vb[cu],*libera_vc[cu],*libera_vd[cu]);
+            ofs_out<<*i<< " [" <<(uint64_t)*libera_acquisition[cu]<<" "<<libera_va[cu]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<(int32_t)*libera_va[cu] <<" "<<(int32_t)*libera_vb[cu] <<" "<<(int32_t)*libera_vc[cu]<<" "<<(int32_t)*libera_vd[cu]<<std::endl;
+
+        }
+    }
+/*    do {
     controller->fetchCurrentDeviceValue();
 
       CDataWrapper *wrapped_data =controller->getCurrentData();
@@ -333,7 +346,7 @@ int main (int argc, char* argv[] ) {
           ofs_out.close();
 
 
-
+*/
   } catch(CException& e) {
     std::cerr << e.errorCode << " - "<< e.errorDomain << " - " << e.errorMessage << std::endl;
     return -3;

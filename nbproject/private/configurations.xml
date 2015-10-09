@@ -55,6 +55,10 @@
       <df name="models">
         <df name="Libera">
           <df name="CMakeFiles">
+            <df name="BPMSync.dir">
+              <df name="test">
+              </df>
+            </df>
             <df name="chaos_driver_libera.dir">
             </df>
             <df name="chaos_driver_libera_cspi.dir">
@@ -75,6 +79,8 @@
               <df name="default">
               </df>
               <df name="init.d">
+              </df>
+              <df name="openntpd">
               </df>
             </df>
           </df>
@@ -193,9 +199,12 @@
             </df>
           </df>
           <df name="test">
+            <in>BPMSync.cpp</in>
             <in>daqLiberaClient.cpp</in>
             <in>daqLiberaServer.cpp</in>
           </df>
+          <in>ChaosControllerLibera.cpp</in>
+          <in>ChaosControllerLibera.h</in>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaAcquire.h</in>
           <in>CmdLiberaDefault.cpp</in>
@@ -204,13 +213,14 @@
           <in>CmdLiberaEnv.h</in>
           <in>CmdLiberaTime.cpp</in>
           <in>CmdLiberaTime.h</in>
+          <in>DafneAccumulatorBPMSync.cpp</in>
+          <in>DafneAccumulatorBPMSync.h</in>
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceCSPIDriver.h</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>
           <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
           <in>RTBPMLibera.cpp</in>
-          <in>RTBPMLibera.h</in>
           <in>SCLiberaCU.cpp</in>
           <in>SCLiberaCU.h</in>
         </df>
@@ -243,6 +253,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -255,13 +267,16 @@
       <runprofile version="9">
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
+          <runcommandpicklistitem>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>.</rundir>
+        <runcommand>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommand>
+        <rundir>/home/michelo/chaos_bundle_development/chaos-x86_64-dynamic-release/bin/</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>
         <environment>
+          <variable name="LD_LIBRARY_PATH"
+                    value="/home/michelo/chaos_bundle_development/chaos-x86_64-dynamic-release/lib"/>
         </environment>
       </runprofile>
     </conf>

@@ -1,5 +1,5 @@
 /*
- *	RTBPMLibera.h
+ *	DafneAccumulatorBPMSync.h
  *	!CHAOS
  *	Created by Andrea Michelotti
  *      Collects and align a given series of Libera BPMs
@@ -17,29 +17,39 @@
  *    	See the License for the specific language governing permissions and
  *    	limitations under the License.
  */
-#ifndef ChaosRTControlUnit_RTBPMLibera_h
-#define ChaosRTControlUnit_RTBPMLibera_h
+#ifndef ChaosRTControlUnit_DafneAccumulatorBPMSync_h
+#define ChaosRTControlUnit_DafneAccumulatorBPMSync_h
 
 #include <chaos/cu_toolkit/ControlManager/RTAbstractControlUnit.h>
-namespace chaos {
+#include <driver/misc/ChaosControllerGroup.h>
+#include <driver/misc/ChaosDatasetAttribute.h>
+#include <driver/misc/ChaosDatasetAttributeSyncronizer.h>
+#include <driver/daq/models/Libera/ChaosControllerLibera.h>
+
    
     namespace driver {
         
         namespace daq {
-class RTBPMLibera : public chaos::cu::control_manager::RTAbstractControlUnit {
-	PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTBPMLibera)
+class DafneAccumulatorBPMSync : public chaos::cu::control_manager::RTAbstractControlUnit {
+	PUBLISHABLE_CONTROL_UNIT_INTERFACE(DafneAccumulatorBPMSync)
 public:
     /*!
      Construct a new CU with full constructor
      */
-    RTBPMLibera(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers);
+    DafneAccumulatorBPMSync(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers);
     /*!
      Destructor a new CU
      */
-    ~RTBPMLibera();
+    ~DafneAccumulatorBPMSync();
 
 protected:
-		/*!
+ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd,**libera_acquisition;
+ChaosControllerLibera** libera_devs;
+ChaosControllerGroup<ChaosControllerLibera> group;
+ChaosDatasetAttributeSyncronizer data_group;
+std::vector<std::string> cu_names;
+
+    /*!
 		Define the Control Unit Dataset and Actions
 		*/
 		void unitDefineActionAndDataset()throw(chaos::CException);
@@ -84,5 +94,5 @@ protected:
 		*/
 		void unitInputAttributeChangedHandler() throw(chaos::CException);
 };
-        }}}
+        }}
 #endif

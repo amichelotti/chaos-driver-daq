@@ -21,7 +21,6 @@
             <file>file:/home/michelo/chaos_bundle_master/driver/daq/models/Libera/SCLiberaCU.cpp</file>
             <file>file:/home/michelo/chaos_bundle_master/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
         </group>
-        <group name="CHAOS_BUNDLE_DEVELOPMENT"/>
         <group name="HW/CHAOS_BUNDLE">
             <file>file:/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
             <file>file:/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/CmdLiberaEnv.cpp</file>
@@ -29,6 +28,19 @@
             <file>file:/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/SCLiberaCU.cpp</file>
             <file>file:/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/CmdLiberaDefault.h</file>
             <file>file:/ntfs/Users/michelo/LINUX/chaos_bundle/driver/daq/models/Libera/CmdLiberaTime.cpp</file>
+        </group>
+        <group name="CHAOS_BUNDLE_DEVELOPMENT">
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/ChaosControllerLibera.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaDefault.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/DafneAccumulatorBPMSync.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CMakeLists.txt</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/test/daqLiberaServer.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/DafneAccumulatorBPMSync.h</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/SCLiberaCU.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/ChaosControllerLibera.h</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/CMakeLists.txt</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/test/daqLiberaClient.cpp</file>
+            <file>file:/home/michelo/chaos_bundle_development/driver/daq/models/Libera/CmdLiberaAcquire.cpp</file>
         </group>
     </open-files>
 </project-private>
