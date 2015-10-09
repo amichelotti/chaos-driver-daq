@@ -8,11 +8,15 @@ ADD_DEFINITIONS(-DEBPP -DCSPI -DCORDIC_IGNORE_GAIN -D_REENTRANT)
 SET(LiberaCSPI_src cspi/cordic.c cspi/pool.c cspi/cspi.c cspi/cspi_events.c cspi/ebpp.c)
 
 
+ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
+ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
+ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
+
 IF(BUILD_FORCE_STATIC)
-  SET(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
+#  SET(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
    ADD_LIBRARY(chaos_driver_libera STATIC ${DAQ_src} )
    ADD_LIBRARY(chaos_driver_libera_cspi STATIC ${LiberaCSPI_src})
-
+   set_target_properties(BPMSync PROPERTIES LINK_FLAGS "-static -Wl,--whole-archive -lchaos_common -lchaos_uitoolkit -Wl,--no-whole-archive")
 ELSE()
   ADD_LIBRARY(chaos_driver_libera SHARED ${DAQ_src})	
   ADD_LIBRARY(chaos_driver_libera_cspi SHARED ${LiberaCSPI_src})
@@ -22,9 +26,6 @@ ENDIF()
 SET(DAQ_LIBRARY chaos_driver_libera chaos_driver_libera_cspi)
 TARGET_LINK_LIBRARIES(chaos_driver_libera chaos_cutoolkit chaos_common common_serial chaos_driver_misc ${FrameworkLib})
 
-ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
-ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
-ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
 
 TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_cutoolkit chaos_common  common_serial ${FrameworkLib})
 TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
