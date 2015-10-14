@@ -1,5 +1,5 @@
 /*
- *	DafneAccumulatorBPMSync.cpp
+ *	SCDafneAccumulatorBPMSync.cpp
  *	!CHAOS
  *	Created automatically
  *
@@ -18,8 +18,8 @@
  *    	limitations under the License.
  */
 
-#include "DafneAccumulatorBPMSync.h"
-//#include "DafneAccumulatorBPMSyncDriver.h"
+#include "SCDafneAccumulatorBPMSync.h"
+//#include "SCDafneAccumulatorBPMSyncDriver.h"
 #include <boost/algorithm/string.hpp>
 #include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/cu_toolkit/CommandManager/CommandManager.h>
@@ -29,11 +29,11 @@ using namespace chaos;
 using namespace chaos::common::data::cache;
 using namespace chaos::cu::driver_manager::driver;
 using namespace ::driver::daq;
-PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(DafneAccumulatorBPMSync)
+PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(SCDafneAccumulatorBPMSync)
 
-#define DafneAccumulatorBPMSyncLAPP_		LAPP_ << "[DafneAccumulatorBPMSync] "
-#define DafneAccumulatorBPMSyncLDBG_		LDBG_ << "[DafneAccumulatorBPMSync] " << __PRETTY_FUNCTION__ << " "
-#define DafneAccumulatorBPMSyncLERR_		LERR_ << "[DafneAccumulatorBPMSync] " << __PRETTY_FUNCTION__ << "("<<__LINE__<<") "
+#define SCDafneAccumulatorBPMSyncLAPP_		LAPP_ << "[SCDafneAccumulatorBPMSync] "
+#define SCDafneAccumulatorBPMSyncLDBG_		LDBG_ << "[SCDafneAccumulatorBPMSync] " << __PRETTY_FUNCTION__ << " "
+#define SCDafneAccumulatorBPMSyncLERR_		LERR_ << "[SCDafneAccumulatorBPMSync] " << __PRETTY_FUNCTION__ << "("<<__LINE__<<") "
 
 
 
@@ -80,14 +80,14 @@ end*/
 /*
  Construct
  */
-DafneAccumulatorBPMSync::DafneAccumulatorBPMSync(const string& _control_unit_id, const string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers):
+SCDafneAccumulatorBPMSync::SCDafneAccumulatorBPMSync(const string& _control_unit_id, const string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers):
 RTAbstractControlUnit(_control_unit_id, _control_unit_param, _control_unit_drivers) {
     int cnt=0;
     std::vector<std::string>::iterator i;
    
      boost::split(cu_names,_control_unit_param,boost::is_any_of(" \n"));
      int cu=cu_names.size();
-       DafneAccumulatorBPMSyncLDBG_<<" "<<cu<<" BPMS:"<<_control_unit_param;
+       SCDafneAccumulatorBPMSyncLDBG_<<" "<<cu<<" BPMS:"<<_control_unit_param;
 
        group=new ChaosControllerGroup<ChaosControllerLibera>();
        data_group=new ChaosDatasetAttributeSyncronizer();
@@ -106,7 +106,7 @@ RTAbstractControlUnit(_control_unit_id, _control_unit_param, _control_unit_drive
     i=cu_names.begin();
     
     for(cnt=0;cnt<cu;cnt++){
-        DafneAccumulatorBPMSyncLDBG_<<" ["<<cnt<<"] Adding "<<*i<<" to the set";
+        SCDafneAccumulatorBPMSyncLDBG_<<" ["<<cnt<<"] Adding "<<*i<<" to the set";
         libera_devs[cnt]= new ChaosControllerLibera(*i+ "/LIBERA_ACQUIRE0");
         
         libera_va[cnt] = new ChaosDatasetAttribute(*i + "/LIBERA_ACQUIRE0/VA");
@@ -135,7 +135,7 @@ RTAbstractControlUnit(_control_unit_id, _control_unit_param, _control_unit_drive
 /*
  Destructor
  */
-DafneAccumulatorBPMSync::~DafneAccumulatorBPMSync() {
+SCDafneAccumulatorBPMSync::~SCDafneAccumulatorBPMSync() {
 
 }
 
@@ -145,7 +145,7 @@ The api that can be called withi this method are listed into
 "Control Unit Definition Public API" module into html documentation
 (chaosframework/Documentation/html/group___control___unit___definition___api.html)
 */
-void DafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CException) {
     //insert your definition code here
    
 //libera 07
@@ -199,12 +199,12 @@ addAttributeToDataSet("BPBA4002Y","BPBA4002 Y",chaos::DataType::TYPE_DOUBLE,chao
 
 
 //!Define custom control unit attribute
-void DafneAccumulatorBPMSync::unitDefineCustomAttribute() {
+void SCDafneAccumulatorBPMSync::unitDefineCustomAttribute() {
 
 }
 
 //!Initialize the Custom Control Unit
-void DafneAccumulatorBPMSync::unitInit() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitInit() throw(chaos::CException) {
  if(group->init(1)!=0){
      throw chaos::CException(-100,"## cannot initialize devices",__PRETTY_FUNCTION__);
  }
@@ -218,13 +218,13 @@ void DafneAccumulatorBPMSync::unitInit() throw(chaos::CException) {
 }
 
 //!Execute the work, this is called with a determinated delay, it must be as fast as possible
-void DafneAccumulatorBPMSync::unitStart() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitStart() throw(chaos::CException) {
     
  
 }
 
 //!Execute the Control Unit work
-void DafneAccumulatorBPMSync::unitRun() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitRun() throw(chaos::CException) {
     data_group->sync();
     for(int cnt=0,out=0;cnt<cu_names.size();cnt++,out+=2){
                 bpmpos mm; 
@@ -236,7 +236,7 @@ void DafneAccumulatorBPMSync::unitRun() throw(chaos::CException) {
                 vd= *libera_vd[cnt];
                 mm=bpm_voltage_to_mm((cnt>3)?1:0,va,vb,vc,vd);
 
-                DafneAccumulatorBPMSyncLDBG_<<" "<<cnt<<" :"<<libera_va[cnt]->getName()<<" "<<libera_va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<va <<" "<<vb <<" "<<(int32_t)vc<<" "<<vd;
+                SCDafneAccumulatorBPMSyncLDBG_<<" "<<cnt<<" :"<<libera_va[cnt]->getName()<<" "<<libera_va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<va <<" "<<vb <<" "<<(int32_t)vc<<" "<<vd;
                 
                 getAttributeCache()->setOutputAttributeValue(out,(void*)&mm.x,sizeof(double));
                 getAttributeCache()->setOutputAttributeValue(out+1,(void*)&mm.y,sizeof(double));
@@ -246,22 +246,22 @@ void DafneAccumulatorBPMSync::unitRun() throw(chaos::CException) {
 }
 
 //!Execute the Control Unit work
-void DafneAccumulatorBPMSync::unitStop() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitStop() throw(chaos::CException) {
 group->stop(1);
 }
 
 //!Deinit the Control Unit
-void DafneAccumulatorBPMSync::unitDeinit() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitDeinit() throw(chaos::CException) {
 group->deinit(1);
 }
 
 //! pre imput attribute change
-void DafneAccumulatorBPMSync::unitInputAttributePreChangeHandler() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitInputAttributePreChangeHandler() throw(chaos::CException) {
 
 }
 
 //! attribute changed handler
-void DafneAccumulatorBPMSync::unitInputAttributeChangedHandler() throw(chaos::CException) {
+void SCDafneAccumulatorBPMSync::unitInputAttributeChangedHandler() throw(chaos::CException) {
 
   
 }

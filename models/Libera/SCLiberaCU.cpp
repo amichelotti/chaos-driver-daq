@@ -56,6 +56,9 @@ chaos::cu::control_manager::SCAbstractControlUnit(_control_unit_id,
 												  _control_unit_drivers){
 
     driver = NULL;
+/*    if(!_control_unit_param.empty()){
+        bpm_type = atoi(control_unit_param.c_str());
+    }*/
 }
 
 /*
@@ -102,12 +105,14 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::TYPE_INT64,
 						  DataType::Output);
         
+        
         addAttributeToDataSet("VA","Volt A",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VB","Volt B",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VC","Volt C",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VD","Volt D",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("X","X",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Y","Y",DataType::TYPE_INT32,chaos::DataType::Output);
+        
         addAttributeToDataSet("Q","Q",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("SUM","SUM",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q1","Q1",DataType::TYPE_INT32,chaos::DataType::Output);

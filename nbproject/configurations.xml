@@ -125,7 +125,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="0">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -141,7 +141,6 @@
             <Elem>EBPP</Elem>
             <Elem>LIBERA</Elem>
             <Elem>_REENTRANT</Elem>
-            <Elem>chaos_driver_libera_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </item>

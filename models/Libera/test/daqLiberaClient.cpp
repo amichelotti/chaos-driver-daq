@@ -176,7 +176,7 @@ int main (int argc, char* argv[] ) {
         libera_vc[cu] = new ChaosDatasetAttribute(*i + "/VC");
         libera_vd[cu] = new ChaosDatasetAttribute(*i + "/VD");
         libera_acquisition[cu] = new ChaosDatasetAttribute(*i + "/ACQUISITION");
-        data_group.add(*libera_acquisition[cu] );
+        data_group.add(libera_acquisition[cu] );
         
         if(libera_devs[cu]){
             group.add(*libera_devs[cu]);
