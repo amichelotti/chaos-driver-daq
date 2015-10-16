@@ -23,14 +23,15 @@
 #include <chaos/cu_toolkit/ControlManager/RTAbstractControlUnit.h>
 #include <driver/misc/ChaosControllerGroup.h>
 #include <driver/misc/ChaosDatasetAttribute.h>
-#include <driver/misc/ChaosDatasetAttributeSyncronizer.h>
+#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 #include <driver/misc/SCDataSync.h>
    
     namespace driver {
         
         namespace daq {
-class SCDafneAccumulatorBPMSync : public SCDataSync {
+            namespace libera{
+class SCDafneAccumulatorBPMSync : public driver::misc::SCDataSync {
 	PUBLISHABLE_CONTROL_UNIT_INTERFACE(SCDafneAccumulatorBPMSync)
 public:
     /*!
@@ -49,8 +50,21 @@ protected:
 		Define the Control Unit Dataset and Actions
 		*/
 		void unitDefineActionAndDataset()throw(chaos::CException);
+                void unitInit() throw(chaos::CException);
+			/*(Optional)
+			 Execute the work, this is called with a determinated delay, it must be as fast as possible
+			 */
+			void unitStart() throw(chaos::CException);
+			/*(Optional)
+			 The Control Unit will be stopped
+			 */
+			void unitStop() throw(chaos::CException);
+			/*(Optional)
+			 The Control Unit will be deinitialized and disposed
+			 */
+			void unitDeinit() throw(chaos::CException);
 
  
 };
-        }}
+            }}}
 #endif

@@ -28,7 +28,8 @@
 using namespace chaos;
 using namespace chaos::common::data::cache;
 using namespace chaos::cu::driver_manager::driver;
-using namespace ::driver::daq;
+using namespace ::driver::daq::libera;
+using namespace ::driver::misc;
 PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(DafneAccumulatorBPMSync)
 
 #define DafneAccumulatorBPMSyncLAPP_		LAPP_ << "[DafneAccumulatorBPMSync] "
@@ -90,7 +91,7 @@ RTAbstractControlUnit(_control_unit_id, _control_unit_param, _control_unit_drive
        DafneAccumulatorBPMSyncLDBG_<<" "<<cu<<" BPMS:"<<_control_unit_param;
 
        group=new ChaosControllerGroup<ChaosControllerLibera>();
-       data_group=new ChaosDatasetAttributeSyncronizer();
+       data_group=new ChaosDatasetAttributeSinchronizer();
        if(group==NULL || data_group==NULL){
            throw chaos::CException(-100,"## cannot create group access",__PRETTY_FUNCTION__);
        

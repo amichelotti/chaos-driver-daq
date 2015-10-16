@@ -27,7 +27,7 @@
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 #include <driver/misc/ChaosControllerGroup.h>
 #include <driver/misc/ChaosDatasetAttribute.h>
-#include <driver/misc/ChaosDatasetAttributeSyncronizer.h>
+#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
 
 
 //#include <fstream>
@@ -36,7 +36,8 @@ using namespace chaos;
 using namespace chaos::common::data;
 using namespace chaos::ui;
 using namespace chaos::common::batch_command;
-
+using namespace driver::misc;
+using namespace driver::daq::libera;
 struct bpmpos {
     double x;
     double y;
@@ -166,7 +167,7 @@ int main (int argc, char* argv[] ) {
     ChaosDatasetAttribute* libera_acquisition[device_name.size()];
     
     ChaosControllerGroup<ChaosControllerLibera> group;
-    ChaosDatasetAttributeSyncronizer data_group;
+    ChaosDatasetAttributeSinchronizer data_group;
     int cu=0;
     for(vector<std::string>::iterator i = device_name.begin();i!=device_name.end();i++,cu++){
         libera_devs[cu] = new ChaosControllerLibera(i->c_str());

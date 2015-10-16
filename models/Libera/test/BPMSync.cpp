@@ -23,7 +23,8 @@
 
 #include <chaos/cu_toolkit/ChaosCUToolkit.h>
 #include "DafneAccumulatorBPMSync.h"
-
+#include "SCDafneAccumulatorBPMSync.h"
+#include <driver/misc/remoteGroupAccessDriver.h>
 
 
 using namespace chaos;
@@ -40,7 +41,9 @@ int main(int argc, char *argv[])
 		ChaosCUToolkit::getInstance()->init(argc, argv);
                 //REGISTER_CU(::driver::daq::libera::SCLiberaCU);
 
-                REGISTER_CU(::driver::daq::DafneAccumulatorBPMSync);
+                REGISTER_CU(::driver::daq::libera::DafneAccumulatorBPMSync);
+                REGISTER_CU(::driver::daq::libera::SCDafneAccumulatorBPMSync);
+                REGISTER_DRIVER(::driver::misc,remoteGroupAccessDriver);
 		// start control unit toolkit until someone will close it
 		ChaosCUToolkit::getInstance()->start();
 	} catch (CException& ex) {

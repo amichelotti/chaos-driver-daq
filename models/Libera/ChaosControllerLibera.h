@@ -15,8 +15,11 @@
 #include <driver/misc/ChaosController.h>
 
 
-
-class ChaosControllerLibera:public ChaosController{
+namespace driver{
+    
+    namespace daq{
+        namespace libera{
+class ChaosControllerLibera:public driver::misc::ChaosController{
     
     private:
         bool blocking; 
@@ -37,6 +40,6 @@ class ChaosControllerLibera:public ChaosController{
     int setEnviron(std::string param,int32_t val);
     
 };
-
+        }}}
 #endif	/* ChaosController_H */
 

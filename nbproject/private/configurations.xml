@@ -223,6 +223,14 @@
           </df>
           <in>ChaosControllerLibera.cpp</in>
           <in>ChaosControllerLibera.h</in>
+          <in>CmdAcquireDafneAccumulatorBPM.cpp</in>
+          <in>CmdAcquireDafneAccumulatorBPM.h</in>
+          <in>CmdDafneAccumulatorBPM.cpp</in>
+          <in>CmdDafneAccumulatorBPM.h</in>
+          <in>CmdDefaultDafneAccumulatorBPM.cpp</in>
+          <in>CmdDefaultDafneAccumulatorBPM.h</in>
+          <in>CmdEnvDafneAccumulatorBPM.cpp</in>
+          <in>CmdEnvDafneAccumulatorBPM.h</in>
           <in>CmdLiberaAcquire.cpp</in>
           <in>CmdLiberaAcquire.h</in>
           <in>CmdLiberaDefault.cpp</in>
@@ -239,6 +247,8 @@
           <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
           <in>RTBPMLibera.cpp</in>
+          <in>SCDafneAccumulatorBPMSync.cpp</in>
+          <in>SCDafneAccumulatorBPMSync.h</in>
           <in>SCLiberaCU.cpp</in>
           <in>SCLiberaCU.h</in>
         </df>
@@ -271,6 +281,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -284,8 +296,10 @@
         <runcommandpicklist>
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
           <runcommandpicklistitem>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
+          <runcommandpicklistitem>BPMSync --unit-server-aliasTEST_UNIT --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
+          <runcommandpicklistitem>BPMSync --unit-server-alias TEST_UNIT --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommand>
+        <runcommand>BPMSync --unit-server-alias TEST_UNIT --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommand>
         <rundir>/home/michelo/chaos_bundle_development/chaos-x86_64-dynamic-release/bin/</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>

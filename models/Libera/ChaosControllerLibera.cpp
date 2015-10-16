@@ -7,7 +7,7 @@
 
 #include "ChaosControllerLibera.h"
 #include "LiberaData.h"
-
+using namespace driver::daq::libera;
 void ChaosControllerLibera::setCommandBlocking(bool t){
     blocking = t;
 }

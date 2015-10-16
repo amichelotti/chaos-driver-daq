@@ -23,13 +23,14 @@
 #include <chaos/cu_toolkit/ControlManager/RTAbstractControlUnit.h>
 #include <driver/misc/ChaosControllerGroup.h>
 #include <driver/misc/ChaosDatasetAttribute.h>
-#include <driver/misc/ChaosDatasetAttributeSyncronizer.h>
+#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 
    
     namespace driver {
         
         namespace daq {
+            namespace libera{
 class DafneAccumulatorBPMSync : public chaos::cu::control_manager::RTAbstractControlUnit {
 	PUBLISHABLE_CONTROL_UNIT_INTERFACE(DafneAccumulatorBPMSync)
 public:
@@ -43,11 +44,11 @@ public:
     ~DafneAccumulatorBPMSync();
 
 protected:
-ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd,**libera_acquisition;
-ChaosControllerLibera** libera_devs;
-ChaosControllerGroup<ChaosControllerLibera>* group;
-ChaosDatasetAttributeSyncronizer* data_group;
-std::vector<std::string> cu_names;
+        driver::misc::ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd,**libera_acquisition;
+        ChaosControllerLibera** libera_devs;
+        driver::misc::ChaosControllerGroup<ChaosControllerLibera>* group;
+        driver::misc::ChaosDatasetAttributeSinchronizer* data_group;
+        std::vector<std::string> cu_names;
 
     /*!
 		Define the Control Unit Dataset and Actions
@@ -94,5 +95,5 @@ std::vector<std::string> cu_names;
 		*/
 		void unitInputAttributeChangedHandler() throw(chaos::CException);
 };
-        }}
+            }}}
 #endif
