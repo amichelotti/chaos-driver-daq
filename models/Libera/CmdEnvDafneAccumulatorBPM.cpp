@@ -124,7 +124,7 @@ void CmdEnvDafneAccumulatorBPM::acquireHandler() {
     
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));
-     getAttributeCache()->setOutputAttributeValue("ACQUIRE",(void*)&acquire_v,sizeof(acquire_v));
+     getAttributeCache()->setOutputAttributeValue("ACQUISITION",(void*)&acquire_v,sizeof(acquire_v));
      getAttributeCache()->setOutputDomainAsChanged();
 
 }

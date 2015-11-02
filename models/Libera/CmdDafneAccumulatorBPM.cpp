@@ -90,6 +90,7 @@ void CmdDafneAccumulatorBPM::acquireHandler() {
     samples_v = *samples[0];
     acquire_v = *acquire[0];
     int cntt=0;
+    try {
     for(int cnt=0,cntt=0;cnt<elem_size;cnt++,cntt+=4){
           bpmpos mm; 
           int32_t a,b,c,d;
@@ -119,12 +120,14 @@ void CmdDafneAccumulatorBPM::acquireHandler() {
                getAttributeCache()->setOutputAttributeValue(cntt+2,(void*)x,elems*sizeof(double));
                getAttributeCache()->setOutputAttributeValue(cntt+3,(void*)y,elems*sizeof(double));
             }
-            
+           
     }
-    
+    } catch(chaos::CException e){
+        ATTRDBG_<<"%% WARNING "<<e.errorMessage;
+    }
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));
-     getAttributeCache()->setOutputAttributeValue("ACQUIRE",(void*)&acquire_v,sizeof(acquire_v));
+     getAttributeCache()->setOutputAttributeValue("ACQUISITION",(void*)&acquire_v,sizeof(acquire_v));
      getAttributeCache()->setOutputDomainAsChanged();
 
 }

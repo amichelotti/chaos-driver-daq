@@ -81,6 +81,7 @@ void  CmdDefaultDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         CTRLERR_<<"Different array size, check driver input parameters: VA:"<<va.size()<<" VB:"<<vb.size()<<" VC:"<<vc.size()<<" VD:"<<vd.size()<<" MODE:"<<mode.size()<<" acquire:"<<acquire.size()<<" samples:"<<samples.size();
         chaos::CException(-1,"## bad array sizes ",__PRETTY_FUNCTION__);
     }
+    BC_NORMAL_RUNNIG_PROPERTY
 }
 
 void CmdDefaultDafneAccumulatorBPM::acquireHandler() {
@@ -124,7 +125,8 @@ void CmdDefaultDafneAccumulatorBPM::acquireHandler() {
     
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));
-     getAttributeCache()->setOutputAttributeValue("ACQUIRE",(void*)&acquire_v,sizeof(acquire_v));
+     getAttributeCache()->setOutputAttributeValue("ACQUISITION",(void*)&acquire_v,sizeof(acquire_v));
      getAttributeCache()->setOutputDomainAsChanged();
+     
 
 }

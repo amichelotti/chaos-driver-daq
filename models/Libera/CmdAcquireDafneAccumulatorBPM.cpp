@@ -65,6 +65,13 @@ uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
 }
 void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     driver::misc::CmdSync::setHandler(data);
+    if(data->hasKey("enable")) {
+            if(data->getInt32Value("enable")==0){
+               
+                BC_END_RUNNIG_PROPERTY;
+                return;
+            }
+   }
     va=driver->getRemoteVariables("VA");
     vb=driver->getRemoteVariables("VB");
     vc=driver->getRemoteVariables("VC");;
@@ -86,10 +93,12 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
     uint64_t acquire_v,mt_v;
     int32_t mode_v,samples_v;
+    try {
     mode_v= *mode[0];
     samples_v = *samples[0];
     acquire_v = *acquire[0];
     int cntt=0;
+    
     for(int cnt=0,cntt=0;cnt<elem_size;cnt++,cntt+=4){
           bpmpos mm; 
           int32_t a,b,c,d;
@@ -121,10 +130,16 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
             }
             
     }
-    
+    } catch(chaos::CException e){
+        ATTRDBG_<<"%% WARNING "<<e.errorMessage;
+    }
+    if(mode_v==0){
+            ATTRDBG_<<"exiting from acquire, by mode =0";
+           BC_END_RUNNIG_PROPERTY;
+    }
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));
-     getAttributeCache()->setOutputAttributeValue("ACQUIRE",(void*)&acquire_v,sizeof(acquire_v));
+     getAttributeCache()->setOutputAttributeValue("ACQUISITION",(void*)&acquire_v,sizeof(acquire_v));
      getAttributeCache()->setOutputDomainAsChanged();
 
 }
