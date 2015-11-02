@@ -7,8 +7,8 @@
 
 #include "CmdEnvDafneAccumulatorBPM.h"
 #include "LiberaData.h"
-using namespace driver::daq::libera;
-using namespace driver::misc;
+using namespace ::driver::daq::libera;
+using namespace ::driver::misc;
 struct bpmpos {
     double x;
     double y;
@@ -64,7 +64,7 @@ uint8_t CmdEnvDafneAccumulatorBPM::implementedHandler(){
 
 }
 void  CmdEnvDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
-    driver::misc::CmdSync::setHandler(data);
+  ::driver::misc::CmdSync::setHandler(data);
     va=driver->getRemoteVariables("VA");
     vb=driver->getRemoteVariables("VB");
     vc=driver->getRemoteVariables("VC");;

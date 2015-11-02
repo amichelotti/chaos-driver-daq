@@ -19,7 +19,7 @@ namespace driver{
     
     namespace daq{
         namespace libera{
-class ChaosControllerLibera:public driver::misc::ChaosController{
+	  class ChaosControllerLibera:public ::driver::misc::ChaosController{
     
     private:
         bool blocking; 

@@ -31,7 +31,7 @@
         
         namespace daq {
             namespace libera{
-class SCDafneAccumulatorBPMSync : public driver::misc::SCDataSync {
+class SCDafneAccumulatorBPMSync : public ::driver::misc::SCDataSync {
 	PUBLISHABLE_CONTROL_UNIT_INTERFACE(SCDafneAccumulatorBPMSync)
 public:
     /*!

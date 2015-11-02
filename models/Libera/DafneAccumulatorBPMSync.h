@@ -17,8 +17,8 @@
  *    	See the License for the specific language governing permissions and
  *    	limitations under the License.
  */
-#ifndef ChaosRTControlUnit_DafneAccumulatorBPMSync_h
-#define ChaosRTControlUnit_DafneAccumulatorBPMSync_h
+#ifndef _DafneAccumulatorBPMSync_h
+#define _DafneAccumulatorBPMSync_h
 
 #include <chaos/cu_toolkit/ControlManager/RTAbstractControlUnit.h>
 #include <driver/misc/ChaosControllerGroup.h>
@@ -44,10 +44,10 @@ public:
     ~DafneAccumulatorBPMSync();
 
 protected:
-        driver::misc::ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd,**libera_acquisition;
+    ::driver::misc::ChaosDatasetAttribute** libera_va,**libera_vb,**libera_vc,**libera_vd,**libera_acquisition;
         ChaosControllerLibera** libera_devs;
-        driver::misc::ChaosControllerGroup<ChaosControllerLibera>* group;
-        driver::misc::ChaosDatasetAttributeSinchronizer* data_group;
+        ::driver::misc::ChaosControllerGroup<ChaosControllerLibera>* group;
+        ::driver::misc::ChaosDatasetAttributeSinchronizer* data_group;
         std::vector<std::string> cu_names;
 
     /*!

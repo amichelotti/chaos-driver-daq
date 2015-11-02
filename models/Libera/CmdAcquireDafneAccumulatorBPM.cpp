@@ -7,8 +7,8 @@
 
 #include "CmdAcquireDafneAccumulatorBPM.h"
 #include "LiberaData.h"
-using namespace driver::daq::libera;
-using namespace driver::misc;
+using namespace ::driver::daq::libera;
+using namespace ::driver::misc;
 struct bpmpos {
     double x;
     double y;
@@ -64,7 +64,7 @@ uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
 
 }
 void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
-    driver::misc::CmdSync::setHandler(data);
+  ::driver::misc::CmdSync::setHandler(data);
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
                

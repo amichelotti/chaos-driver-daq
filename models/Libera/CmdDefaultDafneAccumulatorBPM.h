@@ -12,18 +12,18 @@ namespace driver {
         
         namespace daq {
             namespace libera{
-class CmdDefaultDafneAccumulatorBPM : public driver::misc::CmdSync {
+	      class CmdDefaultDafneAccumulatorBPM : public ::driver::misc::CmdSync {
     
       
-      std::vector<driver::misc::ChaosDatasetAttribute*> va;
-      std::vector<driver::misc::ChaosDatasetAttribute*> vb;
-      std::vector<driver::misc::ChaosDatasetAttribute*> vc;
-      std::vector<driver::misc::ChaosDatasetAttribute*> vd;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> va;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> vb;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> vc;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> vd;
       
-      std::vector<driver::misc::ChaosDatasetAttribute*> dd;
-      std::vector<driver::misc::ChaosDatasetAttribute*> mode;
-      std::vector<driver::misc::ChaosDatasetAttribute*> acquire;
-      std::vector<driver::misc::ChaosDatasetAttribute*> samples;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> dd;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> mode;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> acquire;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> samples;
       int elem_size;
 public:
     CmdDefaultDafneAccumulatorBPM();
