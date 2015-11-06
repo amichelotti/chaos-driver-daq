@@ -59,7 +59,10 @@
       <flagsDictionary>
         <element flagsID="0" commonFlags="-O3 -O2"/>
         <element flagsID="1" commonFlags="-O3 -fPIC -O2"/>
-        <element flagsID="2" commonFlags="-std=gnu99 -O3 -fPIC -g -O2"/>
+        <element flagsID="2" commonFlags="-fPIC -fPIC -fPIC -fPIC -O3 -O2"/>
+        <element flagsID="3" commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -O3 -O2"/>
+        <element flagsID="4" commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -O3 -fPIC -O2"/>
+        <element flagsID="5" commonFlags="-std=gnu99 -O3 -fPIC -g -O2"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -117,7 +120,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -130,7 +132,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="0">
+        <ccTool flags="2">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -140,7 +142,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -153,7 +154,7 @@
             ex="false"
             tool="1"
             flavor2="0">
-        <ccTool flags="1">
+        <ccTool flags="4">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -163,7 +164,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -200,8 +200,8 @@
       <item path="models/Libera/CmdDefaultDafneAccumulatorBPM.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
-        <ccTool flags="1">
+            flavor2="4">
+        <ccTool flags="4">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -211,7 +211,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -224,7 +223,7 @@
       <item path="models/Libera/CmdEnvDafneAccumulatorBPM.cpp"
             ex="false"
             tool="1"
-            flavor2="0">
+            flavor2="4">
         <ccTool flags="1">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
@@ -333,7 +332,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="4">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -343,7 +342,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -434,7 +432,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="4">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -444,7 +442,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -476,41 +473,41 @@
         </ccTool>
       </item>
       <item path="models/Libera/cspi/cordic.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="2">
+        <cTool flags="5">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="2">
+        <cTool flags="5">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi_events.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="2">
+        <cTool flags="5">
         </cTool>
       </item>
       <item path="models/Libera/cspi/ebpp.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="2">
+        <cTool flags="5">
         </cTool>
       </item>
       <item path="models/Libera/cspi/pool.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="2">
+        <cTool flags="5">
         </cTool>
       </item>
       <item path="models/Libera/test/BPMSync.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="0">
+        <ccTool flags="3">
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaClient.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="0">
+        <ccTool flags="3">
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaServer.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="0">
+        <ccTool flags="2">
         </ccTool>
       </item>
     </conf>

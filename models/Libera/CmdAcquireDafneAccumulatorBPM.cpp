@@ -65,8 +65,19 @@ uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
 }
 void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   ::driver::misc::CmdSync::setHandler(data);
+  int tomode=0;
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
+               
+                BC_END_RUNNIG_PROPERTY;
+                return;
+            }
+   }
+  
+   if(data->hasKey("mode")) {
+       tomode=data->getInt32Value("mode");
+        CTRLDBG_<<" Going into mode:"<<tomode;
+            if(tomode==0){
                
                 BC_END_RUNNIG_PROPERTY;
                 return;
@@ -88,6 +99,16 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         CTRLERR_<<"Different array size, check driver input parameters: VA:"<<va.size()<<" VB:"<<vb.size()<<" VC:"<<vc.size()<<" VD:"<<vd.size()<<" MODE:"<<mode.size()<<" acquire:"<<acquire.size()<<" samples:"<<samples.size();
         chaos::CException(-1,"## bad array sizes ",__PRETTY_FUNCTION__);
     }
+    
+   
+   for(int cnt=0;cnt<elem_size;cnt++){
+       mode_sync.add(mode[cnt]);
+   }
+    CTRLDBG_<<" WAITING for mode:"<<tomode;
+
+    mode_sync.sync(tomode);
+    CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
+
 }
 
 void CmdAcquireDafneAccumulatorBPM::acquireHandler() {

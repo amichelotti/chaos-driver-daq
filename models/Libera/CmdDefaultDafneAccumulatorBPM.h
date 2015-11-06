@@ -8,6 +8,7 @@
 #ifndef CMDDEFAULTDAFNEACCUMULATORBPM_H
 #define	CMDDEFAULTDAFNEACCUMULATORBPM_H
 #include <driver/misc/CmdSync.h>
+#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
 namespace driver {
         
         namespace daq {

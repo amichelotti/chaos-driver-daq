@@ -8,6 +8,7 @@
 #ifndef CMDACQDAFNEACCUMULATORBPM_H
 #define	CMDACQDAFNEACCUMULATORBPM_H
 #include <driver/misc/CmdSync.h>
+#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
 namespace driver {
         
         namespace daq {
@@ -25,6 +26,7 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> acquire;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> samples;
       int elem_size;
+      ::driver::misc::ChaosDatasetAttributeSinchronizer mode_sync;
 public:
     CmdAcquireDafneAccumulatorBPM();
    
