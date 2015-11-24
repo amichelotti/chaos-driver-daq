@@ -57,6 +57,7 @@ SCDafneAccumulatorBPMSync::~SCDafneAccumulatorBPMSync() {
 
 }
 
+using namespace driver::daq::libera;
 //!Return the definition of the control unit
 /*!
 The api that can be called withi this method are listed into
@@ -65,8 +66,9 @@ The api that can be called withi this method are listed into
 */
 void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CException) {
     //insert your definition code here
-       installCommand<CmdDefaultDafneAccumulatorBPM>("default");
-	installCommand<CmdAcquireDafneAccumulatorBPM>("acquire");
+      installCommand<CmdDefaultDafneAccumulatorBPM>("default");
+      installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdAcquireDafneAccumulatorBPM));
+
 	installCommand<CmdEnvDafneAccumulatorBPM>("env");
 	//installCommand<CmdDafneAccumulatorBPM>("time");
         setDefaultCommand("default");
@@ -158,6 +160,11 @@ addAttributeToDataSet("BPBA4002Y","BPBA4002 Y",chaos::DataType::TYPE_DOUBLE,chao
 addAttributeToDataSet("BPBA4002X_ACQ","Acquired BPBA4002X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
 addAttributeToDataSet("BPBA4002Y_ACQ","Acquired BPBA4002Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
 
+addBinaryAttributeAsSubtypeToDataSet("DoubleTest",
+                                         "test",
+                                         DataType::SUB_TYPE_DOUBLE,
+                                         1,
+                                         DataType::Output);
 ////
 
     addAttributeToDataSet("MODE",

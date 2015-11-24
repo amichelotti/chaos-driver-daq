@@ -7,12 +7,23 @@
 
 #include "CmdAcquireDafneAccumulatorBPM.h"
 #include "LiberaData.h"
+#include <boost/format.hpp>
+#include <chaos/cu_toolkit/ControlManager/slow_command/SlowCommand.h>
+
 using namespace ::driver::daq::libera;
 using namespace ::driver::misc;
 struct bpmpos {
     double x;
     double y;
 };
+
+BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdAcquireDafneAccumulatorBPM,"acquire","acquire command","72882f3e-36db-11e5-985f-334fcd6dff22")
+BATCH_COMMAND_ADD_INT32_PARAM("enable", "enable acquisition =1, disable =0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
+BATCH_COMMAND_ADD_INT32_PARAM("mode", "acquisition modes, =1 SlowAcquisition, =2 Data on Demand, add 0x100 for DD triggering",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
+BATCH_COMMAND_ADD_INT32_PARAM("samples", "in DataOnDemand number of samples",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
+BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, to break launch a acquire command with enable=0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
+
+BATCH_COMMAND_CLOSE_DESCRIPTION()
 
 static bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
     bpmpos pos;
@@ -105,7 +116,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
        mode_sync.add(mode[cnt]);
    }
     CTRLDBG_<<" WAITING for mode:"<<tomode;
-
+    mode_sync.setTimeout(10000000);
     mode_sync.sync(tomode);
     CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
 
@@ -139,15 +150,20 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
                 int elems=size/sizeof(libera_dd_t);
                 double x[elems];
                 double y[elems];
+                getAttributeCache()->setOutputAttributeNewSize("DoubleTest",elems*sizeof(double));
+              //  double*tst= getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "DoubleTest");
+
                 getAttributeCache()->setOutputAttributeNewSize(cntt+2,elems*sizeof(double));
                 getAttributeCache()->setOutputAttributeNewSize(cntt+3,elems*sizeof(double));
                 for(int c=0;c<elems;c++){
                     mm= bpm_voltage_to_mm((cnt>3)?1:0,buf[c].Va,buf[c].Vb,buf[c].Vc,buf[c].Vd);
                     x[c]=mm.x;
                     y[c]=mm.y;
+                 //   tst[c]=mm.y;
                 }
                getAttributeCache()->setOutputAttributeValue(cntt+2,(void*)x,elems*sizeof(double));
                getAttributeCache()->setOutputAttributeValue(cntt+3,(void*)y,elems*sizeof(double));
+               getAttributeCache()->setOutputAttributeValue("DoubleTest",(void*)x,elems*sizeof(double));
             }
             
     }
@@ -158,6 +174,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
             ATTRDBG_<<"exiting from acquire, by mode =0";
            BC_END_RUNNIG_PROPERTY;
     }
+    
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));
      getAttributeCache()->setOutputAttributeValue("ACQUISITION",(void*)&acquire_v,sizeof(acquire_v));
