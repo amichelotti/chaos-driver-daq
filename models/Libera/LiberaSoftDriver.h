@@ -25,6 +25,18 @@ limitations under the License.
 #include <common/misc/wavegenerators/WaveBase.h>
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaSoftDriver);
 
+
+class LiberaSoftDriver : public chaos::cu::driver_manager::driver::BasicIODriver {
+protected:
+    int driver_mode;
+    int nacquire;
+    char*raw_data;
+    CSPIHENV env_handle;
+    CSPIHCON con_handle;
+    CSPI_LIBPARAMS lib;
+    CSPI_ENVPARAMS ep;
+    CSPI_CONPARAMS p;
+
 struct liberaconfig
 {
 	liberaconfig() :
@@ -85,24 +97,13 @@ struct liberaconfig
 	};
 	CSPI_BITMASK mask;			// command-line switches (flags)
 };
-
-class LiberaSoftDriver : public chaos::cu::driver_manager::driver::BasicIODriver {
-protected:
-    int driver_mode;
-    int nacquire;
-    char*raw_data;
-    CSPIHENV env_handle;
-    CSPIHCON con_handle;
-    CSPI_LIBPARAMS lib;
-    CSPI_ENVPARAMS ep;
-    CSPI_CONPARAMS p;
     
     struct liberaconfig cfg;
     int wait_trigger();
     int assign_time(const char*time );
     
     int trigger_time_ms;
-    common::misc::wavegenerators::WaveBase_t wave;
+    ::common::misc::wavegenerators::WaveBase_t wave;
     CSPI_ENVPARAMS myenv;
 public:
     LiberaSoftDriver();
