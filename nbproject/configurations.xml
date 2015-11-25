@@ -29,6 +29,7 @@
           <in>LiberaBrillianceCSPIDriver.cpp</in>
           <in>LiberaBrillianceSlowDriver.cpp</in>
           <in>LiberaData.cpp</in>
+          <in>LiberaSoftDriver.cpp</in>
           <in>RTBPMLibera.cpp</in>
           <in>SCDafneAccumulatorBPMSync.cpp</in>
           <in>SCLiberaCU.cpp</in>
@@ -135,7 +136,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -150,6 +151,7 @@
             <Elem>EBPP</Elem>
             <Elem>LIBERA</Elem>
             <Elem>_REENTRANT</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </item>
@@ -157,7 +159,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -204,7 +206,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -227,7 +229,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -267,7 +269,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaDefault.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -277,7 +279,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -288,7 +289,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaEnv.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -298,7 +299,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -309,7 +309,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaTime.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -319,7 +319,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -356,7 +355,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -366,7 +365,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -390,16 +388,36 @@
         </ccTool>
       </item>
       <item path="models/Libera/LiberaData.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
             <pElem>models/Libera/cspi</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
+            <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
+            <Elem>CORDIC_IGNORE_GAIN</Elem>
+            <Elem>CSPI</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>_REENTRANT</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="models/Libera/LiberaSoftDriver.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="3">
+          <incDir>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>models/Libera/driver/misc</pElem>
+          </incDir>
+          <preprocessorList>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
@@ -453,7 +471,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/SCLiberaCU.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="1">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -463,7 +481,6 @@
             <pElem>models/Libera/driver/misc</pElem>
           </incDir>
           <preprocessorList>
-            <Elem>BOOST_ALL_DYN_LINK</Elem>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 
-SET(DAQ_src LiberaData.cpp LiberaBrillianceCSPIDriver.cpp CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  DafneAccumulatorBPMSync.cpp ChaosControllerLibera.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp)
+SET(DAQ_src LiberaData.cpp LiberaBrillianceCSPIDriver.cpp LiberaSoftDriver.cpp CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  DafneAccumulatorBPMSync.cpp ChaosControllerLibera.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp)
 set (CMAKE_C_FLAGS "-std=gnu99 -DEBPP -DCORDIC_IGNORE_GAIN -D_REENTRANT -Idriver/libera-driver-2-04-ebpp -Imsp/src -I/cspi")
 SET(BasicDAQClient_src test/DAQClient.cpp)
 INCLUDE_DIRECTORIES(. cspi driver/libera-driver-2-04-ebpp msp/src driver/misc)
@@ -24,7 +24,7 @@ ELSE()
 ENDIF()
 
 SET(DAQ_LIBRARY chaos_driver_libera chaos_driver_libera_cspi)
-TARGET_LINK_LIBRARIES(chaos_driver_libera chaos_cutoolkit chaos_common common_serial chaos_driver_misc ${FrameworkLib})
+TARGET_LINK_LIBRARIES(chaos_driver_libera chaos_cutoolkit chaos_common common_serial chaos_driver_misc common_misc_wavegenerators ${FrameworkLib})
 
 
 TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_cutoolkit chaos_common  common_serial ${FrameworkLib})

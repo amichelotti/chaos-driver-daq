@@ -38,6 +38,9 @@
 #include <ostream>
 #include <vector>
 #include <iostream>
+#include <sstream>
+#define ILK_PARAMCOUNT 8
+
 #define DECLARE_DESC(_T) \
 typedef struct _T: public libera_desc {\
 static const char* desc[];\
@@ -105,6 +108,9 @@ typedef struct libera_env {
     std::ostream& operator <<(std::ostream&os,const libera_sp_t& data); 
     std::ostream& operator <<(std::ostream&os,const libera_avg_t& data);
    
+    
+   std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj);
+
 #else
 #error "NO LIBERA PLATFORM SPECIFIED"
 #endif

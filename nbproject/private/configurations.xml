@@ -230,6 +230,8 @@
           <in>LiberaBrillianceSlowDriver.cpp</in>
           <in>LiberaData.cpp</in>
           <in>LiberaData.h</in>
+          <in>LiberaSoftDriver.cpp</in>
+          <in>LiberaSoftDriver.h</in>
           <in>RTBPMLibera.cpp</in>
           <in>SCDafneAccumulatorBPMSync.cpp</in>
           <in>SCDafneAccumulatorBPMSync.h</in>
