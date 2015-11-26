@@ -4,20 +4,6 @@
     <df root="." name="0">
       <df name="build">
       </df>
-      <df name="CMakeFiles">
-        <df name="3.2.2">
-          <df name="CompilerIdC">
-            <in>CMakeCCompilerId.c</in>
-          </df>
-          <df name="CompilerIdCXX">
-            <in>CMakeCXXCompilerId.cpp</in>
-          </df>
-        </df>
-        <df name="CMakeTmp">
-        </df>
-        <in>feature_tests.c</in>
-        <in>feature_tests.cxx</in>
-      </df>
       <df name="LabVIEW">
         <df name="bck">
           <df name="common">
@@ -56,26 +42,6 @@
       </df>
       <df name="models">
         <df name="Libera">
-          <df name="CMakeFiles">
-            <df name="BPMSync.dir">
-              <df name="test">
-              </df>
-            </df>
-            <df name="chaos_driver_libera.dir">
-            </df>
-            <df name="chaos_driver_libera_cspi.dir">
-              <df name="cspi">
-              </df>
-            </df>
-            <df name="daqLiberaClient.dir">
-              <df name="test">
-              </df>
-            </df>
-            <df name="daqLiberaServer.dir">
-              <df name="test">
-              </df>
-            </df>
-          </df>
           <df name="conf">
             <df name="etc">
               <df name="default">
