@@ -186,14 +186,16 @@ int LiberaSoftDriver::assign_time(const char*time ){
        
 }
 // trigger_time,WaveGen:init_params
-static boost::regex drv_opt("(\\d+),([a-zA-Z]+):(.+)");
+static boost::regex drv_opt("(\\d+),(.+)");
 
 int LiberaSoftDriver::initIO(void *buffer, int sizeb) {
     
     boost::smatch match;
     std::string param=(const char*)buffer;
     if(boost::regex_match(param,match,drv_opt,boost::match_extra)){
-        wave = common::misc::wavegenerators::WaveFactory::getGenerator(match[2],match[3]);
+      std::string ttime=match[1];
+      wave = common::misc::wavegenerators::WaveFactory::getGenerator(match[2]);
+      trigger_time_ms=atoi(ttime.c_str());
     } else {
         
          LiberaBrillianceCSPILERR_<< "bad option parameters:"<<param;
