@@ -4,6 +4,20 @@
     <df root="." name="0">
       <df name="build">
       </df>
+      <df name="CMakeFiles">
+        <df name="2.8.12.2">
+          <df name="CompilerIdC">
+            <in>CMakeCCompilerId.c</in>
+          </df>
+          <df name="CompilerIdCXX">
+            <in>CMakeCXXCompilerId.cpp</in>
+          </df>
+        </df>
+        <df name="CMakeTmp">
+        </df>
+        <df name="Progress">
+        </df>
+      </df>
       <df name="LabVIEW">
         <df name="bck">
           <df name="common">
@@ -42,6 +56,26 @@
       </df>
       <df name="models">
         <df name="Libera">
+          <df name="CMakeFiles">
+            <df name="BPMSync.dir">
+              <df name="test">
+              </df>
+            </df>
+            <df name="chaos_driver_libera.dir">
+            </df>
+            <df name="chaos_driver_libera_cspi.dir">
+              <df name="cspi">
+              </df>
+            </df>
+            <df name="daqLiberaClient.dir">
+              <df name="test">
+              </df>
+            </df>
+            <df name="daqLiberaServer.dir">
+              <df name="test">
+              </df>
+            </df>
+          </df>
           <df name="conf">
             <df name="etc">
               <df name="default">
@@ -233,6 +267,8 @@
         <gdb_interceptlist>
           <gdbinterceptoptions gdb_all="false" gdb_unhandled="true" gdb_unexpected="true"/>
         </gdb_interceptlist>
+        <gdb_signals>
+        </gdb_signals>
         <gdb_options>
           <DebugOptions>
           </DebugOptions>
@@ -248,8 +284,10 @@
           <runcommandpicklistitem>BPMSync --unit-server-aliasTEST_UNIT --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
           <runcommandpicklistitem>BPMSync --unit-server-alias TEST_UNIT --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
           <runcommandpicklistitem>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommandpicklistitem>
+          <runcommandpicklistitem></runcommandpicklistitem>
+          <runcommandpicklistitem>daqLiberaServer --unit-server-alias LIBERA01 --log-on-console --log-level debug</runcommandpicklistitem>
         </runcommandpicklist>
-        <runcommand>BPMSync --unit-server-alias ACCUMULATOR/BPM --log-on-file --log-level debug --log-on-console --metadata-server chaost-mds1.chaos.lnf.infn.it:5000</runcommand>
+        <runcommand>daqLiberaServer --unit-server-alias LIBERA01 --log-on-console --log-level debug</runcommand>
         <rundir>/home/michelo/chaos_bundle_development/chaos-x86_64-dynamic-release/bin/</rundir>
         <buildfirst>false</buildfirst>
         <terminal-type>0</terminal-type>

@@ -38,8 +38,8 @@ using namespace chaos::cu::driver_manager::driver;
 
 
 
-#define SCCUAPP LAPP_ << "[SCLiberaCU - " << getCUID() << "] - "<<__FUNCTION__<<":"
-#define SCCULDBG LDBG_ << "[SCLiberaCU - " << getCUID() << "] - "<<__FUNCTION__<<":"
+#define SCCUAPP LAPP_ << "[SCLiberaCU - " << getCUID() << "] - "<<__PRETTY_FUNCTION__<<":"
+#define SCCULDBG LDBG_ << "[SCLiberaCU - " << getCUID() << "] - "<<__PRETTY_FUNCTION__<<":"
 
 PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::libera::SCLiberaCU)
 

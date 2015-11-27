@@ -22,6 +22,7 @@
 #include <chaos/cu_toolkit/ControlManager/IOCU.h>
 #ifdef LIBERA
 #include "driver/daq/models/Libera/LiberaBrillianceCSPIDriver.h"
+#include <driver/daq/models/Libera/LiberaSoftDriver.h>
 #endif
 #include "SCLiberaCU.h"
 #include <string>
@@ -42,6 +43,8 @@ int main(int argc, char *argv[])
 #ifdef LIBERA
 		// allocate the instance and inspector for driver
 		REGISTER_DRIVER(,LiberaBrillianceCSPIDriver);
+                REGISTER_DRIVER(,LiberaSoftDriver);
+
                 REGISTER_CU(::driver::daq::libera::SCLiberaCU);
 #endif
 		// start control unit toolkit until someone will close it
