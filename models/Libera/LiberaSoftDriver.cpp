@@ -103,7 +103,7 @@ int LiberaSoftDriver::read(void *buffer, int addr, int bcount) {
 	  rc = (cfg.mask & liberaconfig::want_trigger) ? CSPI_SEEK_TR : CSPI_SEEK_MT;
               
 	  if(addr==CHANNEL_DD){
-	   
+	    LiberaSoftDBG<<" DA read count:"<<count;
             libera_dd_t*dd=(libera_dd_t*)buffer;
             for(int cnt=0;cnt<count;cnt++){
                 memset(&dd[cnt],0,sizeof(libera_dd_t));

@@ -27,8 +27,8 @@
 
 #define CMDCU_ LAPP_ << "["<<__FUNCTION__<<"]"
 
-#define CMDCUDBG_ LDBG_ << "[- "<<__FUNCTION__<<" -]"
-#define CMDCUERR_ LERR_ << "["<<__FUNCTION__<<"]"
+#define CMDCUDBG_ LDBG_ << "[- "<<__PRETTY_FUNCTION__<<" -]"
+#define CMDCUERR_ LERR_ << "["<<__PRETTY_FUNCTION__<<"]"
 
 namespace c_data = chaos::common::data;
 namespace ccc_slow_command = chaos::cu::control_manager::slow_command;
