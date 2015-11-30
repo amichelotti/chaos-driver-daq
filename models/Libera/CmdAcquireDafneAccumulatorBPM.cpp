@@ -24,7 +24,10 @@ BATCH_COMMAND_ADD_INT32_PARAM("samples", "in DataOnDemand number of samples",cha
 BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, to break launch a acquire command with enable=0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 
 BATCH_COMMAND_CLOSE_DESCRIPTION()
-
+#define FIX_NUM(g) \
+if(isnan(g)) g=0; \
+else if(isinf(g)){g=(g>0)?std::numeric_limits<double>::max():std::numeric_limits<double>::min();}
+        
 static bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
     bpmpos pos;
     double x=0,y=0;
@@ -54,8 +57,8 @@ Xs=x;
 Ys=y;
 
 end*/
-    
-
+    FIX_NUM(x);
+    FIX_NUM(y);
     pos.x=x;
     pos.y=y;
     return pos;

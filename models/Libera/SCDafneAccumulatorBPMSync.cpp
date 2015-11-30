@@ -79,57 +79,57 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
 addAttributeToDataSet("BPSA1001X","BPSA1001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPSA1001Y","BPSA1001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPSA1001X_ACQ","Buffer of Acquired X coordinate in mm",chaos::DataType::TYPE_BYTEARRAY,DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPSA1001Y_ACQ","Buffer of Acquired Y coordinate in mm",chaos::DataType::TYPE_BYTEARRAY,DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPSA1001X_ACQ","Buffer of Acquired X coordinate in mm",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPSA1001Y_ACQ","Buffer of Acquired Y coordinate in mm",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 //libera01
 addAttributeToDataSet("BPSA2001X","BPSA2001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPSA2001Y","BPSA2001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPSA2001X_ACQ","Acquired BPSA2001 X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPSA2001Y_ACQ","Acquired BPSA2001 Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPSA2001X_ACQ","Acquired BPSA2001 X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPSA2001Y_ACQ","Acquired BPSA2001 Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 //libera09
 addAttributeToDataSet("BPSA3001X","BPSA3001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPSA3001Y","BPSA3001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPSA3001X_ACQ","Acquired BPSA3001 X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPSA3001Y_ACQ","Acquired BPSA3001 Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPSA3001X_ACQ","Acquired BPSA3001 X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPSA3001Y_ACQ","Acquired BPSA3001 Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 //libera03
 addAttributeToDataSet("BPSA4001X","BPSA4001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPSA4001Y","BPSA4001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPSA4001X_ACQ","Acquired BPSA4001X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPSA4001Y_ACQ","Acquired BPSA4001Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPSA4001X_ACQ","Acquired BPSA4001X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPSA4001Y_ACQ","Acquired BPSA4001Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 //libera08
 addAttributeToDataSet("BPBA1001X","BPBA1001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA1001Y","BPBA1001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA1001X_ACQ","Acquired BPBA1001X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA1001Y_ACQ","Acquired BPBA1001Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA1001X_ACQ","Acquired BPBA1001X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA1001Y_ACQ","Acquired BPBA1001Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 //libera02
 addAttributeToDataSet("BPBA2002X","BPBA2002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA2002Y","BPBA2002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA2002X_ACQ","Acquired BPBA2002X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA2002Y_ACQ","Acquired BPBA2002Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA2002X_ACQ","Acquired BPBA2002X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA2002Y_ACQ","Acquired BPBA2002Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 
 // libera 13
 addAttributeToDataSet("BPBA1002X","BPBA1002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA1002Y","BPBA1002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA1002X_ACQ","Acquired BPBA1002X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA1002Y_ACQ","Acquired BPBA1002Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA1002X_ACQ","Acquired BPBA1002X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA1002Y_ACQ","Acquired BPBA1002Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 addAttributeToDataSet("BPBA2001X","BPBA2001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA2001Y","BPBA2001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA2001X_ACQ","Acquired BPBA2001X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA2001Y_ACQ","Acquired BPBA2001Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA2001X_ACQ","Acquired BPBA2001X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA2001Y_ACQ","Acquired BPBA2001Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 //
 
@@ -138,33 +138,38 @@ addAttributeToDataSet("BPBA2001Y_ACQ","Acquired BPBA2001Y Y",chaos::DataType::TY
 addAttributeToDataSet("BPBA3001X","BPBA3001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA3001Y","BPBA3001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA3001X_ACQ","Acquired BPBA3001X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA3001Y_ACQ","Acquired BPBA3001Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA3001X_ACQ","Acquired BPBA3001X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA3001Y_ACQ","Acquired BPBA3001Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 addAttributeToDataSet("BPBA3002X","BPBA3002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA3002Y","BPBA3002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA3002X_ACQ","Acquired BPBA3002X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA3002Y_ACQ","Acquired BPBA3002Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA3002X_ACQ","Acquired BPBA3002X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA3002Y_ACQ","Acquired BPBA3002Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 addAttributeToDataSet("BPBA4001X","BPBA4001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA4001Y","BPBA4001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA4001X_ACQ","Acquired BPBA4001X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA4001Y_ACQ","Acquired BPBA4001Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-
+addBinaryAttributeAsSubtypeToDataSet("BPBA4001X_ACQ","Acquired BPBA4001X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA4001Y_ACQ","Acquired BPBA4001Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
 addAttributeToDataSet("BPBA4002X","BPBA4002 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPBA4002Y","BPBA4002 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 
-addAttributeToDataSet("BPBA4002X_ACQ","Acquired BPBA4002X X",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
-addAttributeToDataSet("BPBA4002Y_ACQ","Acquired BPBA4002Y Y",chaos::DataType::TYPE_BYTEARRAY,chaos::DataType::Output,1 * sizeof(double));
+addBinaryAttributeAsSubtypeToDataSet("BPBA4002X_ACQ","Acquired BPBA4002X X",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+addBinaryAttributeAsSubtypeToDataSet("BPBA4002Y_ACQ","Acquired BPBA4002Y Y",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
 
-addBinaryAttributeAsSubtypeToDataSet("DoubleTest",
+
+
+
+
+
+  addBinaryAttributeAsSubtypeToDataSet("DoubleTest",
                                          "test",
                                          DataType::SUB_TYPE_DOUBLE,
                                          1,
                                          DataType::Output);
+
 ////
 
     addAttributeToDataSet("MODE",
