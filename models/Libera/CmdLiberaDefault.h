@@ -21,7 +21,7 @@
 #ifndef __CmdLiberaDefault__
 #define __CmdLiberaDefault__
 
-#include <chaos/cu_toolkit/ControlManager/slow_command/SlowCommand.h>
+#include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriverInterface.h>
 #include "LiberaData.h"
 

@@ -8,7 +8,7 @@
 #include "CmdAcquireDafneAccumulatorBPM.h"
 #include "LiberaData.h"
 #include <boost/format.hpp>
-#include <chaos/cu_toolkit/ControlManager/slow_command/SlowCommand.h>
+#include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
 
 using namespace ::driver::daq::libera;
 using namespace ::driver::misc;

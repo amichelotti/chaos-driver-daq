@@ -20,7 +20,7 @@
 #ifndef ChaosRTControlUnit_SCDafneAccumulatorBPMSync_h
 #define ChaosRTControlUnit_SCDafneAccumulatorBPMSync_h
 
-#include <chaos/cu_toolkit/ControlManager/RTAbstractControlUnit.h>
+#include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
 #include <driver/misc/ChaosControllerGroup.h>
 #include <driver/misc/ChaosDatasetAttribute.h>
 #include <driver/misc/ChaosDatasetAttributeSinchronizer.h>

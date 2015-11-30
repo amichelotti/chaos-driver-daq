@@ -19,7 +19,7 @@
 */
 
 
-#include <chaos/cu_toolkit/ControlManager/IOCU.h>
+#include <chaos/cu_toolkit/control_manager/IOCU.h>
 #ifdef LIBERA
 #include "driver/daq/models/Libera/LiberaBrillianceCSPIDriver.h"
 #include <driver/daq/models/Libera/LiberaSoftDriver.h>
