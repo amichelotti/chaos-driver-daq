@@ -26,7 +26,7 @@ BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, t
 BATCH_COMMAND_CLOSE_DESCRIPTION()
 #define FIX_NUM(g) \
 if(isnan(g)) g=0; \
-else if(isinf(g)){g=(g>0)?std::numeric_limits<double>::max():std::numeric_limits<double>::min();}
+else if(isinf(g)){g=(g>0)?std::numeric_limits<float>::max():std::numeric_limits<float>::min();}
         
 static bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
     bpmpos pos;
