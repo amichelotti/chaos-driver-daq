@@ -23,8 +23,8 @@ limitations under the License.
 #include <boost/lexical_cast.hpp>
 
 #define LiberaBrillianceCSPILAPP_		LAPP_ << "[LiberaBrillianceCSPI] "
-#define LiberaBrillianceCSPILDBG_		LDBG_ << "[LiberaBrillianceCSPI] "
-#define LiberaBrillianceCSPILERR_		LERR_ << "[LiberaBrillianceCSPI] "
+#define LiberaBrillianceCSPILDBG_		LDBG_ << "[LiberaBrillianceCSPI "<<__PRETTY_FUNCTION__<<"]"
+#define LiberaBrillianceCSPILERR_		LERR_ << "[LiberaBrillianceCSPI "<<__PRETTY_FUNCTION__<<"]"
 using namespace chaos::cu::driver_manager::driver;
 static boost::mutex io_mux;
 OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaBrillianceCSPIDriver, 1.0.0, LiberaBrillianceCSPIDriver)
@@ -394,7 +394,7 @@ int LiberaBrillianceCSPIDriver::initIO(void *buffer, int sizeb) {
     cfg.operation = liberaconfig::init;
     cfg.atom_count=1;
     cfg.datasize=0;
-
+    cfg.mask =0;
     ep.trig_mode = CSPI_TRIGMODE_GET;
      
     cspi_setlibparam(&lib, CSPI_LIB_SUPERUSER);

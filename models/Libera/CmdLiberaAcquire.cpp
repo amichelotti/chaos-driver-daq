@@ -199,12 +199,20 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
 
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
+         if(mode&LIBERA_IOP_MODE_PERMLOOP){
+             loops=-1;
+         } else {
+            if(loops<0){
+                mode|=LIBERA_IOP_MODE_PERMLOOP;
+            }
+         }
          *pmode=mode;
          *psamples=samples;
          *acquire_loops=0;
          getAttributeCache()->setOutputDomainAsChanged();
         CMDCU_<<" start acquiring mode:"<<mode<<" samples:"<<samples<<" offset:"<<offset<<" loops:"<<loops<<" WAIT COMMAND FOR:"<<wait_for_us;
          boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
+         
         start_acquire=start_test.time_of_day().total_milliseconds();
         BC_NORMAL_RUNNIG_PROPERTY;
         usleep(wait_for_us);
