@@ -95,7 +95,6 @@ protected:
     CSPI_LIBPARAMS lib;
     CSPI_ENVPARAMS ep;
     CSPI_CONPARAMS p;
-    
     struct liberaconfig cfg;
     int wait_trigger();
     int assign_time(const char*time );

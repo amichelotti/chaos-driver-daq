@@ -56,6 +56,8 @@ chaos::cu::control_manager::SCAbstractControlUnit(_control_unit_id,
 												  _control_unit_drivers){
 
     driver = NULL;
+   
+        
 /*    if(!_control_unit_param.empty()){
         bpm_type = atoi(control_unit_param.c_str());
     }*/
@@ -110,9 +112,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("VB","Volt B",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VC","Volt C",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("VD","Volt D",DataType::TYPE_INT32,chaos::DataType::Output);
-        addAttributeToDataSet("X","X",DataType::TYPE_INT32,chaos::DataType::Output);
-        addAttributeToDataSet("Y","Y",DataType::TYPE_INT32,chaos::DataType::Output);
         
+    
+        addAttributeToDataSet("X","X mm calculated",DataType::TYPE_INT32,chaos::DataType::Output);
+        addAttributeToDataSet("Y","Y mm calculated",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q","Q",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("SUM","SUM",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q1","Q1",DataType::TYPE_INT32,chaos::DataType::Output);
@@ -124,6 +127,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::TYPE_INT32,
 						  DataType::Input);
         
+        addAttributeToDataSet("POLYTYPE",
+						  "Poly to use to fit the position from Voltages (0=BPB 1=BPSA)",
+						  DataType::TYPE_INT32,
+						  DataType::Input);
         
         addAttributeToDataSet("error",
 						  "error status",
@@ -135,15 +142,25 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::Output,MAX_STRING);
         
 	//setup the dataset
-	addAttributeToDataSet("DD",
+	/*
+         * addAttributeToDataSet("DD",
 						  "Data on Demand",
 						  DataType::TYPE_BYTEARRAY,
 						  DataType::Output,1 * sizeof(libera_dd_t));
+         */ 
+        addBinaryAttributeAsSubtypeToDataSet("VA_ACQ","VA ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
+        addBinaryAttributeAsSubtypeToDataSet("VB_ACQ","VB ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
+        addBinaryAttributeAsSubtypeToDataSet("VC_ACQ","VC ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
+        addBinaryAttributeAsSubtypeToDataSet("VD_ACQ","VD ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
 	
-        addAttributeToDataSet("SA",
+        addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+        addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+     /*
+      *    addAttributeToDataSet("SA",
 						  "Data Streaming",
 						  DataType::TYPE_BYTEARRAY,
 						  DataType::Output,1 * sizeof(libera_sa_t));
+      */
         
          addAttributeToDataSet("ADC_CW",
 						  "Data ADC Continuous",
@@ -160,6 +177,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::TYPE_BYTEARRAY,
 						  DataType::Output,1 * sizeof(libera_avg_t));
         
+
 	
 }
 

@@ -121,22 +121,35 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         if(data->hasKey("wait_for")) {
             wait_for_us = data->getInt64Value("wait_for");
          }
-         getAttributeCache()->setOutputAttributeNewSize("SA", 0);
-         getAttributeCache()->setOutputAttributeNewSize("DD", 0);
+         //getAttributeCache()->setOutputAttributeNewSize("SA", 0);
+         //getAttributeCache()->setOutputAttributeNewSize("DD", 0);
+        getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", 0);
+        getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", 0);
+        getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", 0);
+        getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", 0);
+        getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
+        getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
+        
          getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
          getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
 
          if(tmode&LIBERA_IOP_MODE_DD){
              if(tsamples>0){
-                getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
-
+                //getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
+               // getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
+                getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", tsamples*sizeof(int32_t));
+                getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", tsamples*sizeof(int32_t));
+                getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", tsamples*sizeof(int32_t));
+                getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", tsamples*sizeof(int32_t));
+                getAttributeCache()->setOutputAttributeNewSize("X_ACQ", tsamples*sizeof(double));
+                getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", tsamples*sizeof(double));
                 driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                 samples=tsamples;
 
              }
             } else if (tmode&LIBERA_IOP_MODE_SA){
                 if(tsamples>0){
-                    getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
+                   // getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
                     driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
                     samples=tsamples;
 
@@ -181,7 +194,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
         }
         
-      
+         type=*getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "POLYTYPE");
          mode = tmode;
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
          vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
@@ -197,7 +210,12 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
         mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
-
+        va_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA_ACQ");
+        vb_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
+        vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
+        vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
+        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
          if(mode&LIBERA_IOP_MODE_PERMLOOP){
              loops=-1;
@@ -246,8 +264,8 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             CMDCUDBG_<<"MT:"<<*mt<<" ST:"<<*st <<" TV_sec:"<<ts.st.tv_sec<<" TV_NSEC:"<<ts.st.tv_nsec;
 
      }
-        libera_dd_t*pnt=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
-        if(pnt==NULL){
+        libera_dd_t pnt[samples];//=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
+      /*  if(pnt==NULL){
             CMDCUERR_<<"cannot retrieve dataset \"DD\"";
             *pmode=0;
             *perr|=LIBERA_ERROR_ALLOCATE_DATASET;
@@ -255,19 +273,30 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             getAttributeCache()->setOutputDomainAsChanged();
             BC_END_RUNNIG_PROPERTY;
             return;
-        }
+        }*/
+        
         if((ret=driver->read((void*)pnt,0,samples*sizeof(libera_dd_t)))>=0){
-            
+            bpmpos mm;
             *va = pnt[0].Va;
             *vb = pnt[0].Vb;
             *vc = pnt[0].Vc;
             *vd = pnt[0].Vd;
-            *x  = pnt[0].X;
-            *y  = pnt[0].Y;
+            mm=bpm_voltage_to_mm(type,pnt[0].Va,pnt[0].Vb,pnt[0].Vc,pnt[0].Vd);
+            *x  = mm.x;
+            *y  = mm.y;
             *q  = pnt[0].Q;
             *sum  = pnt[0].Sum;
             *q1 = 0;
             *q2 = 0;
+            for(int cnt=0;cnt<samples;cnt++){
+                va_acq[cnt]=pnt[cnt].Va;
+                vb_acq[cnt]=pnt[cnt].Vb;
+                vc_acq[cnt]=pnt[cnt].Vc;
+                vd_acq[cnt]=pnt[cnt].Vd;
+                mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
+                x_acq[cnt]=mm.x;
+                y_acq[cnt]=mm.y;
+            }
              CMDCUDBG_ << "DD read [ret="<<std::dec<<ret<<"]:"<<pnt[0];
              (*acquire_loops)++;
         } else {
@@ -276,22 +305,26 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             CMDCUERR_<<"Error reading DD ret:"<<ret<<", mode:"<<mode<<" samples:"<<samples;
         }
     } else if(mode&LIBERA_IOP_MODE_SA){
-        libera_sa_t*pnt=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
+        libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
-        if((ret=driver->read((void*)pnt,0,samples*sizeof(libera_sa_t)))>=0){
-            *va = pnt[0].Va;
-            *vb = pnt[0].Vb;
-            *vc = pnt[0].Vc;
-            *vd = pnt[0].Vd;
-            *x  = pnt[0].X;
-            *y  = pnt[0].Y;
-            *q  = pnt[0].Q;
-            *sum  = pnt[0].Sum;
-            *q1 = pnt[0].Cx;
-            *q2 = pnt[0].Cy;
+        if((ret=driver->read((void*)&pnt,0,sizeof(libera_sa_t)))>=0){
+            bpmpos mm;
+
+            *va = pnt.Va;
+            *vb = pnt.Vb;
+            *vc = pnt.Vc;
+            *vd = pnt.Vd;
+            mm=bpm_voltage_to_mm(type,pnt.Va,pnt.Vb,pnt.Vc,pnt.Vd);
+            *x  = mm.x;
+            *y  = mm.y;
+            *q  = pnt.Q;
+            *sum  = pnt.Sum;
+            *q1 = pnt.Cx;
+            *q2 = pnt.Cy;
              (*acquire_loops)++;
-             
-            CMDCUDBG_ << "SA read:"<<pnt[0];
+             x_acq[0] = mm.x;
+             y_acq[0] = mm.y;
+            CMDCUDBG_ << "SA read:"<<pnt;
 
         } else {
              *perr|=LIBERA_ERROR_READING;

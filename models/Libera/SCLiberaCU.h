@@ -29,8 +29,6 @@ namespace driver {
             namespace libera {
 		class SCLiberaCU : public chaos::cu::control_manager::SCAbstractControlUnit {
 			PUBLISHABLE_CONTROL_UNIT_INTERFACE(SCLiberaCU)
-
-			
 			chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
 
 		protected:

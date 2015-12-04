@@ -111,7 +111,12 @@ typedef struct libera_env {
    
     
    std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj);
+struct bpmpos {
+    double x;
+    double y;
+};
 
+   bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd);
 #else
 #error "NO LIBERA PLATFORM SPECIFIED"
 #endif

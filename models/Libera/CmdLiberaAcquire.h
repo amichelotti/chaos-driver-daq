@@ -30,9 +30,12 @@ namespace driver {
 	namespace daq {
             namespace libera {
 		class CmdLiberaAcquire : public CmdLiberaDefault {
-                    int mode,samples,loops,offset;
+                    int mode,samples,loops,offset,type;
     
                     int32_t* va,*vb,*vc,*vd,*x,*y,*q,*sum,*q1,*q2;
+                    int32_t* va_acq,*vb_acq,*vc_acq,*vd_acq;
+                    double *x_acq,*y_acq;
+                    
                     int32_t* psamples,*pmode,*perr;
                     int64_t*acquire_loops;
                     int acquire_duration;

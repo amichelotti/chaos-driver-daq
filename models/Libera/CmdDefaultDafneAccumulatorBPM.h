@@ -26,6 +26,8 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> acquire;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> samples;
       int elem_size;
+      std::vector< ::driver::misc::ChaosDatasetAttribute* > rattrs;
+
 public:
     CmdDefaultDafneAccumulatorBPM();
    

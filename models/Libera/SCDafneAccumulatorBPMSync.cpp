@@ -73,8 +73,18 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
 	//installCommand<CmdDafneAccumulatorBPM>("time");
         setDefaultCommand("default");
 
+        std::vector<ChaosDatasetAttribute*> rattrs= driver->getRemoteVariables();
         
-    
+    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
+        std::string name=(*i)->getGroup()+chaos::PATH_SEPARATOR+(*i)->getName();
+        
+        if((*i)->getType()!=chaos::DataType::TYPE_BYTEARRAY){
+            addAttributeToDataSet(name,(*i)->getDesc(),(*i)->getType(),(*i)->getDir());
+        } else if((*i)->getBinaryType()!=chaos::DataType::SUB_TYPE_NONE){
+            addBinaryAttributeAsSubtypeToDataSet(name,(*i)->getDesc(),(*i)->getBinaryType(),(*i)->getSize(),(*i)->getDir());
+        }
+    }
+        /*
 //libera 07
 addAttributeToDataSet("BPSA1001X","BPSA1001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
 addAttributeToDataSet("BPSA1001Y","BPSA1001 Y",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
@@ -169,6 +179,7 @@ addBinaryAttributeAsSubtypeToDataSet("BPBA4002Y_ACQ","Acquired BPBA4002Y Y",chao
                                          DataType::SUB_TYPE_DOUBLE,
                                          1,
                                          DataType::Output);
+         * */
 
 ////
 

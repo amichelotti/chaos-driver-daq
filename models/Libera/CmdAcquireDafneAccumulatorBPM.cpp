@@ -12,10 +12,6 @@
 
 using namespace ::driver::daq::libera;
 using namespace ::driver::misc;
-struct bpmpos {
-    double x;
-    double y;
-};
 
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdAcquireDafneAccumulatorBPM,"acquire","acquire command","72882f3e-36db-11e5-985f-334fcd6dff22")
 BATCH_COMMAND_ADD_INT32_PARAM("enable", "enable acquisition =1, disable =0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
@@ -24,47 +20,6 @@ BATCH_COMMAND_ADD_INT32_PARAM("samples", "in DataOnDemand number of samples",cha
 BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, to break launch a acquire command with enable=0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 
 BATCH_COMMAND_CLOSE_DESCRIPTION()
-#define FIX_NUM(g) \
-if(isnormal(g)==false)g=0;
- /*       
-if(isnan(g)) g=0; \
-else if(isinf(g)){g=(g>0)?std::numeric_limits<float>::max():std::numeric_limits<float>::min();}
-   */     
-static bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
-    bpmpos pos;
-    double x=0,y=0;
-    if((va +vb +vc+vd)==0)return pos;
-    double U= ((double)(vb +vd -va -vc))/(va +vb +vc+vd);
-    double V= ((double)(va +vb -vc -vd))/(va +vb +vc+vd);
-    double a[2][6]={{28.5574,-0.046125,5.43125e-5,0.0172085,-1.15991e-5,1.94837e-7},{9.8435,-0.022408,0.034859,-1.4584e-6,-9.9279e-6}};
-    double b[2][6]={{28.5574,-0.0172085,1.94837e-7,-0.046125,-1.15991e-5,5.43125e-5},{32.0137,0.0432143,0.000222447,-0.000318269,0.00167884}};
-    if(type>1){
-        return pos;
-    }
-    for(int cnt=0;cnt<7;cnt++){
-        x = a[type][0] * U + a[type][1] * pow(y,2)*U +  a[type][2]*pow(y,4)*U + a[type][3] *pow(x,2)*U +a[type][4]*pow(x,2)*pow(y,2)*U+a[type][5]*pow(x,4)*U;
-        y = b[type][1] * V + b[type][1] * pow(y,2)*V +  b[type][2]*pow(y,4)*V + b[type][3] *pow(x,2)*V +b[type][4]*pow(x,2)*pow(y,2)*V+b[type][5]*pow(x,4)*V;
-    }
-    
-    /*MATLAB*/
-    /*Xs=0;
-Ys=0;
-
-for i=1:7
-
-x=a(1)*U+a(2)*Ys^2*U+a(3)*Ys^4*U+a(4)*Xs^2*U+a(5)*Xs^2*Ys^2*U+a(6)*Xs^4*U;
-y=b(1)*V+b(2)*Ys^2*V+b(3)*Ys^4*V+b(4)*Xs^2*V+b(5)*Xs^2*Ys^2*V+b(6)*Xs^4*V;
-
-Xs=x;
-Ys=y;
-
-end*/
-    FIX_NUM(x);
-    FIX_NUM(y);
-    pos.x=x;
-    pos.y=y;
-    return pos;
-}
 
 CmdAcquireDafneAccumulatorBPM::CmdAcquireDafneAccumulatorBPM() {
     
@@ -104,7 +59,8 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     vc=driver->getRemoteVariables("VC");;
     vd=driver->getRemoteVariables("VD");;
       
-    dd=driver->getRemoteVariables("DD");
+    x_acq=driver->getRemoteVariables("X_ACQ");
+    y_acq=driver->getRemoteVariables("Y_ACQ");
     mode=driver->getRemoteVariables("MODE");
     acquire=driver->getRemoteVariables("ACQUISITION");
     samples=driver->getRemoteVariables("SAMPLES");
@@ -124,6 +80,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     mode_sync.setTimeout(10000000);
     mode_sync.sync(tomode);
     CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
+    rattrs= driver->getRemoteVariables();
 
 }
 
@@ -136,6 +93,26 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
     acquire_v = *acquire[0];
     int cntt=0;
     
+    
+    int cnt=0;
+    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++,cnt++){
+        
+        if((*i)->getDir()==chaos::DataType::Output){
+            uint32_t size;
+            void*ptr=(*i)->get(&size);
+            if((*i)->getType()==chaos::DataType::TYPE_BYTEARRAY){
+                getAttributeCache()->setOutputAttributeNewSize(cnt,size);
+            }
+                    
+            getAttributeCache()->setOutputAttributeValue(cnt,ptr,size);
+            
+        } 
+    }
+       } catch(chaos::CException e){
+        ATTRDBG_<<"%% WARNING "<<e.errorMessage;
+    }
+ 
+    /*
     for(int cnt=0,cntt=0;cnt<elem_size;cnt++,cntt+=4){
           bpmpos mm; 
           int32_t a,b,c,d;
@@ -168,13 +145,10 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
                 }
                getAttributeCache()->setOutputAttributeValue(cntt+2,(void*)x,elems*sizeof(double));
                getAttributeCache()->setOutputAttributeValue(cntt+3,(void*)y,elems*sizeof(double));
-               getAttributeCache()->setOutputAttributeValue("DoubleTest",(void*)x,elems*sizeof(double));
             }
             
     }
-    } catch(chaos::CException e){
-        ATTRDBG_<<"%% WARNING "<<e.errorMessage;
-    }
+    */
     if(mode_v==0){
             ATTRDBG_<<"exiting from acquire, by mode =0";
            BC_END_RUNNIG_PROPERTY;

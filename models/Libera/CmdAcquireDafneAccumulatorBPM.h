@@ -21,12 +21,14 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vc;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vd;
       
-      std::vector< ::driver::misc::ChaosDatasetAttribute*> dd;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> x_acq;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> y_acq;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> mode;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> acquire;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> samples;
       int elem_size;
       ::driver::misc::ChaosDatasetAttributeSinchronizer mode_sync;
+      std::vector< ::driver::misc::ChaosDatasetAttribute* > rattrs;
 public:
     CmdAcquireDafneAccumulatorBPM();
    
