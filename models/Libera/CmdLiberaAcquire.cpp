@@ -281,23 +281,24 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             *vb = pnt[0].Vb;
             *vc = pnt[0].Vc;
             *vd = pnt[0].Vd;
-            mm=bpm_voltage_to_mm(type,pnt[0].Va,pnt[0].Vb,pnt[0].Vc,pnt[0].Vd);
-            *x  = mm.x;
-            *y  = mm.y;
+	    //      mm=bpm_voltage_to_mm(type,pnt[0].Va,pnt[0].Vb,pnt[0].Vc,pnt[0].Vd);
+            *x  = pnt[0].X;
+            *y  = pnt[0].Y;
             *q  = pnt[0].Q;
             *sum  = pnt[0].Sum;
             *q1 = 0;
             *q2 = 0;
+	    CMDCUDBG_ << "DD read [ret="<<std::dec<<ret<<"]:"<<pnt[0];
             for(int cnt=0;cnt<samples;cnt++){
                 va_acq[cnt]=pnt[cnt].Va;
                 vb_acq[cnt]=pnt[cnt].Vb;
                 vc_acq[cnt]=pnt[cnt].Vc;
                 vd_acq[cnt]=pnt[cnt].Vd;
-                mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
-                x_acq[cnt]=mm.x;
-                y_acq[cnt]=mm.y;
+		//                mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
+                x_acq[cnt]=pnt[cnt].X;
+		y_acq[cnt]=pnt[cnt].Y
             }
-             CMDCUDBG_ << "DD read [ret="<<std::dec<<ret<<"]:"<<pnt[0];
+
              (*acquire_loops)++;
         } else {
            *perr|=LIBERA_ERROR_READING;
