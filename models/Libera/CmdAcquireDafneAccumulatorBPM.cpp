@@ -58,12 +58,18 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     vb=driver->getRemoteVariables("VB");
     vc=driver->getRemoteVariables("VC");;
     vd=driver->getRemoteVariables("VD");;
-      
+    va_acq=driver->getRemoteVariables("VA_ACQ");
+    vb_acq=driver->getRemoteVariables("VB_ACQ");
+    vc_acq=driver->getRemoteVariables("VC_ACQ");;
+    vd_acq=driver->getRemoteVariables("VD_ACQ");; 
     x_acq=driver->getRemoteVariables("X_ACQ");
     y_acq=driver->getRemoteVariables("Y_ACQ");
+    x=driver->getRemoteVariables("X");
+    y=driver->getRemoteVariables("Y");
     mode=driver->getRemoteVariables("MODE");
     acquire=driver->getRemoteVariables("ACQUISITION");
     samples=driver->getRemoteVariables("SAMPLES");
+    poly_type=driver->getRemoteVariables("POLYTYPE");
     if((va.size()==vb.size())&&(vb.size()==vc.size())&&(vc.size()==vd.size())&&(vd.size()==mode.size())&&(mode.size()==acquire.size())&&(acquire.size()==samples.size())){
         CTRLDBG_<<" Array BPM size:"<<va.size();
         elem_size = va.size();
@@ -92,9 +98,39 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
     samples_v = *samples[0];
     acquire_v = *acquire[0];
     int cntt=0;
-    
-    
     int cnt=0;
+   
+ 
+    for(cnt=0;cnt<elem_size;cnt++){
+          bpmpos mm; 
+          int32_t a,b,c,d;
+          uint32_t size;
+          int poly;
+          a= *va[cnt];
+          b= *vb[cnt];
+          c= *vc[cnt];
+          d= *vd[cnt];
+          poly=*poly_type[cnt];
+          mm=bpm_voltage_to_mm(poly,a,b,c,d);
+          *x[cnt]=mm.x;
+          *x[cnt]=mm.y;
+          if(mode_v&LIBERA_IOP_MODE_DD){
+              
+              int32_t *vva_acq=(int32_t*) *va_acq[cnt];
+              int32_t *vvb_acq=(int32_t*) *vb_acq[cnt];
+              int32_t *vvc_acq=(int32_t*) *vc_acq[cnt];
+              int32_t *vvd_acq=(int32_t*) *vd_acq[cnt];
+              double *vx_acq=(double*) *x_acq[cnt];
+              double *vy_acq=(double*) *y_acq[cnt];
+              for(int cntt=0;cntt<samples_v;cntt++){
+                 mm=bpm_voltage_to_mm(poly,vva_acq[cntt],vvb_acq[cntt],vvc_acq[cntt],vvd_acq[cntt]);
+                 vx_acq[cntt]=mm.x;
+                 vy_acq[cntt]=mm.y;
+              }
+          }
+          CTRLDBG_<<getAlias()<<" "<<cnt<<"."<<" :"<<va[cnt]->getName()<<" "<<va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
+    }
+    cnt=0;
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++,cnt++){
         
         if((*i)->getDir()==chaos::DataType::Output){
@@ -112,47 +148,10 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
         ATTRDBG_<<"%% WARNING "<<e.errorMessage;
     }
  
-    /*
-    for(int cnt=0,cntt=0;cnt<elem_size;cnt++,cntt+=4){
-          bpmpos mm; 
-          int32_t a,b,c,d;
-          libera_dd_t*buf;
-          uint32_t size;
-            a= *va[cnt];
-            b= *vb[cnt];
-            c= *vc[cnt];
-            d= *vd[cnt];
-            mm=bpm_voltage_to_mm((cnt>3)?1:0,a,b,c,d);
-
-            CTRLDBG_<<getAlias()<<" "<<cnt<<"."<<cntt<<" :"<<va[cnt]->getName()<<" "<<va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
-                
-            getAttributeCache()->setOutputAttributeValue(cntt,(void*)&mm.x,sizeof(double));
-            getAttributeCache()->setOutputAttributeValue(cntt+1,(void*)&mm.y,sizeof(double));
-            if((buf=(libera_dd_t*)dd[cnt]->get(&size))&& (size>sizeof(libera_dd_t))){
-                int elems=size/sizeof(libera_dd_t);
-                double x[elems];
-                double y[elems];
-                getAttributeCache()->setOutputAttributeNewSize("DoubleTest",elems*sizeof(double));
-              //  double*tst= getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "DoubleTest");
-
-                getAttributeCache()->setOutputAttributeNewSize(cntt+2,elems*sizeof(double));
-                getAttributeCache()->setOutputAttributeNewSize(cntt+3,elems*sizeof(double));
-                for(int c=0;c<elems;c++){
-                    mm= bpm_voltage_to_mm((cnt>3)?1:0,buf[c].Va,buf[c].Vb,buf[c].Vc,buf[c].Vd);
-                    x[c]=mm.x;
-                    y[c]=mm.y;
-                 //   tst[c]=mm.y;
-                }
-               getAttributeCache()->setOutputAttributeValue(cntt+2,(void*)x,elems*sizeof(double));
-               getAttributeCache()->setOutputAttributeValue(cntt+3,(void*)y,elems*sizeof(double));
-            }
-            
-    }
-    */
-    if(mode_v==0){
-            ATTRDBG_<<"exiting from acquire, by mode =0";
-           BC_END_RUNNIG_PROPERTY;
-    }
+     if(mode_v==0){
+        ATTRDBG_<<"exiting from acquire, by mode =0";
+        BC_END_RUNNIG_PROPERTY;
+        }
     
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));

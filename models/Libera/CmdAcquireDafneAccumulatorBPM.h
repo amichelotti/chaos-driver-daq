@@ -21,6 +21,13 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vc;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vd;
       
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> va_acq;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> vb_acq;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> vc_acq;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> vd_acq;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> poly_type;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> x;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> y;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> x_acq;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> y_acq;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> mode;
