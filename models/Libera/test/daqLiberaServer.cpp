@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 #ifdef LIBERA
 		// allocate the instance and inspector for driver
 		REGISTER_DRIVER(,LiberaBrillianceCSPIDriver);
-                REGISTER_DRIVER(,LiberaSoftDriver);
+		//                REGISTER_DRIVER(,LiberaSoftDriver);
 
                 REGISTER_CU(::driver::daq::libera::SCLiberaCU);
 #endif
