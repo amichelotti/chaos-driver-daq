@@ -29,7 +29,8 @@ namespace ccc_slow_command = chaos::cu::control_manager::slow_command;
 namespace driver {
 	namespace daq {
             namespace libera {
-		class CmdLiberaAcquire : public CmdLiberaDefault {
+		
+                   DEFINE_BATCH_COMMAND_CLASS(CmdLiberaAcquire,CmdLiberaDefault) {
                     int mode,samples,loops,offset,type;
     
                     int32_t* va,*vb,*vc,*vd,*x,*y,*q,*sum,*q1,*q2;

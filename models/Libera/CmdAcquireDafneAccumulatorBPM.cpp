@@ -47,6 +47,11 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   
    if(data->hasKey("mode")) {
        tomode=data->getInt32Value("mode");
+       if(data->hasKey("loops")){
+           if(data->getInt32Value("loops")<0){
+               tomode|=LIBERA_IOP_MODE_PERMLOOP;
+           }
+       }
         CTRLDBG_<<" Going into mode:"<<tomode;
             if(tomode==0){
                
@@ -84,6 +89,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
    }
     CTRLDBG_<<" WAITING for mode:"<<tomode;
     mode_sync.setTimeout(10000000);
+   
     mode_sync.sync(tomode);
     CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
     rattrs= driver->getRemoteVariables();

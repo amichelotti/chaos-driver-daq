@@ -78,10 +78,11 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
   SCCULDBG<<"defining commands";
 	//install all command
 	installCommand<CmdLiberaDefault>("default");
-	installCommand<CmdLiberaAcquire>("acquire");
+	//installCommand<CmdLiberaAcquire>("acquire");
 	installCommand<CmdLiberaEnv>("env");
 	installCommand<CmdLiberaTime>("time");
-	
+	installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaAcquire));
+
 	//set it has default
 	setDefaultCommand("default");
 	SCCULDBG<<"defining dataset";
