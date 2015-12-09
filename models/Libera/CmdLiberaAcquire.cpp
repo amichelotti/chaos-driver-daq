@@ -296,7 +296,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
                 vd_acq[cnt]=pnt[cnt].Vd;
 		//                mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
                 x_acq[cnt]=pnt[cnt].X;
-		y_acq[cnt]=pnt[cnt].Y
+		y_acq[cnt]=pnt[cnt].Y;
             }
 
              (*acquire_loops)++;
