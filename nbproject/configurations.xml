@@ -219,8 +219,9 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="3">
           <incDir>
+            <pElem>..</pElem>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
             <pElem>models/Libera/cspi</pElem>

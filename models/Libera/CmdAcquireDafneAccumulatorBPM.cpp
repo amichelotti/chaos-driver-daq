@@ -5,7 +5,7 @@
  * Created on October 15, 2015, 10:21 AM
  */
 
-#include "CmdAcquireDafneAccumulatorBPM.h"
+#include <driver/daq/models/Libera/CmdAcquireDafneAccumulatorBPM.h>
 #include "LiberaData.h"
 #include <boost/format.hpp>
 #include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
@@ -75,7 +75,8 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     acquire=driver->getRemoteVariables("ACQUISITION");
     samples=driver->getRemoteVariables("SAMPLES");
     poly_type=driver->getRemoteVariables("POLYTYPE");
-    if((va.size()==vb.size())&&(vb.size()==vc.size())&&(vc.size()==vd.size())&&(vd.size()==mode.size())&&(mode.size()==acquire.size())&&(acquire.size()==samples.size())){
+    
+    if((va.size()==vb.size())&&(vb.size()==vc.size())&&(vc.size()==vd.size())&&(vd.size()==mode.size())&&(mode.size()==acquire.size())&&(acquire.size()==samples.size())&&(va_acq.size()==samples.size())&&(vb_acq.size()==samples.size())&&(vc_acq.size()==samples.size())&&(vd_acq.size()==samples.size())&&(poly_type.size()==samples.size())){
         CTRLDBG_<<" Array BPM size:"<<va.size();
         elem_size = va.size();
     } else {
@@ -100,11 +101,9 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
     uint64_t acquire_v,mt_v;
     int32_t mode_v,samples_v;
     try {
-    mode_v= *mode[0];
-    samples_v = *samples[0];
-    acquire_v = *acquire[0];
-    int cntt=0;
-    int cnt=0;
+    
+    int cntt;
+    int cnt;
    
  
     for(cnt=0;cnt<elem_size;cnt++){
@@ -112,6 +111,9 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           int32_t a,b,c,d;
           uint32_t size;
           int poly;
+          mode_v= *mode[cnt];
+        samples_v = *samples[cnt];
+        acquire_v = *acquire[cnt];
           a= *va[cnt];
           b= *vb[cnt];
           c= *vc[cnt];
@@ -128,13 +130,13 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
               int32_t *vvd_acq=(int32_t*) *vd_acq[cnt];
               double *vx_acq=(double*) *x_acq[cnt];
               double *vy_acq=(double*) *y_acq[cnt];
-              for(int cntt=0;cntt<samples_v;cntt++){
+              for(cntt=0;cntt<samples_v;cntt++){
                  mm=bpm_voltage_to_mm(poly,vva_acq[cntt],vvb_acq[cntt],vvc_acq[cntt],vvd_acq[cntt]);
-                 vx_acq[cntt]=mm.x;
-                 vy_acq[cntt]=mm.y;
+                 vx_acq[cntt]=mm.x*10000;
+                 vy_acq[cntt]=mm.y*10000;
               }
           }
-          CTRLDBG_<<getAlias()<<" "<<cnt<<"."<<" :"<<va[cnt]->getName()<<" "<<va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
+          CTRLDBG_<<"BPM ["<<cnt<<"] type:"<<poly<<" " <<mode[cnt]->getPath()<<"["<<mode[cnt]->getInfo().getTimeStamp()<<"] mode:"<<mode_v<<" samples:"<<samples_v<<" "<<"acquire:"<<acquire_v<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
     }
     cnt=0;
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
@@ -142,15 +144,16 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
         if((*i)->getDir()==chaos::DataType::Output){
             uint32_t size;
             void*ptr=(*i)->get(&size);
-            if((*i)->getType()==chaos::DataType::TYPE_BYTEARRAY){
+          /*  if((*i)->getType()==chaos::DataType::TYPE_BYTEARRAY){
                 getAttributeCache()->setOutputAttributeNewSize(cnt,size);
-            }
-                    
+            }*/
+            CTRLDBG_<<"setting "<<cnt<<" "<<(*i)->getPath()<<" size:"<<size;       
             getAttributeCache()->setOutputAttributeValue(cnt,ptr,size);
             cnt++;
+
+            }
             
         } 
-    }
        } catch(chaos::CException e){
         ATTRDBG_<<"%% WARNING "<<e.errorMessage;
     }
