@@ -77,7 +77,7 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
         
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         std::string name=(*i)->getGroup()+chaos::PATH_SEPARATOR+(*i)->getName();
-        
+        SCDafneAccumulatorBPMSyncLDBG_<<"dynamic adding attribute:"<<name<<" size:"<<(*i)->getSize()<<" dir:"<<(*i)->getDir()<<" type:"<<(*i)->getType();
         if((*i)->getType()!=chaos::DataType::TYPE_BYTEARRAY){
             addAttributeToDataSet(name,(*i)->getDesc(),(*i)->getType(),(*i)->getDir());
         } else if((*i)->getBinaryType()!=chaos::DataType::SUB_TYPE_NONE){

@@ -137,7 +137,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           CTRLDBG_<<getAlias()<<" "<<cnt<<"."<<" :"<<va[cnt]->getName()<<" "<<va[cnt]->getInfo().getTimeStamp()<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
     }
     cnt=0;
-    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++,cnt++){
+    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         
         if((*i)->getDir()==chaos::DataType::Output){
             uint32_t size;
@@ -147,6 +147,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
             }
                     
             getAttributeCache()->setOutputAttributeValue(cnt,ptr,size);
+            cnt++;
             
         } 
     }

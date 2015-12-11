@@ -61,7 +61,7 @@ void CmdDefaultDafneAccumulatorBPM::acquireHandler() {
     
     
     int cnt=0;
-    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++,cnt++){
+    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         
         if((*i)->getDir()==chaos::DataType::Output){
             uint32_t size;
@@ -69,9 +69,10 @@ void CmdDefaultDafneAccumulatorBPM::acquireHandler() {
             if((*i)->getType()==chaos::DataType::TYPE_BYTEARRAY){
                 getAttributeCache()->setOutputAttributeNewSize(cnt,size);
             }
-                    
+      //     ATTRDBG_<<"setting attribute ["<<cnt<<"]: "<<(*i)->getPath()<<" size:"<<size<<" type:"<<(*i)->getType();
+        
             getAttributeCache()->setOutputAttributeValue(cnt,ptr,size);
-            
+            cnt++;
         } 
     }
        } catch(chaos::CException e){
