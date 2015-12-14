@@ -115,8 +115,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("VD","Volt D",DataType::TYPE_INT32,chaos::DataType::Output);
         
     
-        addAttributeToDataSet("X","X mm calculated",DataType::TYPE_INT32,chaos::DataType::Output);
-        addAttributeToDataSet("Y","Y mm calculated",DataType::TYPE_INT32,chaos::DataType::Output);
+        addAttributeToDataSet("X","X mm calculated",DataType::TYPE_DOUBLE,chaos::DataType::Output);
+        addAttributeToDataSet("Y","Y mm calculated",DataType::TYPE_DOUBLE,chaos::DataType::Output);
         addAttributeToDataSet("Q","Q",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("SUM","SUM",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q1","Q1",DataType::TYPE_INT32,chaos::DataType::Output);

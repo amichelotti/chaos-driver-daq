@@ -5,12 +5,12 @@
  * Created on October 15, 2015, 10:21 AM
  */
 
-#include <driver/daq/models/Libera/CmdAcquireDafneAccumulatorBPM.h>
 #include "LiberaData.h"
 #include <boost/format.hpp>
 #include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
+#include <driver/daq/models/Libera/CmdAcquireDafneAccumulatorBPM.h>
 
-using namespace ::driver::daq::libera;
+using namespace driver::daq::libera;
 using namespace ::driver::misc;
 
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdAcquireDafneAccumulatorBPM,"acquire","acquire command","72882f3e-36db-11e5-985f-334fcd6dff22")
@@ -61,8 +61,8 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
    }
     va=driver->getRemoteVariables("VA");
     vb=driver->getRemoteVariables("VB");
-    vc=driver->getRemoteVariables("VC");;
-    vd=driver->getRemoteVariables("VD");;
+    vc=driver->getRemoteVariables("VC");
+    vd=driver->getRemoteVariables("VD");
     va_acq=driver->getRemoteVariables("VA_ACQ");
     vb_acq=driver->getRemoteVariables("VB_ACQ");
     vc_acq=driver->getRemoteVariables("VC_ACQ");;
@@ -94,6 +94,15 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     mode_sync.sync(tomode);
     CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
     rattrs= driver->getRemoteVariables();
+    for(int cnt=0;cnt<elem_size;cnt++){
+        int32_t samples_v=*samples[cnt];
+        x_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
+        y_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
+        x_acq[cnt]->resize(samples_v*sizeof(double));
+        y_acq[cnt]->resize(samples_v*sizeof(double));
+        x[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
+        y[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
+    }
 
 }
 
@@ -121,9 +130,11 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           poly=*poly_type[cnt];
           mm=bpm_voltage_to_mm(poly,a,b,c,d);
           *x[cnt]=mm.x;
-          *x[cnt]=mm.y;
+          *y[cnt]=mm.y;
           if(mode_v&LIBERA_IOP_MODE_DD){
-              
+             // double vx_acq[samples_v];
+            //  double vy_acq[samples_v];
+
               int32_t *vva_acq=(int32_t*) *va_acq[cnt];
               int32_t *vvb_acq=(int32_t*) *vb_acq[cnt];
               int32_t *vvc_acq=(int32_t*) *vc_acq[cnt];
@@ -132,10 +143,12 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
               double *vy_acq=(double*) *y_acq[cnt];
               for(cntt=0;cntt<samples_v;cntt++){
                  mm=bpm_voltage_to_mm(poly,vva_acq[cntt],vvb_acq[cntt],vvc_acq[cntt],vvd_acq[cntt]);
-                 vx_acq[cntt]=mm.x*10000;
-                 vy_acq[cntt]=mm.y*10000;
+                 vx_acq[cntt]=mm.x;
+                 vy_acq[cntt]=mm.y;
               }
+              
           }
+          
           CTRLDBG_<<"BPM ["<<cnt<<"] type:"<<poly<<" " <<mode[cnt]->getPath()<<"["<<mode[cnt]->getInfo().getTimeStamp()<<"] mode:"<<mode_v<<" samples:"<<samples_v<<" "<<"acquire:"<<acquire_v<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
     }
     cnt=0;
