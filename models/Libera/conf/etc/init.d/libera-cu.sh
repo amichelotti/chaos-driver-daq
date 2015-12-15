@@ -1,7 +1,7 @@
 #!/bin/sh
 ## startup script for libera CU
 # 8/2015 Andrea Michelotti
-
+export LC_ALL="en_US.UTF-8"
 CONFIG=/etc/default/libera-cu
 if [ ! -f $CONFIG ];then
     echo "# libera configuration file \"$CONFIG\" missing"
@@ -14,7 +14,7 @@ case "$1" in
     start)
         # Start Libera CHAOS CU server
         echo -n "Starting Libera CHAOS CU server: $EXEC"
-        start-stop-daemon --start --quiet --exec $EXEC -- --conf-file $CONFIG 2>&1 > $EXEC.std.out & 
+        start-stop-daemon --start --quiet -b --exec $EXEC -- --conf-file $CONFIG 2>&1 > /dev/null
         echo "."
         ;;
 
