@@ -81,6 +81,8 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
         if((*i)->getType()!=chaos::DataType::TYPE_BYTEARRAY){
             addAttributeToDataSet(name,(*i)->getDesc(),(*i)->getType(),(*i)->getDir());
         } else if((*i)->getBinaryType()!=chaos::DataType::SUB_TYPE_NONE){
+           SCDafneAccumulatorBPMSyncLDBG_<<"dynamic adding attribute:"<<name<<" size:"<<(*i)->getSize()<<" dir:"<<(*i)->getDir()<<" binary subtype:"<<(*i)->getBinaryType();
+
             addBinaryAttributeAsSubtypeToDataSet(name,(*i)->getDesc(),(*i)->getBinaryType(),(*i)->getSize(),(*i)->getDir());
         }
     }

@@ -44,7 +44,10 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
                 return;
             }
    }
-  
+  mode=driver->getRemoteVariables("MODE");
+    for(int cnt=0;cnt<elem_size;cnt++){
+       mode_sync.add(mode[cnt]);
+   }
    if(data->hasKey("mode")) {
        tomode=data->getInt32Value("mode");
        if(data->hasKey("loops")){
@@ -54,7 +57,10 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
        }
         CTRLDBG_<<" Going into mode:"<<tomode;
             if(tomode==0){
-               
+                mode_sync.setTimeout(10000000);
+                CTRLDBG_<<" WAITING for exiting acquire";
+
+                mode_sync.sync(tomode);
                 BC_END_RUNNIG_PROPERTY;
                 return;
             }
@@ -71,7 +77,6 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     y_acq=driver->getRemoteVariables("Y_ACQ");
     x=driver->getRemoteVariables("X");
     y=driver->getRemoteVariables("Y");
-    mode=driver->getRemoteVariables("MODE");
     acquire=driver->getRemoteVariables("ACQUISITION");
     samples=driver->getRemoteVariables("SAMPLES");
     poly_type=driver->getRemoteVariables("POLYTYPE");
@@ -85,9 +90,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     }
     
    
-   for(int cnt=0;cnt<elem_size;cnt++){
-       mode_sync.add(mode[cnt]);
-   }
+   
     CTRLDBG_<<" WAITING for mode:"<<tomode;
     mode_sync.setTimeout(10000000);
    
@@ -160,7 +163,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           /*  if((*i)->getType()==chaos::DataType::TYPE_BYTEARRAY){
                 getAttributeCache()->setOutputAttributeNewSize(cnt,size);
             }*/
-            CTRLDBG_<<"setting "<<cnt<<" "<<(*i)->getPath()<<" size:"<<size;       
+        //    CTRLDBG_<<"setting "<<cnt<<" "<<(*i)->getPath()<<" size:"<<size;       
             getAttributeCache()->setOutputAttributeValue(cnt,ptr,size);
             cnt++;
 
