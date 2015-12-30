@@ -18,6 +18,7 @@
 #define LIBERA_IOP_MODE_DECIMATED 0x200
 #define LIBERA_IOP_MODE_CONTINUOUS 0x400
 #define LIBERA_IOP_MODE_SINGLEPASS 0x800
+#define LIBERA_IOP_MODE_PERMLOOP 0x1000
 
 #define LIBERA_IOP_CMD_ACQUIRE 0x1
 #define LIBERA_IOP_CMD_SETENV 0x2 // Setting environment
@@ -26,6 +27,8 @@
 #define LIBERA_IOP_CMD_SET_OFFSET 0x5 // set offset in buffer
 #define LIBERA_IOP_CMD_SET_SAMPLES 0x6 // set offset in buffer
 #define LIBERA_IOP_CMD_STOP 0x7
+#define LIBERA_IOP_CMD_GET_TS 0x8 // get time stamps
+
 // ERROR
 #define LIBERA_ERROR_READING 0x1
 #define LIBERA_ERROR_WRITING 0x2
@@ -36,6 +39,9 @@
 #include <ostream>
 #include <vector>
 #include <iostream>
+#include <sstream>
+#define ILK_PARAMCOUNT 8
+
 #define DECLARE_DESC(_T) \
 typedef struct _T: public libera_desc {\
 static const char* desc[];\
@@ -63,13 +69,15 @@ typedef struct libera_env {
 } libera_env_t;
 
 #ifdef CSPI
-#include "models/Libera/cspi/cspi.h"
+#include <driver/daq/models/Libera/cspi/cspi.h>
 
     typedef CSPI_DD_ATOM libera_dd_t;
     typedef CSPI_SA_ATOM libera_sa_t;
     typedef CSPI_ADC_CW_ATOM libera_cw_t;
     typedef CSPI_ADC_SP_ATOM libera_sp_t;
     typedef CSPI_AVERAGE_ATOM libera_avg_t;
+    typedef CSPI_AVERAGE_ATOM libera_avg_t;
+    typedef CSPI_TIMESTAMP libera_ts_t;
     
     class libera_desc{
     protected:
@@ -101,6 +109,14 @@ typedef struct libera_env {
     std::ostream& operator <<(std::ostream&os,const libera_sp_t& data); 
     std::ostream& operator <<(std::ostream&os,const libera_avg_t& data);
    
+    
+   std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj);
+struct bpmpos {
+    double x;
+    double y;
+};
+
+   bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd);
 #else
 #error "NO LIBERA PLATFORM SPECIFIED"
 #endif

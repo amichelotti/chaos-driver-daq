@@ -21,9 +21,15 @@
 #ifndef __CmdLiberaDefault__
 #define __CmdLiberaDefault__
 
-#include <chaos/cu_toolkit/ControlManager/slow_command/SlowCommand.h>
+#include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriverInterface.h>
 #include "LiberaData.h"
+
+#define CMDCU_ LAPP_ << "["<<__FUNCTION__<<"]"
+
+#define CMDCUDBG_ LDBG_ << "[- "<<__PRETTY_FUNCTION__<<" -]"
+#define CMDCUERR_ LERR_ << "["<<__PRETTY_FUNCTION__<<"]"
+
 namespace c_data = chaos::common::data;
 namespace ccc_slow_command = chaos::cu::control_manager::slow_command;
 #define MAX_STRING 1024
@@ -36,6 +42,9 @@ namespace driver {
                    
                 protected:
                      const uint32_t	*i_command_timeout;
+                     uint64_t     *mt; // machine time
+                      uint64_t     *st; // system time
+                     
                     chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
                 
 			// return the implemented handler

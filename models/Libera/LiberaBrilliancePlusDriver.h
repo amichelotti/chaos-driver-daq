@@ -1,8 +1,8 @@
 /*  
- * LiberaBrillianceCSPIDriver.h
+ * LiberaBrilliancePlusDriver.h
  * @author michelo
 Copyright Apr 29, 2015 michelo
- * low level driver for Libera Brilliance + 
+ * simulator driver for Libera Brilliance + 
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,12 +17,25 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-#ifndef __LiberaBrillianceCSPIDriver_H__
-#define __LiberaBrillianceCSPIDriver_H__
+#ifndef __LiberaBrilliancePlusDriver_H__
+#define __LiberaBrilliancePlusDriver_H__
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
 #define CSPI
 #include "LiberaData.h"
-DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceCSPIDriver);
+#include <common/misc/wavegenerators/WaveBase.h>
+DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrilliancePlusDriver);
+
+
+class LiberaBrilliancePlusDriver : public chaos::cu::driver_manager::driver::BasicIODriver {
+protected:
+    int driver_mode;
+    int nacquire;
+    char*raw_data;
+    CSPIHENV env_handle;
+    CSPIHCON con_handle;
+    CSPI_LIBPARAMS lib;
+    CSPI_ENVPARAMS ep;
+    CSPI_CONPARAMS p;
 
 struct liberaconfig
 {
@@ -84,24 +97,18 @@ struct liberaconfig
 	};
 	CSPI_BITMASK mask;			// command-line switches (flags)
 };
-
-class LiberaBrillianceCSPIDriver : public chaos::cu::driver_manager::driver::BasicIODriver {
-protected:
-    int driver_mode;
-    int nacquire;
-    char*raw_data;
-    CSPIHENV env_handle;
-    CSPIHCON con_handle;
-    CSPI_LIBPARAMS lib;
-    CSPI_ENVPARAMS ep;
-    CSPI_CONPARAMS p;
+    
     struct liberaconfig cfg;
     int wait_trigger();
     int assign_time(const char*time );
+    
+    int trigger_time_ms;
+    ::common::misc::wavegenerators::WaveBase_t wave;
+    CSPI_ENVPARAMS myenv;
 public:
-    LiberaBrillianceCSPIDriver();
+    LiberaBrilliancePlusDriver();
 
-    ~LiberaBrillianceCSPIDriver();
+    ~LiberaBrilliancePlusDriver();
     //! Execute a command
 
     /**

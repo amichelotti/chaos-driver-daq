@@ -1,0 +1,6 @@
+log-on-file=yes
+log-file=/root/libera-cu.log
+#log-level=debug
+log-max-size=5
+metadata-server=192.168.150.31:5000
+unit-server-alias=LIBERA

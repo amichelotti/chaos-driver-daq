@@ -1,5 +1,5 @@
 /*
-*	daqServer.cpp
+*	BPMSync.cpp
 *	!CHAOS
 *	Created by Andrea Michelotti
 *
@@ -19,20 +19,18 @@
 */
 
 
-#include <chaos/cu_toolkit/control_manager/IOCU.h>
-#ifdef LIBERA
-#include <driver/daq/models/Libera/LiberaBrillianceCSPIDriver.h>
-#include <driver/daq/models/Libera/LiberaSoftDriver.h>
-#include <driver/daq/models/Libera/LiberaBrilliancePlusDriver.h>
-#endif
-#include "SCLiberaCU.h"
 #include <string>
 
 #include <chaos/cu_toolkit/ChaosCUToolkit.h>
+#include "DafneAccumulatorBPMSync.h"
+#include "SCDafneAccumulatorBPMSync.h"
+#include <driver/misc/remoteGroupAccessDriver.h>
 
 
 using namespace chaos;
 using namespace chaos::cu;
+using namespace chaos::ui;
+
 using namespace chaos::cu::driver_manager;
 
 
@@ -41,15 +39,11 @@ int main(int argc, char *argv[])
 	try {
 		// initialize the control unit toolkit
 		ChaosCUToolkit::getInstance()->init(argc, argv);
-#ifdef LIBERA
-		// allocate the instance and inspector for driver
-		REGISTER_DRIVER(,LiberaBrillianceCSPIDriver);
-		REGISTER_DRIVER(,LiberaBrilliancePlusDriver);
-                REGISTER_DRIVER(,LiberaSoftDriver);
+                //REGISTER_CU(::driver::daq::libera::SCLiberaCU);
 
-
-                REGISTER_CU(::driver::daq::libera::SCLiberaCU);
-#endif
+                REGISTER_CU(::driver::daq::libera::DafneAccumulatorBPMSync);
+                REGISTER_CU(::driver::daq::libera::SCDafneAccumulatorBPMSync);
+                REGISTER_DRIVER(::driver::misc,remoteGroupAccessDriver);
 		// start control unit toolkit until someone will close it
 		ChaosCUToolkit::getInstance()->start();
 	} catch (CException& ex) {

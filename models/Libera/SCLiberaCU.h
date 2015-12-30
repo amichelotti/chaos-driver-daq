@@ -17,10 +17,10 @@
  *    	See the License for the specific language governing permissions and
  *    	limitations under the License.
  */
-#ifndef __PowerSupply__SCLiberaCU__
-#define __PowerSupply__SCLiberaCU__
+#ifndef __SCLiberaCU__
+#define __SCLiberaCU__
 
-#include <chaos/cu_toolkit/ControlManager/SCAbstractControlUnit.h>
+#include <chaos/cu_toolkit/control_manager/SCAbstractControlUnit.h>
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriverInterface.h>
 
 
@@ -29,8 +29,6 @@ namespace driver {
             namespace libera {
 		class SCLiberaCU : public chaos::cu::control_manager::SCAbstractControlUnit {
 			PUBLISHABLE_CONTROL_UNIT_INTERFACE(SCLiberaCU)
-
-			
 			chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
 
 		protected:
