@@ -7,6 +7,7 @@ IF("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
   SET(CHAOS_INSTALL_DIRS models/Libera models/Libera/cspi)
   ADD_DEFINITIONS(-DLIBERA)
   ADD_SUBDIRECTORY(models/Libera)
+  ADD_SUBDIRECTORY(models/btf)
 
 ENDIF()
 
