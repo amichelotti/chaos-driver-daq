@@ -3,6 +3,9 @@
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root="." name="0">
       <df name="models">
+        <df name="btf">
+          <in>RTBTFdaqCU.cpp</in>
+        </df>
         <df name="Libera">
           <df name="cspi">
             <in>cordic.c</in>
@@ -112,12 +115,33 @@
       </makefileType>
       <folder path="0/models/Libera/test">
         <ccTool>
+          <incDir>
+            <pElem>..</pElem>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models/Libera/cspi</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera/msp/src</pElem>
+            <pElem>models/Libera/driver/misc</pElem>
+          </incDir>
           <preprocessorList>
             <Elem>CORDIC_IGNORE_GAIN</Elem>
             <Elem>CSPI</Elem>
             <Elem>EBPP</Elem>
             <Elem>LIBERA</Elem>
             <Elem>_REENTRANT</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/models/btf">
+        <ccTool>
+          <incDir>
+            <pElem>..</pElem>
+            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>LIBERA</Elem>
+            <Elem>chaos_driver_daq_btf_EXPORTS</Elem>
           </preprocessorList>
         </ccTool>
       </folder>
@@ -507,15 +531,6 @@
       </item>
       <item path="models/Libera/test/BPMSync.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="2">
-          <incDir>
-            <pElem>..</pElem>
-            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>models/Libera/cspi</pElem>
-            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
-            <pElem>models/Libera/msp/src</pElem>
-            <pElem>models/Libera/driver/misc</pElem>
-          </incDir>
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaClient.cpp"
@@ -523,30 +538,17 @@
             tool="1"
             flavor2="4">
         <ccTool flags="2">
-          <incDir>
-            <pElem>..</pElem>
-            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>models/Libera/cspi</pElem>
-            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
-            <pElem>models/Libera/msp/src</pElem>
-            <pElem>models/Libera/driver/misc</pElem>
-          </incDir>
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaServer.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="4">
-          <incDir>
-            <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>models/Libera/cspi</pElem>
-            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
-            <pElem>models/Libera/msp/src</pElem>
-            <pElem>models/Libera/driver/misc</pElem>
-          </incDir>
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="models/btf/RTBTFdaqCU.cpp" ex="false" tool="1" flavor2="4">
+        <ccTool flags="3">
         </ccTool>
       </item>
     </conf>
