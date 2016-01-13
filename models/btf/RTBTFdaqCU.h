@@ -43,6 +43,8 @@ namespace driver {
                     uint32_t counter,counter_old,counter_middle; 
                     uint64_t tot_lost,loop;
                     uint32_t*qdchi,*qdclow,*qdc792,*counters;
+                    uint64_t* trigger_lost,*acquisition,*triggers;
+                    
 			/*
 			 Define the Control Unit Dataset and Actions
 			 */

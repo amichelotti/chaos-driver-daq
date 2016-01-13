@@ -142,6 +142,9 @@ void RTBTFdaqCU::unitInit() throw(CException) {
         qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"QDC965LO");
         qdc792=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"QDC792");
         counters=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"SCALER");
+        trigger_lost=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER LOST");
+         acquisition=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"ACQUISITION");
+        triggers=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER");
        if(sis3800_addr  == NULL || caen965_addr==NULL || caen792_addr==NULL ||caen513_addr==NULL){
            throw chaos::CException(-2, "BAD VME START ADDRESS", __PRETTY_FUNCTION__);
        }
@@ -212,11 +215,15 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     //    dump_channels(out,ch,cycle1,ret);
     counter_middle=sis3800_readCounter(sis3800_handle,30);
     
-    //    dump_channels(out,counters,cycle1,2);
+    *acquisition=loop;
+    *trigger_lost=tot_lost;
+    *triggers=*triggers+ (counter_middle-counter);
+    
     if(counter_middle>counter){
       int discard;
 
       discard=(counter_middle-counter-1);
+      
       if(discard){
           PRINT("acquisition SW %llu HW:%llu discarded, lost %d trigger(s)",loop,counter,discard)
       } else {
