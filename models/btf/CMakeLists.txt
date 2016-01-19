@@ -12,8 +12,12 @@ ENDIF()
 
 SET(DAQ_LIBRARY ${PROJECT_NAME})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme vme ${FrameworkLib})
-
+ADD_EXECUTABLE(daqbtfCU test/main.cpp)
+TARGET_LINK_LIBRARIES(daqbtfCU ${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme vme ${FrameworkLib})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme vme ${FrameworkLib})
  INSTALL_TARGETS(/lib ${PROJECT_NAME})
+ INSTALL_TARGETS(/bin daqbtfCU)
+
  FILE(GLOB ss *.h)
  INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/btf)
 

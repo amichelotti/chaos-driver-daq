@@ -4,6 +4,9 @@
     <df root="." name="0">
       <df name="models">
         <df name="btf">
+          <df name="test">
+            <in>main.cpp</in>
+          </df>
           <in>RTBTFdaqCU.cpp</in>
         </df>
         <df name="Libera">
@@ -65,11 +68,12 @@
         <element flagsID="1" commonFlags="-O3 -fPIC -O2"/>
         <element flagsID="2" commonFlags="-fPIC -fPIC -fPIC -O3 -O2"/>
         <element flagsID="3" commonFlags="-fPIC -fPIC -fPIC -O3 -fPIC -O2"/>
-        <element flagsID="4"
-                 commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -O3 -O2"/>
+        <element flagsID="4" commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -O3 -O2"/>
         <element flagsID="5"
+                 commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -O3 -O2"/>
+        <element flagsID="6"
                  commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -O3 -fPIC -O2"/>
-        <element flagsID="6" commonFlags="-std=gnu99 -O3 -fPIC -g -O2"/>
+        <element flagsID="7" commonFlags="-std=gnu99 -O3 -fPIC -g -O2"/>
       </flagsDictionary>
       <codeAssistance>
       </codeAssistance>
@@ -141,15 +145,21 @@
           </incDir>
           <preprocessorList>
             <Elem>LIBERA</Elem>
-            <Elem>chaos_driver_daq_btf_EXPORTS</Elem>
           </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="0/models/btf/test">
+        <ccTool>
+          <incDir>
+            <pElem>models/btf</pElem>
+          </incDir>
         </ccTool>
       </folder>
       <item path="models/Libera/ChaosControllerLibera.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="4">
+        <ccTool flags="5">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -285,7 +295,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaDefault.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -305,7 +315,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaEnv.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -325,7 +335,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaTime.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -372,7 +382,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -405,7 +415,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/LiberaData.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -425,7 +435,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/LiberaSoftDriver.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include</pElem>
             <pElem>models/Libera</pElem>
@@ -510,23 +520,23 @@
         </ccTool>
       </item>
       <item path="models/Libera/cspi/cordic.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="6">
+        <cTool flags="7">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="6">
+        <cTool flags="7">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi_events.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="6">
+        <cTool flags="7">
         </cTool>
       </item>
       <item path="models/Libera/cspi/ebpp.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="6">
+        <cTool flags="7">
         </cTool>
       </item>
       <item path="models/Libera/cspi/pool.c" ex="false" tool="0" flavor2="3">
-        <cTool flags="6">
+        <cTool flags="7">
         </cTool>
       </item>
       <item path="models/Libera/test/BPMSync.cpp" ex="false" tool="1" flavor2="4">
@@ -549,6 +559,13 @@
       </item>
       <item path="models/btf/RTBTFdaqCU.cpp" ex="false" tool="1" flavor2="4">
         <ccTool flags="3">
+          <preprocessorList>
+            <Elem>chaos_driver_daq_btf_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="models/btf/test/main.cpp" ex="false" tool="1" flavor2="0">
+        <ccTool flags="4">
         </ccTool>
       </item>
     </conf>
