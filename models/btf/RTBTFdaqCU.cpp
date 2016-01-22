@@ -135,22 +135,44 @@ void RTBTFdaqCU::unitInit() throw(CException) {
         tot_lost=0;
         loop=0;
        sis3800_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "scaleradd");
+       DPRINT("SIS 0x%x",sis3800_addr);
        caen965_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc965add");
+              DPRINT("QDC965 0x%x",caen965_addr);
+
        caen792_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc792add");
+              DPRINT("QDC792 0x%x",caen792_addr);
+
         caen513_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"caen513add");
-        qdchi=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"QDC965HI");
-        qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"QDC965LO");
-        qdc792=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"QDC792");
-        counters=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_INPUT,"SCALER");
+              DPRINT("CAEN513 0x%x",caen513_addr);
+
+        qdchi=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965HI");
+                      DPRINT("QDC965HI 0x%x",qdchi);
+
+        qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965LO");
+                      DPRINT("QDC965LOW 0x%x",qdclow);
+
+        qdc792=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC792");
+                      DPRINT("QDC792 0x%x",qdc792);
+
+        counters=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"SCALER");
+                      DPRINT("COUNTERS 0x%x",counters);
+
         trigger_lost=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER LOST");
+                              DPRINT("TRIGGER LOST 0x%x",trigger_lost);
+
          acquisition=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"ACQUISITION");
+                                       DPRINT("ACQUISITION 0x%x",acquisition);
+
         triggers=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER");
-       if(sis3800_addr  == NULL || caen965_addr==NULL || caen792_addr==NULL ||caen513_addr==NULL){
+                                               DPRINT("TRIGGERS 0x%x",triggers);
+
+       if((sis3800_addr  == NULL) || (caen965_addr==NULL) || (caen792_addr==NULL) ||(caen513_addr==NULL)){
            throw chaos::CException(-2, "BAD VME START ADDRESS", __PRETTY_FUNCTION__);
        }
        
-        if(qdchi  == NULL || qdclow==NULL || qdc792==NULL ||counters==NULL){
-           throw chaos::CException(-3, "BAD DATEASET", __PRETTY_FUNCTION__);
+        if((qdchi  == NULL) || (qdclow==NULL) || (qdc792==NULL) ||(counters==NULL)){
+            DPRINT("qdchi 0x%x qdclo 0x%x qdc792 0x%x counters 0x%x",qdchi,qdclow,qdc792,counters);
+       //    throw chaos::CException(-3, "BAD DATASET", __PRETTY_FUNCTION__);
        }
        
        DPRINT("scaler add 0x%x qdc965 0x%x qdc 792 0x%x",*sis3800_addr,*caen965_addr,*caen792_addr);

@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.6)
 project(chaos_driver_daq_btf)
 SET(DAQ_src RTBTFdaqCU.cpp)
-ADD_DEFINITIONS(-fpermissive)
+ADD_DEFINITIONS(-fpermissive -DDEBUG)
 IF(BUILD_FORCE_STATIC)
    SET(CMAKE_EXE_LINKER_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
    ADD_LIBRARY(${PROJECT_NAME} STATIC ${DAQ_src} )
