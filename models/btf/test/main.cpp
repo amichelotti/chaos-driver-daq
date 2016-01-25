@@ -14,7 +14,6 @@
 
 int main(int argc,char**argv){
 	try{
-
 		chaos::cu::ChaosCUToolkit::getInstance()->init(argc, argv);
 		REGISTER_CU(::driver::daq::btf::RTBTFdaqCU); /* file: driver/daq/models/btf/RTBTFdaqCU.h */
 		chaos::cu::ChaosCUToolkit::getInstance()->start();

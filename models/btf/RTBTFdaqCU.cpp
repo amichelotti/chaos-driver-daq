@@ -31,6 +31,8 @@ using namespace chaos::common::batch_command;
 
 using namespace chaos::cu::control_manager::slow_command;
 using namespace chaos::cu::driver_manager::driver;
+using namespace driver::daq::btf;
+namespace chaos_batch = chaos::common::batch_command;
 
 #define ENABLE_VETO 0x0
 #define DISABLE_VETO 0xffff
@@ -39,7 +41,8 @@ using namespace chaos::cu::driver_manager::driver;
   _x ## _close(_x ## _handle);
 
 #define OPENDEV(_x)						\
-  if(_x ## _addr && (_x ## _handle = _x ## _open((uint32_t)_x ## _addr))){ \
+DPRINT("opening %s at address 0x%x",# _x ,(uint32_t) * _x ## _addr);\
+  if(_x ## _addr && (_x ## _handle = _x ## _open((uint32_t) * _x ## _addr))){ \
     DPRINT("* " # _x " successfully mapped\n");\
   } else {\
        throw chaos::CException(-4,"## cannot map " # _x " ", __PRETTY_FUNCTION__);\
@@ -51,7 +54,6 @@ using namespace chaos::cu::driver_manager::driver;
 
 PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::btf::RTBTFdaqCU)
 
-using namespace ::driver::daq::btf;
 /*
  Construct a new CU with an identifier
  */
@@ -134,6 +136,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
         counter=counter_old=0;
         tot_lost=0;
         loop=0;
+        
        sis3800_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "scaleradd");
        DPRINT("SIS 0x%x",sis3800_addr);
        caen965_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc965add");
@@ -142,9 +145,10 @@ void RTBTFdaqCU::unitInit() throw(CException) {
        caen792_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc792add");
               DPRINT("QDC792 0x%x",caen792_addr);
 
-        caen513_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"caen513add");
-              DPRINT("CAEN513 0x%x",caen513_addr);
-
+        //caen513_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"caen513add");
+          //    DPRINT("CAEN513 0x%x",caen513_addr);
+       //getAttributeCache()->setOutputAttributeNewSize("QDC965HI",16*sizeof(int32_t));
+       
         qdchi=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965HI");
                       DPRINT("QDC965HI 0x%x",qdchi);
 
@@ -166,7 +170,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
         triggers=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER");
                                                DPRINT("TRIGGERS 0x%x",triggers);
 
-       if((sis3800_addr  == NULL) || (caen965_addr==NULL) || (caen792_addr==NULL) ||(caen513_addr==NULL)){
+       if((sis3800_addr  == NULL) || (caen965_addr==NULL) || (caen792_addr==NULL)){
            throw chaos::CException(-2, "BAD VME START ADDRESS", __PRETTY_FUNCTION__);
        }
        
@@ -183,19 +187,21 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     sleep(1);
     OPENDEV(sis3800);
     sleep(1);
-    OPENDEV(caen513);
+    /*
+     * OPENDEV(caen513);
     sleep(1);
     caen513_reset(caen513_handle);
+     * */
   //  caen513_init(caen513_handle,V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT); 
   //  
   //caen513_init(caen513_handle,1); //use board defaults
   /*
   for(cnt=8;cnt<16;cnt++)
     caen513_setChannelMode(caen513_handle,cnt, V513_CHANMODE_NEG|V513_CHANMODE_IGLITCHED|V513_CHANMODE_INPUT); // 15 trigger in
-  */
+  *
   for(cnt=0;cnt<16;cnt++)
     caen513_setChannelMode(caen513_handle,cnt, V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT); 
-  
+  */
 
 
 
@@ -205,7 +211,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
   sis3800_init(sis3800_handle);
 
   //resetTM(caen513_handle);
-  caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF  
+ // caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF  
   
             
 
@@ -213,19 +219,29 @@ void RTBTFdaqCU::unitInit() throw(CException) {
 
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitStart() throw(CException) {
+    setDefaultScheduleDelay(0);
+    loop=0;
+    counter_old=counter=0;
+    tot_lost=0;
+    sis3800_clear(sis3800_handle);
 	
 }
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitRun() throw(CException) {
-    int ret;
+    int ret,cnt;
     uint64_t cycle0,cycle1;
-    loop++;
     counter_old=counter;
-    counter=sis3800_readCounter(sis3800_handle,30);
+    for(cnt=0;cnt<32;cnt++){
+        counters[cnt]=sis3800_readCounter(sis3800_handle,cnt);
+    }
+    counter=counters[30];
+    
     DPRINT("start acquisition SW:%10llu HW %10u",loop,counter);
-
+    if(loop==0){
+        loop=counter;
+    }
     if(counter>counter_old){
-      tot_lost+=(counter_old)-1;
+      tot_lost+=(counter-counter_old)-1;
     }
     ret = caen965_acquire_channels_poll(caen965_handle,qdclow,qdchi,0,16,&cycle0,0);
     //caen513_set(caen513_handle,ENABLE_VETO); // SW veto ON
@@ -247,23 +263,19 @@ void RTBTFdaqCU::unitRun() throw(CException) {
       discard=(counter_middle-counter-1);
       
       if(discard){
-          PRINT("acquisition SW %llu HW:%llu discarded, lost %d trigger(s)",loop,counter,discard)
+          DERR("acquisition SW %llu HW:%llu discarded, lost %d trigger(s)",loop,counter,discard)
       } else {
           getAttributeCache()->setOutputDomainAsChanged();
 
       }
       
     }
-    
+    loop++;
+
 
     //    caen513_reset(caen513_handle);
     //    caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
-    //caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
-
-
-    
-    loop++;
-	
+    //caen513_set(caen513_handle,DISABLE_VETO); // SW veto OF	
 }
 
 // Abstract method for the stop of the control unit
@@ -275,7 +287,7 @@ void RTBTFdaqCU::unitStop() throw(CException) {
 
 // Abstract method for the deinit of the control unit
 void RTBTFdaqCU::unitDeinit() throw(CException) {
-  CLOSEDEV(caen513);
+ // CLOSEDEV(caen513);
   CLOSEDEV(caen965);
   CLOSEDEV(caen792);
   CLOSEDEV(sis3800);
