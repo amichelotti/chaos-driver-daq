@@ -26,6 +26,8 @@
 #include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 #include <driver/misc/RTDataSync.h>
+#include <driver/data-import/models/MemcachedDataImporterDriver.h>
+
    
     namespace driver {
         
@@ -45,7 +47,9 @@ public:
     ~RTBTFSync();
 
 protected:
-
+MemcachedDataImporterDriver memcache;
+std::string server_url;
+std::string server_key;
      
     /*!
 		Define the Control Unit Dataset and Actions

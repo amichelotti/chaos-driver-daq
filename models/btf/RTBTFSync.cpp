@@ -58,6 +58,16 @@ RTBTFSync::~RTBTFSync() {
 }
 
 void RTBTFSync::unitDefineActionAndDataset() throw(chaos::CException) {
+     addAttributeToDataSet("memcacheurl",
+						  "Memcache server",
+						  DataType::TYPE_STRING,
+						  DataType::Input);
+     
+     addAttributeToDataSet("memcachekey",
+						  "Memcache output key",
+						  DataType::TYPE_STRING,
+						  DataType::Input);
+     
     RTDataSync::unitDefineActionAndDataset();
     
    
@@ -67,7 +77,14 @@ void RTBTFSync::unitDefineActionAndDataset() throw(chaos::CException) {
 
 //!Initialize the Custom Control Unit
 void RTBTFSync::unitInit() throw(chaos::CException) {
-  
+    char*url=getAttributeCache()->getROPtr<char>(DOMAIN_INPUT, "memcacheurl");
+    char*key=getAttributeCache()->getROPtr<char>(DOMAIN_INPUT, "memcachekey");
+    if(url == NULL || key ==NULL){
+        throw chaos::CException(-1,__PRETTY_FUNCTION__, "cannot find 'memcacheurl' or 'memcachekey' required initialization  ");
+    }
+    server_url.assign(url);
+    server_key.assign(key);
+
 
 }
 
