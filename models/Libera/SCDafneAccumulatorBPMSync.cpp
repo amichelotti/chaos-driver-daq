@@ -65,6 +65,10 @@ The api that can be called withi this method are listed into
 (chaosframework/Documentation/html/group___control___unit___definition___api.html)
 */
 void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CException) {
+     driver=new remoteGroupAccessInterface(getAccessoInstanceByIndex(0));
+     if((driver == NULL) || (driver->connect()!=0)){
+         throw chaos::CException(-1,"cannot connect with driver",__PRETTY_FUNCTION__);
+     }
     //insert your definition code here
       installCommand<CmdDefaultDafneAccumulatorBPM>("default");
       installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdAcquireDafneAccumulatorBPM));
