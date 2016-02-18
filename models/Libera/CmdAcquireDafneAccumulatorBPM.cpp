@@ -45,6 +45,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
             }
    }
   mode=driver->getRemoteVariables("MODE");
+  elem_size=mode.size();
     for(int cnt=0;cnt<elem_size;cnt++){
        mode_sync.add(mode[cnt]);
    }
@@ -95,10 +96,32 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     mode_sync.setTimeout(10000000);
    
     mode_sync.sync(tomode);
+    mode_sync.setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+
     CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
-    rattrs= driver->getRemoteVariables();
+    rattrs= driver->getRemoteVariables("X_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_xx=driver->getRemoteVariables("X");
+        std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
+        rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
+        rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
+        rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
+        
     for(int cnt=0;cnt<elem_size;cnt++){
         int32_t samples_v=*samples[cnt];
+        //10ms
+        va[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        vb[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        vc[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        vd[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        va_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        vb_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        vc_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        vd_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        acquire[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        samples[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
+        poly_type[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,1000000);
+
         x_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
         y_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
         x_acq[cnt]->resize(samples_v*sizeof(double));
@@ -154,6 +177,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           
           CTRLDBG_<<"BPM ["<<cnt<<"] type:"<<poly<<" " <<mode[cnt]->getPath()<<"["<<mode[cnt]->getInfo().getTimeStamp()<<"] mode:"<<mode_v<<" samples:"<<samples_v<<" "<<"acquire:"<<acquire_v<<": ("<<mm.x<<" mm, "<<mm.y<<" mm) Voltages:"<<a <<" "<<b <<" "<<c<<" "<<d;
     }
+  
     cnt=0;
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         

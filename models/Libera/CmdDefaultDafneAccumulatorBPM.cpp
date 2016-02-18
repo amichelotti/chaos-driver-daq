@@ -42,8 +42,13 @@ void  CmdDefaultDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         chaos::CException(-1,"## bad array sizes ",__PRETTY_FUNCTION__);
     }
     BC_NORMAL_RUNNIG_PROPERTY;
-    rattrs= driver->getRemoteVariables();
-
+ rattrs= driver->getRemoteVariables("X_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_xx=driver->getRemoteVariables("X");
+        std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
+        rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
+        rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
+        rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
 }
 
 void CmdDefaultDafneAccumulatorBPM::acquireHandler() {

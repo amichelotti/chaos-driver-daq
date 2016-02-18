@@ -77,7 +77,13 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
 	//installCommand<CmdDafneAccumulatorBPM>("time");
         setDefaultCommand("default");
 
-        std::vector<ChaosDatasetAttribute*> rattrs= driver->getRemoteVariables();
+        std::vector<ChaosDatasetAttribute*> rattrs= driver->getRemoteVariables("X_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_xx=driver->getRemoteVariables("X");
+        std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
+        rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
+        rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
+        rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
         
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         std::string name=(*i)->getGroup()+chaos::PATH_SEPARATOR+(*i)->getName();
