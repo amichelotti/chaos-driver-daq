@@ -146,6 +146,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           int32_t a,b,c,d;
           uint32_t size;
           int poly;
+          double dx,dy;
           mode_v= *mode[cnt];
         samples_v = *samples[cnt];
         acquire_v = *acquire[cnt];
@@ -155,8 +156,10 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           d= *vd[cnt];
           poly=*poly_type[cnt];
           mm=bpm_voltage_to_mm(poly,a,b,c,d);
-          *x[cnt]=mm.x;
-          *y[cnt]=mm.y;
+          dx=mm.x;
+          dy=mm.y;
+          *x[cnt]=dx;
+          *y[cnt]=dy;
           if(mode_v&LIBERA_IOP_MODE_DD){
              // double vx_acq[samples_v];
             //  double vy_acq[samples_v];
@@ -169,8 +172,10 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
               double *vy_acq=(double*) *y_acq[cnt];
               for(cntt=0;cntt<samples_v;cntt++){
                  mm=bpm_voltage_to_mm(poly,vva_acq[cntt],vvb_acq[cntt],vvc_acq[cntt],vvd_acq[cntt]);
-                 vx_acq[cntt]=mm.x;
-                 vy_acq[cntt]=mm.y;
+                 dx=mm.x;
+                  dy=mm.y;
+                 vx_acq[cntt]=dx;
+                 vy_acq[cntt]=dy;
               }
               
           }
