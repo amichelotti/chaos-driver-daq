@@ -24,10 +24,9 @@
 #include <driver/misc/core/RTVme.h>
 #include <common/vme/caen/caen775_drv.h>
     namespace driver {
-
         namespace daq {
-namespace caen{
-	  class RTCAEN775 : public driver::misc::RTVme {
+        namespace caen {
+	  class RTCAEN775 : public ::driver::misc::RTVme {
 		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN775)
 	  public:
     /*!
@@ -56,5 +55,7 @@ public:
     void unitRun() throw(chaos::CException);
 
 };
-            }}}
+            }
+        }
+    }
 #endif
