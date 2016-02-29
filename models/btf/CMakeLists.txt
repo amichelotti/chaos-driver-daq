@@ -11,7 +11,7 @@ ELSE()
 ENDIF()
 
 SET(DAQ_LIBRARY ${PROJECT_NAME})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme vme common_debug ${FrameworkLib})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme_caen common_vme_sis common_vme vme common_debug ${FrameworkLib})
 ADD_EXECUTABLE(daqbtfCU test/main.cpp)
 TARGET_LINK_LIBRARIES(daqbtfCU ${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme chaos_driver_misc vme common_debug ${FrameworkLib})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme vme ${FrameworkLib})

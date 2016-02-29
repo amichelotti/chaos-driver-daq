@@ -37,6 +37,8 @@ uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
 void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   ::driver::misc::CmdSync::setHandler(data);
   int tomode=0;
+  int32_t samples_v;
+  int cnt;
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
                
@@ -107,8 +109,8 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
         rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
         
-    for(int cnt=0;cnt<elem_size;cnt++){
-        int32_t samples_v=*samples[cnt];
+    for(cnt=0;cnt<elem_size;cnt++){
+        samples_v=*samples[cnt];
         //10ms
         va[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
         vb[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
@@ -130,7 +132,26 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         y[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
     }
 
+    cnt=0;
+    for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
+
+           if((*i)->getDir()==chaos::DataType::Output){
+               uint32_t size;
+               //void*ptr=(*i)->get(&size);
+               if((*i)->getType()==chaos::DataType::TYPE_BYTEARRAY){
+                   getAttributeCache()->setOutputAttributeNewSize(cnt,size);
+               }
+           //    CTRLDBG_<<"setting "<<cnt<<" "<<(*i)->getPath()<<" size:"<<size;
+               //getAttributeCache()->setOutputAttributeValue(cnt,ptr,size);
+               cnt++;
+
+               }
+
+           }
+    //getAttributeCache()->setOutputAttributeNewSize("X_ACQ", samples_v*sizeof(double));
+   //     getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", samples_v*sizeof(double));
 }
+
 
 void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
     uint64_t acquire_v,mt_v;
