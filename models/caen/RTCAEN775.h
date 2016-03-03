@@ -43,9 +43,11 @@ protected:
     uint32_t *chp;
     uint64_t* events;
     uint64_t* acq_cycle;
-    int32_t* timeo_ms;
+    
 public:
-    int channels;
+    int32_t channels;
+    int32_t crate_num;
+    int32_t timeo_ms;
     void unitDefineActionAndDataset() throw(chaos::CException);
     void unitInit() throw(chaos::CException);
 

@@ -30,8 +30,8 @@ using namespace chaos;
 using namespace chaos::common::data::cache;
 using namespace chaos::common::utility;
 using namespace chaos::cu::driver_manager::driver;
-using namespace driver::daq::caen;
-PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(RTCAEN775)
+using namespace ::driver::daq::caen;
+PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN775)
 
 #define RTCAEN775LAPP_		LAPP_ << "[RTDataSync] "
 #define RTCAEN775LDBG_		LDBG_ << "[RTDataSync] " << __PRETTY_FUNCTION__ << " "
@@ -59,6 +59,11 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
 	addAttributeToDataSet("CHANNELS",
 	                        "Number of channels available",
 	                        DataType::TYPE_INT64,
+	                        DataType::Input);
+
+	addAttributeToDataSet("CRATE_NUM",
+	                        "Crate Number",
+	                        DataType::TYPE_INT32,
 	                        DataType::Input);
 
 	addAttributeToDataSet("TIMEOUT",
@@ -90,6 +95,9 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
  void RTCAEN775::unitInit() throw(chaos::CException){
 	 vme_base_address = *getAttributeCache()->getROPtr<uint64_t>(DOMAIN_INPUT, "VME_BASE");
 	 channels = *getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "CHANNELS");
+	 timeo_ms = *getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "TIMEOUT");
+	 crate_num = *getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "CRATE_NUM");
+
 	 if((channels<=0)||(vme_base_address==0)){
 		 throw CException(-1,__PRETTY_FUNCTION__,"invalid CHANNELS or VME_BASE ");
 	 }
@@ -101,15 +109,16 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
 
 	 }
 	 chp=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "CH");
-	 timeo_ms=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "TIMEOUT");
+
 	 events=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "EVENTS");
 	 acq_cycle=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQ_CYCLE");
 
-
-	 if((chp==NULL)||(events==NULL) || (acq_cycle==NULL) || (timeo_ms==NULL)){
+	 
+	 if((chp==NULL)||(events==NULL) || (acq_cycle==NULL)){
 		 throw CException(-1,__PRETTY_FUNCTION__,"cannot retrive dataset pointers");
 
 	 }
+	 caen775_init(caen,crate_num,true);
  }
  
  void RTCAEN775::unitStart() throw(chaos::CException){
@@ -128,10 +137,10 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
  void RTCAEN775::unitRun() throw(chaos::CException){
 
 	 int ret;
-	 ret = caen775_acquire_channels_poll(caen,chp,events,*timeo_ms);
+	 ret = caen775_acquire_channels_poll(caen,chp,events,timeo_ms);
 
 
-	 DPRINT("* acquired %d channels, events:%llu, loop %llu\n",ret,*events,*acq_cycle);
+	 DPRINT("* acquired %d channels, events:%llu, loop %llu",ret,*events,*acq_cycle);
 	 if(ret){
          getAttributeCache()->setOutputDomainAsChanged();
 
