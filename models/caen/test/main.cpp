@@ -17,6 +17,8 @@ int main(int argc,char**argv){
 	try{
 		chaos::cu::ChaosCUToolkit::getInstance()->init(argc, argv);
 		REGISTER_CU(::driver::daq::caen::RTCAEN775);
+		REGISTER_CU(::driver::daq::caen::RTCAEN965);
+		REGISTER_CU(::driver::daq::caen::RTCAEN792);
 
 
 		chaos::cu::ChaosCUToolkit::getInstance()->start();

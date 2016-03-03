@@ -1,5 +1,5 @@
 /*
- *	RTCAEN775.h
+ *	RTCAEN.h
  *	!CHAOS
  *	Created by Andrea Michelotti
  *      Collects and align a given series of Libera BPMs
@@ -17,33 +17,34 @@
  *    	See the License for the specific language governing permissions and
  *    	limitations under the License.
  */
-#ifndef _RTCAEN775_h
-#define _RTCAEN775_h
+#ifndef _RTCAEN_h
+#define _RTCAEN_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <common/vme/caen/caen775_drv.h>
-#include "RTCAEN.h"
+#include <driver/misc/core/RTVme.h>
     namespace driver {
         namespace daq {
         namespace caen {
-	  class RTCAEN775 : public RTCAEN {
-		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN775)
+	  class RTCAEN : public ::driver::misc::RTVme {
+		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN)
 	  public:
     /*!
      Construct a new CU with full constructor
      */
-	    RTCAEN775(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers);
+	    RTCAEN(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers);
 	    /*!
      Destructor a new CU
      */
-    ~RTCAEN775();
+    ~RTCAEN();
 
 protected:
-    caen775_handle_t caen;
-    uint32_t *chp;
-
+    uint64_t* events;
+    uint64_t* acq_cycle;
+    
 public:
-
+    int32_t channels;
+    int32_t crate_num;
+    int32_t timeo_ms;
     void unitDefineActionAndDataset() throw(chaos::CException);
     void unitInit() throw(chaos::CException);
 
@@ -51,7 +52,7 @@ public:
     void unitStop() throw(chaos::CException);
     void unitDeinit() throw(chaos::CException);
     void unitRun() throw(chaos::CException);
-    chaos::common::data::CDataWrapper* setFSR(CDataWrapper*, bool&);
+    void unitInputAttributeChangedHandler() throw(CException);
 };
             }
         }
