@@ -51,7 +51,6 @@ public:
     void unitStop() throw(chaos::CException);
     void unitDeinit() throw(chaos::CException);
     void unitRun() throw(chaos::CException);
-    chaos::common::data::CDataWrapper* setFSR(CDataWrapper*, bool&);
 };
             }
         }

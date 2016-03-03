@@ -63,7 +63,6 @@ void RTCAEN::unitInputAttributeChangedHandler() throw(CException) {
             it++) {
             switch(*it) {
                 case 0:
-                    setWavePoint();
                     break;
 
                 default:
@@ -114,11 +113,6 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
                             DataType::Output);
 
 // actions
-    AbstActionDescShrPtr
-       actionDescription = addActionDescritionInstance<RTCAEN>(this,
-                                                                   &RTCAEN::setBitSet,
-                                                                   "setBitSet",
-                                                                   "comandTestOne this action will do some beautifull things!");
 
 }
 

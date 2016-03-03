@@ -22,6 +22,7 @@
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
 #include <driver/misc/core/RTVme.h>
+#include <common/vme/caen/CaenBase.h>
     namespace driver {
         namespace daq {
         namespace caen {
@@ -40,7 +41,7 @@
 protected:
     uint64_t* events;
     uint64_t* acq_cycle;
-    
+    ::common::vme::caen::CaenBase* caen;
 public:
     int32_t channels;
     int32_t crate_num;
@@ -52,7 +53,7 @@ public:
     void unitStop() throw(chaos::CException);
     void unitDeinit() throw(chaos::CException);
     void unitRun() throw(chaos::CException);
-    void unitInputAttributeChangedHandler() throw(CException);
+    void unitInputAttributeChangedHandler() throw(chaos::CException);
 };
             }
         }

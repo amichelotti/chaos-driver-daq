@@ -10,6 +10,8 @@
 /*** CU Types ****/
 
 #include<driver/daq/models/caen/RTCAEN775.h>
+#include<driver/daq/models/caen/RTCAEN965.h>
+#include<driver/daq/models/caen/RTCAEN792.h>
 
 
 
