@@ -48,7 +48,7 @@ RTCAEN::RTCAEN(const string& _control_unit_id,
 driver::misc::RTVme(_control_unit_id,
                         "",
                         _control_unit_drivers) {
-
+	caen =NULL;
 
 }
 
@@ -102,7 +102,7 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
 					                        "Operational control mode",
 					                        DataType::TYPE_INT32,
 					                        DataType::Input);
-    addAttributeToDataSet("ACQ_CYCLE",
+    addAttributeToDataSet("ACQUISITION",
                         "Acquisition cycle",
                         DataType::TYPE_INT64,
                         DataType::Output);
@@ -111,6 +111,8 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
                             "Events counted",
                             DataType::TYPE_INT64,
                             DataType::Output);
+    addBinaryAttributeAsSubtypeToDataSet("CH","Vector of acquired channels",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
+
 
 // actions
 
@@ -128,24 +130,49 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
 	 }
 
 	 events=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "EVENTS");
-	 acq_cycle=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQ_CYCLE");
+	 acq_cycle=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQUISITION");
+	 chp=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "CH");
 
+	 *events=0;
+	 *acq_cycle=0;
 	 
 
  }
  
  void RTCAEN::unitStart() throw(chaos::CException){
-
+	 caen->resetEventBuffer();
+	 *events=0;
+	 *acq_cycle=0;
 
  }
  void RTCAEN::unitStop() throw(chaos::CException){
 
  }
  void RTCAEN::unitDeinit() throw(chaos::CException){
-
+	 if(caen){
+		 DPRINT("deallocating caen 0x%x",caen);
+			 caen->close();
+			 delete caen;
+			 caen=NULL;
+		 }
  }
  void RTCAEN::unitRun() throw(chaos::CException){
+	 int ret;
 
+
+		 if(caen->waitEvent(timeo_ms)==0){
+			 last_event=event;
+
+			 ret=caen->acquireChannels(chp,&event);
+			 if(ret){
+				 *events+=(event-last_event);
+				 DPRINT("* acquired %d channels, event tag %d, events:%llu, loop %llu",ret,event,*events,*acq_cycle);
+
+				 getAttributeCache()->setOutputDomainAsChanged();
+			 }
+
+			}
+		 (*acq_cycle)++;
  }
  
 /*

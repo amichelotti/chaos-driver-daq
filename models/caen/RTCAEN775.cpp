@@ -24,7 +24,7 @@
 #include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/cu_toolkit/command_manager/CommandManager.h>
 #include <common/debug/core/debug.h>
-
+#include <common/vme/caen/Caen775.h>
 #include <chaos/common/utility/TimingUtil.h>
 using namespace chaos;
 using namespace chaos::common::data::cache;
@@ -48,7 +48,6 @@ RTCAEN775::RTCAEN775(const string& _control_unit_id,
 RTCAEN(_control_unit_id,
                         _control_unit_param,
                         _control_unit_drivers) {
-	 caen=NULL;
 
 
 }
@@ -61,53 +60,35 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
 		                        DataType::TYPE_INT32,
 		                        DataType::Input);
 
-
-    addBinaryAttributeAsSubtypeToDataSet("CH","Vector of acquired channels",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
-
-
 }
 
 
  void RTCAEN775::unitInit() throw(chaos::CException){
 	 driver::daq::caen::RTCAEN::unitInit();
 
-
-	 getAttributeCache()->setOutputAttributeNewSize("CH", channels*sizeof(int32_t));
-	 caen = caen775_open(vme_base_address);
+	 caen =new ::common::vme::caen::Caen775();
 	 if(caen==NULL){
+		 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN775");
+	 }
+
+	 if(caen->open(vme_base_address)){
 		 throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN775");
 
 	 }
-	 chp=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "CH");
+	 last_event=event=0;
+	 caen->init(crate_num,true);
+	 getAttributeCache()->setOutputAttributeNewSize("CH", caen->getNumberOfChannels()*sizeof(int32_t));
+	 DPRINT("detected %s",caen->getBoard().c_str());
 
-	 caen775_init(caen,crate_num,true);
  }
  
- void RTCAEN775::unitStart() throw(chaos::CException){
 
-
- }
- void RTCAEN775::unitStop() throw(chaos::CException){
-
- }
  void RTCAEN775::unitDeinit() throw(chaos::CException){
-	 if(caen){
-		 caen775_close(caen);
-		 caen=NULL;
-	 }
+	 RTCAEN::unitDeinit();
  }
  void RTCAEN775::unitRun() throw(chaos::CException){
 
-	 int ret;
-	 ret = caen775_acquire_channels_poll(caen,chp,events,timeo_ms);
-
-
-	 DPRINT("* acquired %d channels, events:%llu, loop %llu",ret,*events,*acq_cycle);
-	 if(ret){
-         getAttributeCache()->setOutputDomainAsChanged();
-
-	 }
-	 (*acq_cycle)++;
+	 RTCAEN::unitRun();
  }
  
 /*

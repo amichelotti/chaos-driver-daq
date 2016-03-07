@@ -42,6 +42,8 @@ protected:
     uint64_t* events;
     uint64_t* acq_cycle;
     ::common::vme::caen::CaenBase* caen;
+    uint32_t *chp;
+  	uint32_t last_event,event;
 public:
     int32_t channels;
     int32_t crate_num;

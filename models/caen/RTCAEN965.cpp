@@ -24,6 +24,7 @@
 #include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/cu_toolkit/command_manager/CommandManager.h>
 #include <common/debug/core/debug.h>
+#include <common/vme/caen/CaenBase.h>
 
 #include <chaos/common/utility/TimingUtil.h>
 using namespace chaos;
@@ -48,7 +49,7 @@ RTCAEN965::RTCAEN965(const string& _control_unit_id,
 RTCAEN(_control_unit_id,
                         _control_unit_param,
                         _control_unit_drivers) {
-	 caen=NULL;
+	 caen=new ::common::vme::caen::CaenBase();
 
 
 }
@@ -57,55 +58,31 @@ void RTCAEN965::unitDefineActionAndDataset() throw(chaos::CException) {
 	driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
 
 
-
-
-    addBinaryAttributeAsSubtypeToDataSet("CHL","Vector of acquired channels (Low Resolution)",chaos::DataType::SUB_TYPE_INT32,16*sizeof(int32_t),chaos::DataType::Output);
-    addBinaryAttributeAsSubtypeToDataSet("CHH","Vector of acquired channels (High Resolution)",chaos::DataType::SUB_TYPE_INT32,16*sizeof(int32_t),chaos::DataType::Output);
-
+	addAttributeToDataSet("IPED",
+			                        "IPED QDC pedestal",
+			                        DataType::TYPE_INT32,
+			                        DataType::Input);
 }
 
 
  void RTCAEN965::unitInit() throw(chaos::CException){
 	 driver::daq::caen::RTCAEN::unitInit();
-
-
-	 getAttributeCache()->setOutputAttributeNewSize("CHL", channels*sizeof(int32_t));
-	 getAttributeCache()->setOutputAttributeNewSize("CHH", channels*sizeof(int32_t));
-	 caen = caen965_open(vme_base_address);
-	 if(caen==NULL){
-		 throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN775");
-
-	 }
-	 chpl=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "CHL");
-	 chph=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "CHH");
-	 caen965_init(caen,crate_num,true);
+	 caen =new ::common::vme::caen::CaenBase();
+		 if(caen==NULL){
+			 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN965");
+		 }
+	 caen->init(crate_num,true);
+	 getAttributeCache()->setOutputAttributeNewSize("CH", 2*caen->getNumberOfChannels()*sizeof(int32_t));
+	 DPRINT("detected %s",caen->getBoard().c_str());
  }
  
- void RTCAEN965::unitStart() throw(chaos::CException){
-
-
- }
- void RTCAEN965::unitStop() throw(chaos::CException){
-
- }
  void RTCAEN965::unitDeinit() throw(chaos::CException){
-	 if(caen){
-		 caen965_close(caen);
-		 caen=NULL;
-	 }
+	 RTCAEN::unitDeinit();
+
  }
  void RTCAEN965::unitRun() throw(chaos::CException){
 
-	 int ret;
-
-	 ret = caen965_acquire_channels_poll(caen,chpl,chph,0,channels,events,timeo_ms);
-
-	 DPRINT("* acquired %d channels, events:%llu, loop %llu",ret,*events,*acq_cycle);
-	 if(ret){
-         getAttributeCache()->setOutputDomainAsChanged();
-
-	 }
-	 (*acq_cycle)++;
+	 RTCAEN::unitRun();
  }
  
 /*

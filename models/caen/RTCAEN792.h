@@ -40,15 +40,13 @@
     ~RTCAEN792();
 
 protected:
-    caen965_handle_t caen;
-    uint32_t *chp;
+
 public:
 
     void unitDefineActionAndDataset() throw(chaos::CException);
     void unitInit() throw(chaos::CException);
 
-    void unitStart() throw(chaos::CException);
-    void unitStop() throw(chaos::CException);
+
     void unitDeinit() throw(chaos::CException);
     void unitRun() throw(chaos::CException);
 
