@@ -57,7 +57,7 @@ SCDafneAccumulatorBPMSync::~SCDafneAccumulatorBPMSync() {
 
 }
 
-using namespace driver::daq::libera;
+using namespace ::driver::daq::libera;
 //!Return the definition of the control unit
 /*!
 The api that can be called withi this method are listed into

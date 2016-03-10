@@ -44,47 +44,52 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN965)
  Construct
  */
 RTCAEN965::RTCAEN965(const string& _control_unit_id,
-                        const string& _control_unit_param,
-                        const ControlUnitDriverList& _control_unit_drivers):
-RTCAEN(_control_unit_id,
-                        _control_unit_param,
-                        _control_unit_drivers) {
-	 caen=new ::common::vme::caen::CaenBase();
+		const string& _control_unit_param,
+		const ControlUnitDriverList& _control_unit_drivers):
+		RTCAEN(_control_unit_id,
+				_control_unit_param,
+				_control_unit_drivers) {
+	caen=new ::common::vme::caen::CaenBase();
 
 
 }
 void RTCAEN965::unitDefineActionAndDataset() throw(chaos::CException) {
 
-	driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
+	::driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
 
 
 	addAttributeToDataSet("IPED",
-			                        "IPED QDC pedestal",
-			                        DataType::TYPE_INT32,
-			                        DataType::Input);
+			"IPED QDC pedestal",
+			DataType::TYPE_INT32,
+			DataType::Input);
 }
 
 
- void RTCAEN965::unitInit() throw(chaos::CException){
-	 driver::daq::caen::RTCAEN::unitInit();
-	 caen =new ::common::vme::caen::CaenBase();
-		 if(caen==NULL){
-			 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN965");
-		 }
-	 caen->init(crate_num,true);
-	 getAttributeCache()->setOutputAttributeNewSize("CH", 2*caen->getNumberOfChannels()*sizeof(int32_t));
-	 DPRINT("detected %s",caen->getBoard().c_str());
- }
- 
- void RTCAEN965::unitDeinit() throw(chaos::CException){
-	 RTCAEN::unitDeinit();
+void RTCAEN965::unitInit() throw(chaos::CException){
+	::driver::daq::caen::RTCAEN::unitInit();
+	caen =new ::common::vme::caen::CaenBase();
+	if(caen==NULL){
+		throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN965");
+	}
 
- }
- void RTCAEN965::unitRun() throw(chaos::CException){
+	if(caen->open(vme_driver_type,vme_base_address)){
+		throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN965");
 
-	 RTCAEN::unitRun();
- }
- 
+	}
+	caen->init(crate_num,true);
+	getAttributeCache()->setOutputAttributeNewSize("CH", 2*caen->getNumberOfChannels()*sizeof(int32_t));
+	DPRINT("detected %s",caen->getBoard().c_str());
+}
+
+void RTCAEN965::unitDeinit() throw(chaos::CException){
+	RTCAEN::unitDeinit();
+
+}
+void RTCAEN965::unitRun() throw(chaos::CException){
+
+	RTCAEN::unitRun();
+}
+
 /*
  Destructor
  */

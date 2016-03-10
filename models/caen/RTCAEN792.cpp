@@ -54,7 +54,7 @@ RTCAEN(_control_unit_id,
 }
 void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
 
-	driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
+	::driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
 
 
 	addAttributeToDataSet("IPED",
@@ -65,12 +65,16 @@ void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
 
 
  void RTCAEN792::unitInit() throw(chaos::CException){
-	 driver::daq::caen::RTCAEN::unitInit();
+	 ::driver::daq::caen::RTCAEN::unitInit();
 
 	 caen =new ::common::vme::caen::CaenBase();
 		 if(caen==NULL){
 			 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN792");
 		 }
+		 if(caen->open(vme_driver_type,vme_base_address)){
+		 		throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN965");
+
+		 	}
 	 caen->init(crate_num,true);
 		 getAttributeCache()->setOutputAttributeNewSize("CH", 2*caen->getNumberOfChannels()*sizeof(int32_t));
 		 DPRINT("detected %s",caen->getBoard().c_str());

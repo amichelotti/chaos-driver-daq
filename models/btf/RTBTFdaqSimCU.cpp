@@ -31,7 +31,7 @@ using namespace chaos::common::batch_command;
 
 using namespace chaos::cu::control_manager::slow_command;
 using namespace chaos::cu::driver_manager::driver;
-using namespace driver::daq::btf;
+using namespace ::driver::daq::btf;
 namespace chaos_batch = chaos::common::batch_command;
 
 

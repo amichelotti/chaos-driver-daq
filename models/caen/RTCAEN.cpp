@@ -33,9 +33,9 @@ using namespace chaos::cu::driver_manager::driver;
 using namespace ::driver::daq::caen;
 PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN)
 
-#define RTCAENLAPP_		LAPP_ << "[RTDataSync] "
-#define RTCAENLDBG_		LDBG_ << "[RTDataSync] " << __PRETTY_FUNCTION__ << " "
-#define RTCAENLERR_		LERR_ << "[RTDataSync] " << __PRETTY_FUNCTION__ << "("<<__LINE__<<") "
+#define RTCAENLAPP_		LAPP_ << "[RTCAEN] "
+#define RTCAENLDBG_		LDBG_ << "[RTCAEN] " << __PRETTY_FUNCTION__ << " "
+#define RTCAENLERR_		LERR_ << "[RTCAEN] " << __PRETTY_FUNCTION__ << "("<<__LINE__<<") "
 
 
 
@@ -45,7 +45,7 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN)
 RTCAEN::RTCAEN(const string& _control_unit_id,
                         const string& _control_unit_param,
                         const ControlUnitDriverList& _control_unit_drivers):
-driver::misc::RTVme(_control_unit_id,
+::driver::misc::RTVme(_control_unit_id,
                         "",
                         _control_unit_drivers) {
 	caen =NULL;
@@ -74,7 +74,7 @@ void RTCAEN::unitInputAttributeChangedHandler() throw(CException) {
 
 void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
 
-	driver::misc::RTVme::unitDefineActionAndDataset();
+	::driver::misc::RTVme::unitDefineActionAndDataset();
 
 	addAttributeToDataSet("CHANNELS",
 	                        "Number of channels available",
@@ -121,6 +121,8 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
 
  void RTCAEN::unitInit() throw(chaos::CException){
 	 vme_base_address = *getAttributeCache()->getROPtr<uint64_t>(DOMAIN_INPUT, "VME_BASE");
+	 vme_driver_type= (vme_driver_t)*getAttributeCache()->getROPtr<uint64_t>(DOMAIN_INPUT, "VME_DRIVER");
+
 	 channels = *getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "CHANNELS");
 	 timeo_ms = *getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "TIMEOUT");
 	 crate_num = *getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "CRATE_NUM");
@@ -135,7 +137,7 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
 
 	 *events=0;
 	 *acq_cycle=0;
-	 
+	 last_event=event=0;
 
  }
  
@@ -143,6 +145,7 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
 	 caen->resetEventBuffer();
 	 *events=0;
 	 *acq_cycle=0;
+	 last_event=event=0;
 
  }
  void RTCAEN::unitStop() throw(chaos::CException){
@@ -159,20 +162,20 @@ void RTCAEN::unitDefineActionAndDataset() throw(chaos::CException) {
  void RTCAEN::unitRun() throw(chaos::CException){
 	 int ret;
 
-
+	 	 bzero((void*)chp,caen->getNumberOfChannels()*sizeof(uint32_t));
 		 if(caen->waitEvent(timeo_ms)==0){
-			 last_event=event;
 
 			 ret=caen->acquireChannels(chp,&event);
+			 *events+=(event-last_event);
+			 last_event=event;
+
 			 if(ret){
-				 *events+=(event-last_event);
-				 DPRINT("* acquired %d channels, event tag %d, events:%llu, loop %llu",ret,event,*events,*acq_cycle);
+				 LDBG_<<"* acquired "<< ret <<" channels, event tag "<<event<<" events:"<<*events<<" loop:"<<*acq_cycle;
 
 				 getAttributeCache()->setOutputDomainAsChanged();
 			 }
-
+			 (*acq_cycle)++;
 			}
-		 (*acq_cycle)++;
  }
  
 /*

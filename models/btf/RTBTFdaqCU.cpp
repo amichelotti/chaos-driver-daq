@@ -31,7 +31,7 @@ using namespace chaos::common::batch_command;
 
 using namespace chaos::cu::control_manager::slow_command;
 using namespace chaos::cu::driver_manager::driver;
-using namespace driver::daq::btf;
+using namespace ::driver::daq::btf;
 namespace chaos_batch = chaos::common::batch_command;
 
 #define ENABLE_VETO 0x0
@@ -42,7 +42,7 @@ namespace chaos_batch = chaos::common::batch_command;
 
 #define OPENDEV(_x)						\
 DPRINT("opening %s at address 0x%x",# _x ,(uint32_t) * _x ## _addr);\
-  if(_x ## _addr && (_x ## _handle = _x ## _open((uint32_t) * _x ## _addr))){ \
+  if(_x ## _addr && (_x ## _handle = _x ## _open(VME_UNIVERSE2_DRIVER,(uint32_t) * _x ## _addr))){ \
     DPRINT("* " # _x " successfully mapped\n");\
   } else {\
        throw chaos::CException(-4,"## cannot map " # _x " ", __PRETTY_FUNCTION__);\

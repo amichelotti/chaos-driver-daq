@@ -53,7 +53,7 @@ RTCAEN(_control_unit_id,
 }
 void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
 
-	driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
+	::driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
 
 	addAttributeToDataSet("FSR",
 		                        "FULL SCALE REGISTER TLSB=8.9/N (ns)",
@@ -64,14 +64,14 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
 
 
  void RTCAEN775::unitInit() throw(chaos::CException){
-	 driver::daq::caen::RTCAEN::unitInit();
+	 ::driver::daq::caen::RTCAEN::unitInit();
 
 	 caen =new ::common::vme::caen::Caen775();
 	 if(caen==NULL){
 		 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN775");
 	 }
 
-	 if(caen->open(vme_base_address)){
+	 if(caen->open(vme_driver_type,vme_base_address)){
 		 throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN775");
 
 	 }
