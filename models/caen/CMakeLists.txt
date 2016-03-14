@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.6)
 project(chaos_driver_daq_caen)
-SET(DAQ_src RTCAEN.cpp RTCAEN775.cpp RTCAEN965.cpp RTCAEN792.cpp)
+SET(DAQ_src RTCAEN775.cpp RTCAEN965.cpp RTCAEN792.cpp)
 # ADD_DEFINITIONS(-DDEBUG)
 
 IF(BUILD_FORCE_STATIC)

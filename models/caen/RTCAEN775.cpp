@@ -39,62 +39,29 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN775)
 
 
 
-/*
- Construct
- */
-RTCAEN775::RTCAEN775(const string& _control_unit_id,
-                        const string& _control_unit_param,
-                        const ControlUnitDriverList& _control_unit_drivers):
-RTCAEN(_control_unit_id,
-                        _control_unit_param,
-                        _control_unit_drivers) {
 
-
-}
 void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
-
-	::driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
+	::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitDefineActionAndDataset();
 
 	addAttributeToDataSet("FSR",
 		                        "FULL SCALE REGISTER TLSB=8.9/N (ns)",
 		                        DataType::TYPE_INT32,
 		                        DataType::Input);
 
+	 addHandlerOnInputAttributeName<RTCAEN775, int32_t>(this,
+	                                                            &RTCAEN775::setFsr,
+	                                                            "FSR");
+
+
+}
+void  RTCAEN775::unitInit() throw(chaos::CException){
+		AttributeSharedCacheWrapper * cc=getAttributeCache();
+
+     	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitInit();
+     	 fsr = (cc->getRWPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "FSR"));
+
+
 }
 
 
- void RTCAEN775::unitInit() throw(chaos::CException){
-	 ::driver::daq::caen::RTCAEN::unitInit();
 
-	 caen =new ::common::vme::caen::Caen775();
-	 if(caen==NULL){
-		 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN775");
-	 }
-
-	 if(caen->open(vme_driver_type,vme_base_address)){
-		 throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN775");
-
-	 }
-	 last_event=event=0;
-	 caen->init(crate_num,true);
-	 getAttributeCache()->setOutputAttributeNewSize("CH", caen->getNumberOfChannels()*sizeof(int32_t));
-	 DPRINT("detected %s",caen->getBoard().c_str());
-
- }
- 
-
- void RTCAEN775::unitDeinit() throw(chaos::CException){
-	 RTCAEN::unitDeinit();
- }
- void RTCAEN775::unitRun() throw(chaos::CException){
-
-	 RTCAEN::unitRun();
- }
- 
-/*
- Destructor
- */
-RTCAEN775::~RTCAEN775() {
-	unitDeinit();
-
-}

@@ -45,54 +45,28 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN792)
 RTCAEN792::RTCAEN792(const string& _control_unit_id,
                         const string& _control_unit_param,
                         const ControlUnitDriverList& _control_unit_drivers):
-RTCAEN(_control_unit_id,
+RTCAEN< ::common::vme::caen::CaenBase>(_control_unit_id,
                         _control_unit_param,
                         _control_unit_drivers) {
-	 caen=new ::common::vme::caen::CaenBase();
 
 
 }
 void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
+	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenBase>::unitDefineActionAndDataset();
 
-	::driver::daq::caen::RTCAEN::unitDefineActionAndDataset();
 
-
-	addAttributeToDataSet("IPED",
-			                        "IPED QDC pedestal",
-			                        DataType::TYPE_INT32,
-			                        DataType::Input);
+		addAttributeToDataSet("IPED",
+				"IPED QDC pedestal",
+				DataType::TYPE_INT32,
+				DataType::Input);
 }
 
 
  void RTCAEN792::unitInit() throw(chaos::CException){
-	 ::driver::daq::caen::RTCAEN::unitInit();
+	 AttributeSharedCacheWrapper * cc=getAttributeCache();
 
-	 caen =new ::common::vme::caen::CaenBase();
-		 if(caen==NULL){
-			 throw CException(-1,__PRETTY_FUNCTION__,"cannot allocate CAEN792");
-		 }
-		 if(caen->open(vme_driver_type,vme_base_address)){
-		 		throw CException(-1,__PRETTY_FUNCTION__,"cannot open CAEN965");
-
-		 	}
-	 caen->init(crate_num,true);
-		 getAttributeCache()->setOutputAttributeNewSize("CH", 2*caen->getNumberOfChannels()*sizeof(int32_t));
-		 DPRINT("detected %s",caen->getBoard().c_str());
+	 	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenBase >::unitInit();
+	 	 iped = (cc->getRWPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "IPED"));
  }
  
 
- void RTCAEN792::unitDeinit() throw(chaos::CException){
-	 RTCAEN::unitDeinit();
-
- }
- void RTCAEN792::unitRun() throw(chaos::CException){
-	 RTCAEN::unitRun();
- }
- 
-/*
- Destructor
- */
-RTCAEN792::~RTCAEN792() {
-	unitDeinit();
-
-}

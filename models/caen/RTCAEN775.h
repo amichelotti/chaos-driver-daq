@@ -21,34 +21,39 @@
 #define _RTCAEN775_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <common/vme/caen/caen775_drv.h>
+#include <common/vme/caen/Caen775.h>
 #include "RTCAEN.h"
     namespace driver {
         namespace daq {
         namespace caen {
-	  class RTCAEN775 : public RTCAEN {
-		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN775)
+	  class RTCAEN775 : public RTCAEN< ::common::vme::caen::Caen775 > {
+		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN775);
 	  public:
     /*!
      Construct a new CU with full constructor
      */
-	    RTCAEN775(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers);
-	    /*!
-     Destructor a new CU
-     */
-    ~RTCAEN775();
+	    RTCAEN775(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers):
+	    	RTCAEN< ::common::vme::caen::Caen775 >(_control_unit_id,
+	    	                        _control_unit_param,
+	    	                        _control_unit_drivers) {
+
+
+	    	}
 
 protected:
-
+    uint32_t *fsr;
 
 public:
 
     void unitDefineActionAndDataset() throw(chaos::CException);
     void unitInit() throw(chaos::CException);
+    //actions
+    bool setFsr(const std::string &name,int32_t value,uint32_t size){
+    	DPRINT("set FSR 0x%x",value);
+    	caen->setFSR(value);
+    return true;
+    }
 
-
-    void unitDeinit() throw(chaos::CException);
-    void unitRun() throw(chaos::CException);
 };
             }
         }

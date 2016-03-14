@@ -21,34 +21,30 @@
 #define _RTCAEN792_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <common/vme/caen/caen965_drv.h>
+#include <common/vme/caen/CaenBase.h>
 
 #include "RTCAEN.h"
     namespace driver {
         namespace daq {
         namespace caen {
-	  class RTCAEN792 : public RTCAEN {
+	  class RTCAEN792 : public  RTCAEN< ::common::vme::caen::CaenBase>  {
 		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN792)
 	  public:
     /*!
      Construct a new CU with full constructor
      */
 	    RTCAEN792(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers);
-	    /*!
-     Destructor a new CU
-     */
-    ~RTCAEN792();
+
+
 
 protected:
 
 public:
+    uint32_t* iped;
 
     void unitDefineActionAndDataset() throw(chaos::CException);
     void unitInit() throw(chaos::CException);
 
-
-    void unitDeinit() throw(chaos::CException);
-    void unitRun() throw(chaos::CException);
 
 };
             }
