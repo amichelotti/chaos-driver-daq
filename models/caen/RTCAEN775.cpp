@@ -58,7 +58,7 @@ void  RTCAEN775::unitInit() throw(chaos::CException){
 		AttributeSharedCacheWrapper * cc=getAttributeCache();
 
      	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitInit();
-     	 fsr = (cc->getRWPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "FSR"));
+     	 fsr = (cc->getROPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "FSR"));
 
 
 }

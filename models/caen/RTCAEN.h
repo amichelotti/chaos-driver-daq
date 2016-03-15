@@ -63,7 +63,8 @@ protected:
     uint64_t* events;
     uint64_t* acq_cycle;
     CAEN* caen;
-    uint32_t *chp,*bset,*bclr;
+    uint32_t *chp;
+    const uint32_t *bset,*bclr;
   	uint32_t last_event,event;
 
 public:
@@ -142,13 +143,13 @@ public:
     	channels = *(cc->getROPtr<uint32_t>(DOMAIN_INPUT, "CHANNELS"));
     	timeo_ms = *(cc->getROPtr<int32_t>(DOMAIN_INPUT, "TIMEOUT"));
     	crate_num = *(cc->getROPtr<int32_t>(DOMAIN_INPUT, "CRATE_NUM"));
-    	bset = cc->getRWPtr<uint32_t>(DOMAIN_INPUT, "BITSET2");
-    	bclr =cc->getRWPtr<uint32_t>(DOMAIN_INPUT, "BITCLR2");
+    	bset = cc->getROPtr<uint32_t>(DOMAIN_INPUT, "BITSET2");
+    	bclr =cc->getROPtr<uint32_t>(DOMAIN_INPUT, "BITCLR2");
 
     	events=cc->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "EVENTS");
     	acq_cycle=cc->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQUISITION");
     	chp=cc->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "CH");
-    	if(caen!=NULL){
+    	if(caen==NULL){
     		caen =new CAEN();
 			if(caen==NULL){
 					 throw chaos::CException(-1,__PRETTY_FUNCTION__,"cannot allocate device");
