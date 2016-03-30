@@ -64,7 +64,8 @@ protected:
     uint64_t* acq_cycle;
     CAEN* caen;
     uint32_t *chp;
-    const uint32_t *bset,*bclr;
+    uint32_t *bset;
+    //*bclr;
   	uint32_t last_event,event;
 
 public:
@@ -105,10 +106,12 @@ public:
     						                        chaos::DataType::TYPE_INT32,
     						                        chaos::DataType::Input);
 
-    		addAttributeToDataSet("BITCLR2",
+    	/*	addAttributeToDataSet("BITCLR2",
     							                        "Clear Operational control mode",
     							                        chaos::DataType::TYPE_INT32,
     							                        chaos::DataType::Input);
+
+    		*/
     	    addAttributeToDataSet("ACQUISITION",
     	                        "Acquisition cycle",
     	                        chaos::DataType::TYPE_INT64,
@@ -126,10 +129,10 @@ public:
     	                                                            &::driver::daq::caen::RTCAEN<CAEN>::setMode,
     	                                                            "BITSET2");
 
-    	    addHandlerOnInputAttributeName< ::driver::daq::caen::RTCAEN<CAEN>, int32_t >(this,
+    	   /* addHandlerOnInputAttributeName< ::driver::daq::caen::RTCAEN<CAEN>, int32_t >(this,
     	                                                                &::driver::daq::caen::RTCAEN<CAEN>::clrMode,
     	                                                                "BITCLR2");
-
+*/
     }
 
 
@@ -143,8 +146,8 @@ public:
     	channels = *(cc->getROPtr<uint32_t>(DOMAIN_INPUT, "CHANNELS"));
     	timeo_ms = *(cc->getROPtr<int32_t>(DOMAIN_INPUT, "TIMEOUT"));
     	crate_num = *(cc->getROPtr<int32_t>(DOMAIN_INPUT, "CRATE_NUM"));
-    	bset = cc->getROPtr<uint32_t>(DOMAIN_INPUT, "BITSET2");
-    	bclr =cc->getROPtr<uint32_t>(DOMAIN_INPUT, "BITCLR2");
+    	bset = (uint32_t*)cc->getROPtr<uint32_t>(DOMAIN_INPUT, "BITSET2");
+    	//bclr =(uint32_t*)cc->getROPtr<uint32_t>(DOMAIN_INPUT, "BITCLR2");
 
     	events=cc->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "EVENTS");
     	acq_cycle=cc->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQUISITION");
@@ -172,7 +175,16 @@ public:
     	*acq_cycle=0;
     	last_event=event=0;
 
-
+    	for(int cnt=0;cnt<channels;cnt++){
+    		std::stringstream ss;
+    		ss<<"THRESHOLD"<<cnt;
+    		int32_t *ptr=(int32_t*)cc->getROPtr<int32_t>(DOMAIN_INPUT, ss.str());
+    		*ptr = caen->getThreashold(cnt);
+    	}
+    	DPRINT("setting input BSET 0x%x",*bset);
+    	setMode("BITSET2",*bset,0);
+    	*bset=caen->getMode();
+    	DPRINT("SET2 0x%x",*bset);
     }
 
     void unitStart() throw(chaos::CException){
@@ -180,10 +192,6 @@ public:
    	 if(*bset){
    		 DPRINT("setting BITSET2 0x%x",*bset);
    		 caen->setMode((caen_modes_t)*bset);
-   	 }
-   	 if(*bset){
-   	 		 DPRINT("setting BITCLR2 0x%x",*bset);
-   	 		 caen->clrMode((caen_modes_t)*bclr);
    	 }
    	 caen->resetEventBuffer();
    	 *events=0;
@@ -223,13 +231,16 @@ public:
     bool setMode(const std::string &name,int32_t value,uint32_t size){
     	DPRINT("set mode 0x%x",value);
     	caen->setMode((caen_modes_t)value);
+    	for(int cnt=0;cnt<16;cnt++){
+    		if((value&(0x1<<cnt))==0){
+    	    	caen->clrMode((caen_modes_t)(0x1<<cnt));
+
+    		}
+
+    	}
     	return true;
     }
-    bool clrMode(const std::string &name,int32_t value,uint32_t size){
-    	DPRINT("set CLR mode 0x%x",value);
-    	caen->clrMode((caen_modes_t)value);
-    	return true;
-    }
+
     bool setThreshold(const std::string &name,int32_t value,uint32_t size){
 
     		std:string channel=name.substr(sizeof("THRESHOLD"));

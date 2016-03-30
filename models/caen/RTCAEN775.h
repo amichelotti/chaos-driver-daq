@@ -41,7 +41,7 @@
 	    	}
 
 protected:
-    const uint32_t *fsr;
+     uint32_t *fsr;
 
 public:
 
