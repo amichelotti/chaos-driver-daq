@@ -1,0 +1,27 @@
+#
+# Copyright (c) 2008-2015 Instrumentation Technologies
+# All Rights Reserved.
+#
+# $Id: Makefile.rules 22034 2015-06-19 08:32:00Z damijan.skvarc $
+#
+
+
+include ../Makefile.names
+
+OBJECT_FILES+=$(TARGET_NAME).o
+
+.PHONY : clean
+
+all: $(TARGET_NAME)
+
+clean :
+	-rm $(TARGET_NAME) $(OBJECT_FILES)
+	
+install: $(TARGET_NAME)
+
+unit-test:
+
+cppcheck:
+
+$(TARGET_NAME): $(OBJECT_FILES)
+

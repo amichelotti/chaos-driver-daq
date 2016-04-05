@@ -1,0 +1,44 @@
+#
+# Copyright (c) 2008-2015 Instrumentation Technologies
+# All Rights Reserved.
+#
+# $Id: Makefile.names 22034 2015-06-19 08:32:00Z damijan.skvarc $
+#
+
+# Specify the Libera BASE version that is installed in the OS. Default in this image is 2.8
+
+BASE_VER_MAJOR?=2
+BASE_VER_MINOR?=8
+BASE_VER?=$(BASE_VER_MAJOR).$(BASE_VER_MINOR)
+
+ifeq ($(CORE_BUILD),1)
+  MKFILE_DIR := $(dir $(abspath $(lastword $(MAKEFILE_LIST))))
+  CORE_DIR=$(MKFILE_DIR)/../..
+  SHARED_DIR=$(CORE_DIR)/shared
+  BASE_INC_DIRS?=$(SHARED_DIR) $(CORE_DIR)/debian/libera-mci$(BASE_VER)-dev/usr/include/libera-$(BASE_VER)
+  BASE_LIB_DIRS?=$(SHARED_DIR)/istd $(SHARED_DIR)/mci $(SHARED_DIR)/isig $(SHARED_DIR)/inet
+  BASE_MKF_DIR?=$(CORE_DIR)/make_rules
+else
+  BASE_INC_DIRS?=/usr/include/libera-$(BASE_VER)
+  BASE_LIB_DIRS?=/opt/libera/lib
+  BASE_MKF_DIR?=/usr/share/libera-$(BASE_VER)-dev
+endif
+
+LDLIBS+=$(addprefix -L, $(BASE_LIB_DIRS))
+
+LDLIBS+= \
+	-lliberaistd$(BASE_VER) \
+	-lliberamci$(BASE_VER) \
+	-lliberaisig$(BASE_VER) \
+	-lliberainet$(BASE_VER)
+
+LDLIBS+= \
+	-lomniORB4 \
+	-lomniDynamic4 \
+	-lomnithread \
+	-lstdc++ \
+	-lcrypto \
+
+CXXFLAGS += $(addprefix -I, $(BASE_INC_DIRS))
+CXXFLAGS +=-std=c++0x
+CXXFLAGS +=-D_GLIBCXX_USE_NANOSLEEP
