@@ -1,0 +1,41 @@
+/*
+ * Copyright (c) 2010 Instrumentation Technologies
+ * All Rights Reserved.
+ *
+ * $Id: i_signal_receiver.idl 17623 2012-09-05 07:58:09Z damijan.skvarc $
+ */
+
+#ifndef _INET_STREAM_RECEIVER_IDL
+#define _INET_STREAM_RECEIVER_IDL 
+
+#include "i_types.idl"
+
+#pragma prefix "i-tech.si"
+
+module i_NET {
+
+    /**
+    * Interface called from remote signal to dispatch it remotely.
+    */
+    interface SignalReceiver {
+    
+        // Interface to dispatch buffers. Meta data can contain a list of
+        // id/value pairs that describe the content of the buffer.
+        
+        void DispatchInt8(in Int8Buffer a_buf, in SignalMeta a_meta);
+        void DispatchUInt8(in UInt8Buffer a_buf, in SignalMeta a_meta);
+        void DispatchInt16(in Int16Buffer a_buf, in SignalMeta a_meta);
+        void DispatchUInt16(in UInt16Buffer a_buf, in SignalMeta a_meta);
+        void DispatchInt32(in Int32Buffer a_buf, in SignalMeta a_meta);
+        void DispatchUInt32(in UInt32Buffer a_buf, in SignalMeta a_meta);
+        void DispatchInt64(in Int64Buffer a_buf, in SignalMeta a_meta);
+        void DispatchUInt64(in UInt64Buffer a_buf, in SignalMeta a_meta);
+        void DispatchFloat(in FloatBuffer a_buf, in SignalMeta a_meta);
+        void DispatchDouble(in DoubleBuffer a_buf, in SignalMeta a_meta);
+        
+        void Cancel(in long a_code);
+    };
+
+};
+
+#endif // _INET_STREAM_RECEIVER_IDL

@@ -1,0 +1,109 @@
+/*
+* Copyright (c) 2010 Instrumentation Technologies
+* All Rights Reserved.
+*
+* $Id: i_remote_signal.idl 17623 2012-09-05 07:58:09Z damijan.skvarc $
+*/
+
+#ifndef _INET_REMOTE_SIGNAL_IDL
+#define _INET_REMOTE_SIGNAL_IDL
+
+#include "i_signal_receiver.idl"
+#include "i_types.idl"
+
+#pragma prefix "i-tech.si"
+
+module i_NET {
+    /**
+    * Used for registering of signal receivers. Coupled with signal node.
+    */
+    interface RemoteSignal {
+        // For DOD signals
+
+        unsigned long DodReadI8(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long	        a_len,
+            out Int8Buffer          a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadUI8(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out UInt8Buffer         a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadI16(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out Int16Buffer         a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadUI16(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out UInt16Buffer        a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadI32(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out Int32Buffer         a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadUI32(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out UInt32Buffer        a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadI64(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out Int64Buffer         a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadUI64(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out UInt64Buffer        a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadFloat(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out FloatBuffer         a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        unsigned long DodReadDouble(
+            in SignalReceiver       a_rec,
+            in unsigned long long   a_position,
+            in unsigned long        a_len,
+            out DoubleBuffer        a_buf,
+            out SignalMeta          a_meta) raises(InvalidType);
+
+        // Called by open/close from remote clients
+        unsigned long RegisterReceiver(
+            in SignalReceiver	a_rec,
+            in unsigned long 	a_accessMode,
+            in unsigned long    a_readSize,
+            in long long		a_readOffset,
+            in unsigned long 	a_qcapacity);
+
+        void UnregisterReceiver(in SignalReceiver a_rec);
+
+        // Vector of signal statistics, related to this signal
+        SignalStats GetStatistics(in SignalReceiver a_rec) raises (NotFound);
+    };
+
+};
+
+#endif // _INET_REMOTE_SIGNAL_IDL

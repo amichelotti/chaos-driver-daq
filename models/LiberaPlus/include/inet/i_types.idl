@@ -1,0 +1,65 @@
+/*
+ * Copyright (c) 2010 Instrumentation Technologies
+ * All Rights Reserved.
+ *
+ * $Id: i_types.idl 17623 2012-09-05 07:58:09Z damijan.skvarc $
+ */
+
+#ifndef _INET_TYPES_IDL
+#define _INET_TYPES_IDL 
+
+#pragma prefix "i-tech.si"
+ 
+module i_NET {
+
+    exception NotFound {
+        string what;
+    };
+
+    exception InvalidType {
+        string what;
+    };  
+
+    exception ValueException {
+        string what;
+    };
+    
+    typedef unsigned long long Flags;
+
+    typedef string              NodeName;
+    typedef sequence<NodeName>  NodeNames;
+    typedef NodeNames           NodePath;
+    typedef sequence<string>    StringVec;
+
+    typedef sequence<char>                  Int8Buffer;
+    typedef sequence<octet>         		UInt8Buffer;
+    typedef sequence<short>                 Int16Buffer;
+    typedef sequence<unsigned short>        UInt16Buffer;
+    typedef sequence<string>                StringBuffer;
+    typedef sequence<long>                  Int32Buffer;
+    typedef sequence<unsigned long>         UInt32Buffer;
+    typedef sequence<long long>             Int64Buffer;
+    typedef sequence<unsigned long long>    UInt64Buffer;
+    typedef sequence<float>                 FloatBuffer;
+    typedef sequence<double>                DoubleBuffer;
+    typedef sequence<boolean>               BooleanBuffer;
+    
+    struct SignalStatItem {
+        string              name;
+        unsigned long long  total;
+        unsigned long long  rejected;
+        unsigned long       asize;
+    };
+    
+    typedef sequence<SignalStatItem>        SignalStats;
+    
+    struct SignalMetaPair {
+        unsigned long  id;
+        long long      value;
+    };
+    
+    typedef sequence<SignalMetaPair>        SignalMeta;
+
+};
+
+#endif // _INET_TYPES_IDL

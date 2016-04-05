@@ -1,0 +1,40 @@
+/*
+ * Copyright (c) 2010 Instrumentation Technologies
+ * All Rights Reserved.
+ *
+ * $Id: i_remote_node.idl 11980 2011-06-15 10:36:13Z matej.kenda $
+ */
+
+#ifndef _INET_REMOTE_NODE_IDL
+#define _INET_REMOTE_NODE_IDL
+
+#include "i_types.idl"
+#include "i_notification.idl"
+#include "i_remote_signal.idl"
+
+#pragma prefix "i-tech.si"
+
+module i_NET {
+
+    interface RemoteNode {
+        string          GetName(in NodePath a_relPath) raises(NotFound);
+        string          GetNameByIndex(in NodePath a_relPath, in unsigned long a_index) raises(NotFound);
+        NodeNames       GetNodes(in NodePath a_relPath) raises(NotFound);
+        unsigned long   GetNodeCount(in NodePath a_relPath) raises(NotFound);
+        boolean         IsLeaf(in NodePath a_relPath) raises(NotFound);
+        unsigned long   GetSize(in NodePath a_relPath) raises(NotFound);
+        long            GetValueType(in NodePath a_relPath) raises(NotFound);
+        any             GetValue(in NodePath a_relPath, in unsigned long a_pos, in unsigned long a_size, in CORBA::TypeCode a_typeHint) raises(NotFound, InvalidType, ValueException);
+        void            SetValue(in NodePath a_relPath, in any a_value, in unsigned long a_pos) raises(NotFound, InvalidType, ValueException);
+        boolean         GetDomainValues(in NodePath a_relPath, out StringVec a_values);
+        boolean         GetValidatorExpression(in NodePath a_relPath, out string a_value);
+        Flags           GetFlags(in NodePath a_relPath) raises(NotFound);
+        boolean         Subscribe(in NodePath a_relPath);
+        boolean         Unsubscribe(in NodePath a_relPath);
+        void            StopNotifications();
+        RemoteSignal    GetRemoteSignal(in NodePath a_relPath) raises(NotFound);
+    };
+
+};
+
+#endif // _INET_REMOTE_NODE_IDL
