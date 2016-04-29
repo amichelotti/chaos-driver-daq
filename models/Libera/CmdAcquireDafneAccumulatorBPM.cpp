@@ -36,9 +36,11 @@ uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
 }
 void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   ::driver::misc::CmdSync::setHandler(data);
-  int tomode=0;
+  tomode=0;
   int32_t samples_v;
   int cnt;
+
+  last_command=data;
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
                
@@ -63,7 +65,10 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
                 mode_sync.setTimeout(10000000);
                 CTRLDBG_<<" WAITING for exiting acquire";
 
-                mode_sync.sync(tomode);
+                if(mode_sync.sync(tomode)==0){
+                    CTRLERR_<<" cannot synchronize pool to:"<<tomode;
+
+                }
                 BC_END_RUNNIG_PROPERTY;
                 return;
             }
@@ -97,7 +102,11 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     CTRLDBG_<<" WAITING for mode:"<<tomode;
     mode_sync.setTimeout(10000000);
    
-    mode_sync.sync(tomode);
+    if(mode_sync.sync(tomode)==0){
+        CTRLERR_<<" cannot synchronize pool to:"<<tomode;
+        BC_END_RUNNIG_PROPERTY;
+        return;
+    }
     mode_sync.setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
 
     CTRLDBG_<<" EXITING from waiting mode:"<<tomode;
@@ -148,6 +157,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
                }
 
            }
+   
     //getAttributeCache()->setOutputAttributeNewSize("X_ACQ", samples_v*sizeof(double));
    //     getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", samples_v*sizeof(double));
 }
@@ -169,6 +179,12 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           int poly;
           double dx,dy;
           mode_v= *mode[cnt];
+	  if(mode_v != tomode){
+
+	    CTRLDBG_<<" Reapply command because \""<<rattrs[cnt]->getPath()<<"\" has mode ="<<mode_v;
+	    ::driver::misc::CmdSync::setHandler(last_command);
+	    sleep(1);
+	  }
         samples_v = *samples[cnt];
         acquire_v = *acquire[cnt];
           a= *va[cnt];
