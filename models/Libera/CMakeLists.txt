@@ -18,6 +18,8 @@ IF("${CMAKE_C_COMPILER}" MATCHES "arm-infn-linux-gnueabi-gcc")
   ADD_LIBRARY(chaos_driver_libera_cspi STATIC ${LiberaCSPI_src})
   SET(DAQ_LIBRARY chaos_driver_libera_cspi)
    INSTALL_TARGETS(/lib chaos_driver_libera_cspi)
+ FILE(GLOB ss cspi/*.h)
+ INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera/cspi)
 ELSE()
   MESSAGE(STATUS "Disabling compilation of libera CSPI")
 ENDIF()
@@ -76,6 +78,5 @@ INSTALL_TARGETS(/bin BPMSync)
  FILE(GLOB ss *.h)
  INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera)
 
- FILE(GLOB ss cspi/*.h)
- INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera/cspi)
+
    
