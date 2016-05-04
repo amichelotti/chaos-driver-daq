@@ -71,7 +71,6 @@ typedef struct libera_env {
     int32_t value;
 } libera_env_t;
 
-#ifdef CSPI
 #include <driver/daq/models/Libera/cspi/cspi.h>
 
     typedef CSPI_DD_ATOM libera_dd_t;
@@ -156,10 +155,7 @@ end*/
 }
 
    
-#else
-#error "NO LIBERA PLATFORM SPECIFIED"
-#endif
-            
+
     
     
 #endif	/* LIBERADATA_H */

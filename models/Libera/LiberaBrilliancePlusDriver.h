@@ -20,7 +20,14 @@ limitations under the License.
 #ifndef __LiberaBrilliancePlusDriver_H__
 #define __LiberaBrilliancePlusDriver_H__
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
-#define CSPI
+#include "mci/mci.h"
+#include "mci/mci_util.h"
+#include "istd/trace.h"
+#include "isig/signal_source.h"
+#include "isig/signal_client_base.h"
+#include "isig/remote_stream.h"
+#include "isig/data_on_demand_remote_source.h"
+
 #include "LiberaData.h"
 #include <common/misc/wavegenerators/WaveBase.h>
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrilliancePlusDriver);
@@ -103,7 +110,22 @@ struct liberaconfig
     int assign_time(const char*time );
     
     int trigger_time_ms;
-    ::common::misc::wavegenerators::WaveBase_t wave;
+    mci::Node root ;
+    mci::Node snode,dodnode ;
+
+       /* instantiate remote signal entity */
+    isig::SignalSourceSharedPtr signal;
+
+       /* SA signal is stream signal whose basic data type is signed 32 bit */
+       /* typecast base signal type to this signal type */
+     typedef isig::RemoteStream<isig::SignalTraitsVarInt32> RStream;
+     typedef isig::DataOnDemandRemoteSource<isig::SignalTraitsVarInt16> DOD;
+
+     DOD *rSignalDOD;
+     RStream *rStream;
+     RStream::Client* sclient;
+     DOD::Client dodclient;
+
     CSPI_ENVPARAMS myenv;
 public:
     LiberaBrilliancePlusDriver();

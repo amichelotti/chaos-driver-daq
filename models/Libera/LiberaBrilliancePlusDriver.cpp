@@ -22,8 +22,16 @@ limitations under the License.
 #include <stdlib.h>
 #define ILK_PARAMCOUNT 8
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
-#include <common/misc/wavegenerators/WaveFactory.h>
 #include <boost/lexical_cast.hpp>
+
+
+const std::string cSaStream          = "boards.raf3.signals.sa";                          /* name of SA stream signal                                                */
+const std::string cFaStream          = "boards.raf3.signals.fa";                          /* name of FA stream signal                                                */
+const std::string cAdcDod            = "boards.raf3.signals.adc";                         /* name of adc "data on demand" signal                                     */
+const std::string cTbtDod            = "boards.raf3.signals.ddc_synthetic";               /* name of turn-by-turn (DDC) "data on demand"                             */
+const std::string cTdpDod            = "boards.raf3.signals.tdp_synthetic";               /* name of turn-by-turn (TDP) "data on demand"                             */
+const std::string cAGCNode           = "boards.raf3.conditioning.tuning.agc.enabled";     /* path to the AGC node                                                    */
+const std::string cPowerLevelNode    = "boards.raf3.conditioning.tuning.agc.power_level"; /* path to the Power Level node                                            */
 
 #define LiberaSoftLAPP_		LAPP_ << "[LiberaBrilliancePlusDriver] "
 #define LiberaSoftDBG		LDBG_ << "[LiberaBrilliancePlusDriver "<<__PRETTY_FUNCTION__<<" ]"
@@ -45,13 +53,15 @@ static pthread_mutex_t eventm = PTHREAD_MUTEX_INITIALIZER;
 //we need to define the driver with alias version and a class that implement it
 //default constructor definition
 LiberaBrilliancePlusDriver::LiberaBrilliancePlusDriver() {
-    int rc;
-    cfg.operation =liberaconfig::deinit;
-/*
+	int rc;
+	cfg.operation =liberaconfig::deinit;
+	sclient=NULL;
+
+	/*
     if((rc=initIO(0,0))!=0){
         throw chaos::CException(rc,"Initializing","LiberaBrilliancePlusDriver::LiberaBrilliancePlusDriver");    
     }
- */
+	 */
 }
 
 
@@ -60,180 +70,223 @@ LiberaBrilliancePlusDriver::LiberaBrilliancePlusDriver() {
 //default descrutcor
 
 LiberaBrilliancePlusDriver::~LiberaBrilliancePlusDriver() {
-  deinitIO();  
+	deinitIO();
 }
 int LiberaBrilliancePlusDriver::wait_trigger(){
-    	int rc = 0;
-        usleep(trigger_time_ms*1000);
-        return 0;
+	int rc = 0;
+	usleep(trigger_time_ms*1000);
+	return 0;
 }
 int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
-  	int rc;
+	int rc;
 	// Allways seek(), not just the first time.
-         if((cfg.operation == liberaconfig::acquire)&& (cfg.datasize>0)){
-          size_t nread=0; //initialize variable to 0
-          
-          if (cfg.mask & liberaconfig::want_trigger) {
-	    if((rc=wait_trigger())!=0){
-                LiberaSoftERR<<"Error waiting trigger:"<<rc;
+	if((cfg.operation == liberaconfig::acquire)&& (cfg.datasize>0)){
+		size_t nread=0; //initialize variable to 0
 
-                return -rc;
-            }
-          }
-	  boost::mutex::scoped_lock lock(io_mux);
-	  
-          if(cfg.mode ==CSPI_MODE_SA){
-              
-              libera_sa_t* tt=(libera_sa_t*)buffer;
-              memset(tt,0,bcount);
-              tt->Va =wave->generate();
-              tt->Vb =wave->generate();
-              tt->Vc =wave->generate();
-              tt->Vd =wave->generate();
-              LiberaSoftDBG<<" SA VA:"<<tt->Va<<" VB:"<<tt->Vb<<" VC:"<<tt->Vc<<" VD:"<<tt->Vd;
-              return 1;
-          }
-          if(bcount<(cfg.atom_count*cfg.datasize)){
-              LiberaSoftERR<<"POSSIBLE error, buffer is smaller than required"<<rc;
-          }
-          int count = std::min(bcount/cfg.datasize,cfg.atom_count);
-          
-          
-          
-	  rc = (cfg.mask & liberaconfig::want_trigger) ? CSPI_SEEK_TR : CSPI_SEEK_MT;
-              
-	  if(addr==CHANNEL_DD){
-	    LiberaSoftDBG<<" DA read count:"<<count;
-            libera_dd_t*dd=(libera_dd_t*)buffer;
-            for(int cnt=0;cnt<count;cnt++){
-                memset(&dd[cnt],0,sizeof(libera_dd_t));
-                dd[cnt].Va=wave->generate();
-                dd[cnt].Vb=wave->generate();
-                dd[cnt].Vc=wave->generate();
-                dd[cnt].Vd=wave->generate();
-                LiberaSoftDBG<<" DD["<<cnt<<"] VA:"<<dd[cnt].Va<<" VB:"<<dd[cnt].Vb<<" VC:"<<dd[cnt].Vc<<" VD:"<<dd[cnt].Vd;
-            }
-	 
-	    return count;
-	  }
-         }
-        
-        
-       return 0;        
-      
+		if (cfg.mask & liberaconfig::want_trigger) {
+			if((rc=wait_trigger())!=0){
+				LiberaSoftERR<<"Error waiting trigger:"<<rc;
+
+				return -rc;
+			}
+		}
+		boost::mutex::scoped_lock lock(io_mux);
+
+		if(cfg.mode ==CSPI_MODE_SA){
+			RStream::MetaBufferPtr buf;
+			int ret = sclient->Read(buf);
+
+			if (ret == isig::eSuccess) {
+				std::stringstream ss;
+				/* print out data content */
+
+				RStream::Buffer& mci_buffer(buf->data);
+				const auto columns = mci_buffer[0].GetComponents();
+				libera_sa_t* tt=(libera_sa_t*)buffer;
+				memset(tt,0,bcount);
+				tt->Va =mci_buffer[0][0];
+				tt->Vb =mci_buffer[0][1];
+				tt->Vc =mci_buffer[0][2];
+				tt->Vd =mci_buffer[0][3];
+
+				LiberaSoftDBG<<" SA VA:"<<tt->Va<<" VB:"<<tt->Vb<<" VC:"<<tt->Vc<<" VD:"<<tt->Vd;
+				for (size_t i = 0; i < mci_buffer.GetLength(); ++i) {
+					for (size_t j = 0; j < columns ; ++j) {
+						ss << "["<<i<<"]"<<std::setw(11) <<  mci_buffer[i][j] <<  "  ";
+					}
+					ss << std::endl;
+				}
+				LiberaSoftDBG<<"Raw:"<<ss.str();
+			}
+			else {
+				std::cout <<  "Read error: " << ret << std::endl;
+			}
+
+			return 1;
+		}
+
+		 if(bcount<(cfg.atom_count*cfg.datasize)){
+			 LiberaSoftERR<<"POSSIBLE error, buffer is smaller than required"<<rc;
+		          }
+		int count = std::min(bcount/cfg.datasize,cfg.atom_count);
+
+
+		if(addr==CHANNEL_DD){
+			LiberaSoftDBG<<" DA read count:"<<count;
+			libera_dd_t*dd=(libera_dd_t*)buffer;
+			auto mci_buffer(dodclient.CreateBuffer(2048));
+			isig::SignalMeta meta;
+			int ret = dodclient.Read(mci_buffer, meta);
+			if (ret == isig::eSuccess) {
+				std::stringstream ss;
+
+				/* print out data content */
+				const auto columns = mci_buffer[0].GetComponents();
+
+				for (size_t i = 0; i < mci_buffer.GetLength(); ++i) {
+					for (size_t j = 0; j < columns ; ++j) {
+						ss << "["<<i<<"]"<<std::setw(11) <<  mci_buffer[i][j] <<  "  ";
+					}
+					ss << std::endl;
+				}
+				LiberaSoftDBG<<"Raw:"<<ss.str();
+
+				for(int cnt=0;cnt<count;cnt++){
+								memset(&dd[cnt],0,sizeof(libera_dd_t));
+								dd[cnt].Va=mci_buffer[cnt][0];
+								dd[cnt].Vb=mci_buffer[cnt][1];
+								dd[cnt].Vc=mci_buffer[cnt][2];
+								dd[cnt].Vd=mci_buffer[cnt][3];
+								LiberaSoftDBG<<" DD["<<cnt<<"] VA:"<<dd[cnt].Va<<" VB:"<<dd[cnt].Vb<<" VC:"<<dd[cnt].Vc<<" VD:"<<dd[cnt].Vd;
+				}
+			}else {
+				std::cout <<  "Read error: " << ret << std::endl;
+			}
+
+
+			return count;
+		}
+	}
+
+
+	return 0;
+
 }
 
 int LiberaBrilliancePlusDriver::write(void *buffer, int addr, int bcount) {
-    //TODO: implement the method
-    return 0;
+	//TODO: implement the method
+	return 0;
 }
 // assign MT and ST from a string formatted as [MT]:[YYYYMMDDhhmm.ss]
 
 int LiberaBrilliancePlusDriver::assign_time(const char*time ){
-      const char delim = ':';
-        const char delim_phase = '.';
-        std::string s(time);
+	const char delim = ':';
+	const char delim_phase = '.';
+	std::string s(time);
 
-        size_t p = s.find(delim);
-        if (std::string::npos == p) {
-            LiberaSoftERR<<"Invalid argument -- 'TIME' missing delimiter \":\"" ;
-             return -4;
-        }
-        std::string s2(s.substr(0, p-0));
-        if (!s2.empty()) {
+	size_t p = s.find(delim);
+	if (std::string::npos == p) {
+		LiberaSoftERR<<"Invalid argument -- 'TIME' missing delimiter \":\"" ;
+		return -4;
+	}
+	std::string s2(s.substr(0, p-0));
+	if (!s2.empty()) {
 
-                cfg.mask |= liberaconfig::want_setmt;
+		cfg.mask |= liberaconfig::want_setmt;
 
-                size_t p_phase = s2.find(delim_phase);
-                if (std::string::npos == p_phase) {
-                        // No LMT Phase specified
-                        cfg.time.mt = atoll(s2.c_str());
-                        cfg.time.phase = 0;
+		size_t p_phase = s2.find(delim_phase);
+		if (std::string::npos == p_phase) {
+			// No LMT Phase specified
+			cfg.time.mt = atoll(s2.c_str());
+			cfg.time.phase = 0;
 
-                } else {
-                        // MT + LMT Phase specified
-                        std::string s_mt(s2.substr(0, p_phase-0));
-                        std::string s_phase(s2.substr(p_phase+1));
+		} else {
+			// MT + LMT Phase specified
+			std::string s_mt(s2.substr(0, p_phase-0));
+			std::string s_phase(s2.substr(p_phase+1));
 
-                        cfg.time.mt = atoll(s_mt.c_str());
-                        if (!s_phase.empty())
-                                cfg.time.phase = atoll(s_phase.c_str());
-                        else
-                                cfg.time.phase = 0;
-                }
-        }
+			cfg.time.mt = atoll(s_mt.c_str());
+			if (!s_phase.empty())
+				cfg.time.phase = atoll(s_phase.c_str());
+			else
+				cfg.time.phase = 0;
+		}
+	}
 
-        s2 = s.substr(p+1);
-        if (!s2.empty()) {
+	s2 = s.substr(p+1);
+	if (!s2.empty()) {
 
-                for (p=4; p < (s2.size()-3); ++p)
-                        if (p%3 == 1) s2.insert(p, 1, delim);
+		for (p=4; p < (s2.size()-3); ++p)
+			if (p%3 == 1) s2.insert(p, 1, delim);
 
-                         struct tm t;
-                if (!strptime(s2.c_str(), "%Y:%m:%d:%H:%M.%S", &t)){
-                    LiberaSoftERR<<"Invalid argument -- 'strptime'";
-                    return -1;
-                }
-                cfg.time.st = mktime(&t);
-                if (-1 == cfg.time.st){
-                         LiberaSoftERR<<"Invalid argument -- 'mkTIME'";
+		struct tm t;
+		if (!strptime(s2.c_str(), "%Y:%m:%d:%H:%M.%S", &t)){
+			LiberaSoftERR<<"Invalid argument -- 'strptime'";
+			return -1;
+		}
+		cfg.time.st = mktime(&t);
+		if (-1 == cfg.time.st){
+			LiberaSoftERR<<"Invalid argument -- 'mkTIME'";
 
-                    return -2;
-                }
+			return -2;
+		}
 
-                cfg.mask |= liberaconfig::want_setst;
-        }
-        
-        return 0;
-       
+		cfg.mask |= liberaconfig::want_setst;
+	}
+
+	return 0;
+
 }
 // trigger_time,WaveGen:init_params
 static boost::regex drv_opt("(\\d+),(.+)");
 
 int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
-    
-    boost::smatch match;
-    const char *in=(const char*)buffer;
-    
-    cfg.operation = liberaconfig::init;
-    cfg.atom_count=1;
-    cfg.datasize=0;
+	//const char* argv[1];
+	//argv[0]="LiberaBrilliancePlusDriver";
+	if( cfg.operation!=liberaconfig::deinit){
+		LiberaSoftERR<<"must be deinitialized to initialize";
+		return -2;
+	}
+	mci::Init();
+	root = mci::Connect();
+	snode = root.GetNode(mci::Tokenize(cSaStream));
+	dodnode = root.GetNode(mci::Tokenize(cAdcDod));
+	isig::SignalSourceSharedPtr signal0 = mci::CreateRemoteSignal(snode);
+	isig::SignalSourceSharedPtr signal1 = mci::CreateRemoteSignal(dodnode);
+	DOD *rSignal = dynamic_cast<DOD*> (signal1.get());
+	RStream *rStream = dynamic_cast<RStream*> (signal0.get());
 
-    ep.trig_mode = CSPI_TRIGMODE_GET;
-    
-    if((in==NULL)|| (sizeb ==0)){
-        return 0;
-    }
-    LiberaSoftDBG<<"init parameter:"<<in;
-    std::string param=in;
-    if(boost::regex_match(param,match,drv_opt,boost::match_extra)){
-      std::string ttime=match[1];
-      wave = common::misc::wavegenerators::WaveFactory::getGenerator(match[2]);
-      trigger_time_ms=atoi(ttime.c_str());
-    } else {
-        
-         LiberaSoftERR<< "bad option parameters:"<<param<< "expected form:"<<drv_opt.str();
-         return -1;
-    }
-    
-   
-     
-   
-    
-    return 0;
+	/* instantiate client for reading data from the signal */
+
+	dodclient =rSignal->CreateClient("mydodClient");
+
+
+	sclient = new RStream::Client(rStream,"myStreamClient");
+	if( sclient==NULL){
+		LiberaSoftERR<< "cannot create Clients";
+		return -1;
+	}
+	cfg.operation=liberaconfig::init;
+	return 0;
 }
 
 int LiberaBrilliancePlusDriver::deinitIO() {
-    if(cfg.operation == liberaconfig::deinit){
-          LiberaSoftERR<<"Already de-initializad";
-    }
-    wave.reset();
-    return 0;
+	if(cfg.operation == liberaconfig::deinit){
+		LiberaSoftERR<<"Already de-initializad";
+	}
+	mci::Shutdown();
+
+	if(sclient){
+		delete sclient;
+		sclient=NULL;
+	}
+	cfg.operation = liberaconfig::deinit;
+	return 0;
 }
 
 
 /*
- 
+
 #define LIBERA_IOP_MODE_DD 0x1 // data acquire on demand
 #define LIBERA_IOP_MODE_SS 0x2 // streaming data acquire
 #define LIBERA_IOP_MODE_ADC 0x4 // ADC data acquire
@@ -254,217 +307,236 @@ int LiberaBrilliancePlusDriver::deinitIO() {
 
  */
 int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
-    int rc;
-    CSPI_ENVPARAMS ep;
-    boost::mutex::scoped_lock lock(io_mux);
+	int rc;
+	CSPI_ENVPARAMS ep;
+	boost::mutex::scoped_lock lock(io_mux);
 
 #define SET_ENV(cpimask,param) \
-if(cmd_env->selector & CSPI_ENV_## cpimask ){\
-    env.param =cmd_env->value;\
-    LiberaSoftDBG<<"IO SET ENV \""<<#cpimask<<"\" bitmask:"<<cmd_env->selector<<" value="<<cmd_env->value;\
-}
-    
-            
-    switch(operation){
-        case LIBERA_IOP_CMD_GET_TS:
-            CSPI_TIMESTAMP ts;
-            struct timeval tts;
-            gettimeofday(&tts,NULL);
-            ts.st.tv_sec=tts.tv_sec;
-            ts.st.tv_nsec=tts.tv_usec*1000;
-            memcpy(data,&ts,std::min((uint32_t)sizeb,(uint32_t)sizeof(CSPI_TIMESTAMP)));
-            return 0;
-             
-            break;
-        case LIBERA_IOP_CMD_STOP:
-            LiberaSoftDBG<<"IOP STOP"<<driver_mode;
+		if(cmd_env->selector & CSPI_ENV_## cpimask ){\
+			env.param =cmd_env->value;\
+			LiberaSoftDBG<<"IO SET ENV \""<<#cpimask<<"\" bitmask:"<<cmd_env->selector<<" value="<<cmd_env->value;\
+		}
 
-            cfg.operation = liberaconfig::unknown;
 
-            break;
-        case LIBERA_IOP_CMD_ACQUIRE:
-            driver_mode = *(int*)data;
-            LiberaSoftDBG<<"IOP Acquire driver mode:"<<driver_mode;
-            if(driver_mode&LIBERA_IOP_MODE_TRIGGERED){
-                cfg.mask|=cfg.want_trigger;
-                LiberaSoftDBG<<"Enable Trigger";
-            
-            } else {
-                cfg.mask&=~cfg.want_trigger;
-                LiberaSoftDBG<<"Disable Trigger";
-                myenv.trig_mode = 0;
+	switch(operation){
+	case LIBERA_IOP_CMD_GET_TS:
+		CSPI_TIMESTAMP ts;
+		struct timeval tts;
+		gettimeofday(&tts,NULL);
+		ts.st.tv_sec=tts.tv_sec;
+		ts.st.tv_nsec=tts.tv_usec*1000;
+		memcpy(data,&ts,std::min((uint32_t)sizeb,(uint32_t)sizeof(CSPI_TIMESTAMP)));
 
-            }
-            if(driver_mode&LIBERA_IOP_MODE_DECIMATED){
-                cfg.dd.decimation =1;
-                LiberaSoftDBG<<"Enable Decimation";
 
-            } else {
-                cfg.dd.decimation =0;
-                LiberaSoftDBG<<"Disable Decimation";
+		return 0;
 
-            }
-                 //const size_t modes[] = {CSPI_MODE_DD, CSPI_MODE_SA, CSPI_MODE_PM, CSPI_MODE_ADC, CSPI_MODE_AVERAGE};
+		break;
+	case LIBERA_IOP_CMD_STOP:
+		LiberaSoftDBG<<"IOP STOP"<<driver_mode;
+		if(cfg.operation = liberaconfig::acquire && cfg.mode == CSPI_MODE_DD){
+			dodclient.Close();
+		}
+		if(cfg.operation = liberaconfig::acquire && cfg.mode == CSPI_MODE_SA){
+			sclient->Close();
+		}
+		cfg.operation = liberaconfig::unknown;
 
-            if(driver_mode&LIBERA_IOP_MODE_DD){
-              cfg.mode =CSPI_MODE_DD;
-              LiberaSoftDBG<<"Acquire Data on Demand";
-              cfg.operation = liberaconfig::acquire;
-              cfg.datasize=sizeof(CSPI_DD_ATOM);
+		break;
+	case LIBERA_IOP_CMD_ACQUIRE:
+		driver_mode = *(int*)data;
+		LiberaSoftDBG<<"IOP Acquire driver mode:"<<driver_mode;
+		if(driver_mode&LIBERA_IOP_MODE_TRIGGERED){
+			cfg.mask|=cfg.want_trigger;
+			LiberaSoftDBG<<"Enable Trigger";
 
-            }
-            if(driver_mode&LIBERA_IOP_MODE_SA){
-                cfg.mode =CSPI_MODE_SA;
-                LiberaSoftDBG<<"Acquire Data on Streaming";
-                cfg.operation = liberaconfig::acquire;
-                cfg.datasize=sizeof(CSPI_SA_ATOM);
-            }
-            if(driver_mode&LIBERA_IOP_MODE_PM){
-                cfg.mode =CSPI_MODE_PM;
-                LiberaSoftDBG<<"Acquire Data Post Mortem";
-                cfg.operation = liberaconfig::acquire;
-                cfg.datasize=sizeof(CSPI_DD_ATOM);
-            }
-            if(driver_mode&LIBERA_IOP_MODE_ADC){
-                cfg.mode =CSPI_MODE_ADC;
-                LiberaSoftDBG<<"Acquire ADC Data";
-                cfg.datasize=sizeof(CSPI_ADC_ATOM);
-                cfg.operation = liberaconfig::acquire;
+		} else {
+			cfg.mask&=~cfg.want_trigger;
+			LiberaSoftDBG<<"Disable Trigger";
+			myenv.trig_mode = 0;
 
-                if(driver_mode&LIBERA_IOP_MODE_CONTINUOUS){
-                    cfg.adc.mode|=liberaconfig::adc_specific::cw;
-                    cfg.mode = CSPI_MODE_ADC_CW;
-                    LiberaSoftDBG<<"Acquire ADC Data Continuous";
-                     cfg.operation = liberaconfig::acquire;
-                     cfg.datasize=sizeof(CSPI_ADC_CW_ATOM);
+		}
+		if(driver_mode&LIBERA_IOP_MODE_DECIMATED){
+			cfg.dd.decimation =1;
+			LiberaSoftDBG<<"Enable Decimation";
 
-                } else {
-                    cfg.adc.mode&=~liberaconfig::adc_specific::cw;
-                }
-                if(driver_mode&LIBERA_IOP_MODE_SINGLEPASS){
-                    cfg.adc.mode|=liberaconfig::adc_specific::sp;
-                    cfg.mode = CSPI_MODE_ADC_SP;
-                    LiberaSoftDBG<<"Acquire ADC Data Single Pass";
-                     cfg.operation = liberaconfig::acquire;
-                     cfg.datasize=sizeof(CSPI_ADC_SP_ATOM);
-                } else {
-                    cfg.adc.mode&=~liberaconfig::adc_specific::sp;
-                }
-            }
-            if(operation&LIBERA_IOP_MODE_AVG){
-                cfg.mode =CSPI_MODE_AVERAGE;
-                cfg.atom_count = 1;
-                LiberaSoftDBG<<"Acquire Average Data";
-                cfg.operation = liberaconfig::acquire;
-                cfg.datasize=sizeof(CSPI_AVERAGE_ATOM);
+		} else {
+			cfg.dd.decimation =0;
+			LiberaSoftDBG<<"Disable Decimation";
 
-            }
-            
-            break;
-        case LIBERA_IOP_CMD_SET_SAMPLES:
-               cfg.atom_count = *(int *)data;
-                LiberaSoftDBG<<"Setting Samples:"<<cfg.atom_count;
+		}
+		//const size_t modes[] = {CSPI_MODE_DD, CSPI_MODE_SA, CSPI_MODE_PM, CSPI_MODE_ADC, CSPI_MODE_AVERAGE};
 
-               break;    
-        case LIBERA_IOP_CMD_SET_OFFSET:
-               cfg.dd.offset = *(int *)data;
-               LiberaSoftDBG<<"Setting Offset:"<<cfg.dd.offset;
+		if(driver_mode&LIBERA_IOP_MODE_DD){
+			LiberaSoftDBG<<"Acquire Data on Demand";
+			auto ret = dodclient.Open(isig::eModeDodOnEvent, 2048);
+			if (ret != isig::eSuccess) {
+				LiberaSoftERR<<"Cannot open DOD client";
+				return -1;
+			}
+			cfg.mode =CSPI_MODE_DD;
+			cfg.operation = liberaconfig::acquire;
+			cfg.datasize=sizeof(CSPI_DD_ATOM);
+			return 0;
+		}
+		if(driver_mode&LIBERA_IOP_MODE_SA){
+			LiberaSoftDBG<<"Acquire Data on Streaming";
+			auto ret = sclient->Open();
+			if (ret != isig::eSuccess) {
+				LiberaSoftERR<<"Cannot open stream client";
 
-               break;
-        case LIBERA_IOP_CMD_SETENV:{
-            cfg.operation = liberaconfig::setenv;
-            libera_env_t* cmd_env=(libera_env_t*)data;
-            CSPI_ENVPARAMS &env=myenv;
-            
-            SET_ENV(KX,Kx);
-            SET_ENV(KY,Ky);
-            SET_ENV(XOFFSET,Xoffset);
-            SET_ENV(YOFFSET,Yoffset);
-            SET_ENV(QOFFSET,Qoffset);
-            SET_ENV(SWITCH,switches);
-            SET_ENV(GAIN,gain);
-            SET_ENV(AGC,agc);
-            SET_ENV(DSC,dsc);
-            SET_ENV(ILK,ilk.mode);
-            
-                SET_ENV(ILKSTATUS, ilk_status);
-                SET_ENV(PMOFFSET, PMoffset);
-                
-                SET_ENV(PMDEC, PMdec);
+				return -1;
+			}
+			cfg.datasize=sizeof(CSPI_SA_ATOM);
+			cfg.mode =CSPI_MODE_SA;
+			cfg.operation = liberaconfig::acquire;
+			return 0;
+		}
+		if(driver_mode&LIBERA_IOP_MODE_PM){
+			cfg.mode =CSPI_MODE_PM;
+			LiberaSoftDBG<<"Acquire Data Post Mortem";
+			cfg.operation = liberaconfig::acquire;
+			cfg.datasize=sizeof(CSPI_DD_ATOM);
+		}
+		if(driver_mode&LIBERA_IOP_MODE_ADC){
+			cfg.mode =CSPI_MODE_ADC;
+			LiberaSoftDBG<<"Acquire ADC Data";
+			cfg.datasize=sizeof(CSPI_ADC_ATOM);
+			cfg.operation = liberaconfig::acquire;
 
-               SET_ENV(TRIGDELAY, trig_delay);
-               
-                SET_ENV(EXTSWITCH, external_switching);
-                SET_ENV(SWDELAY, switching_delay);
-                SET_ENV(TRIGMODE,trig_mode);
-                SET_ENV(DDC_MAFLENGTH, ddc_maflength);
-               SET_ENV(DDC_MAFDELAY, ddc_mafdelay);
+			if(driver_mode&LIBERA_IOP_MODE_CONTINUOUS){
+				cfg.adc.mode|=liberaconfig::adc_specific::cw;
+				cfg.mode = CSPI_MODE_ADC_CW;
+				LiberaSoftDBG<<"Acquire ADC Data Continuous";
+				cfg.operation = liberaconfig::acquire;
+				cfg.datasize=sizeof(CSPI_ADC_CW_ATOM);
 
-               SET_ENV(NOTCH1, notch1[0]);
-               SET_ENV( NOTCH2, notch2[0]);
-                SET_ENV(POLYPHASE_FIR, polyphase_fir[0]);
+			} else {
+				cfg.adc.mode&=~liberaconfig::adc_specific::cw;
+			}
+			if(driver_mode&LIBERA_IOP_MODE_SINGLEPASS){
+				cfg.adc.mode|=liberaconfig::adc_specific::sp;
+				cfg.mode = CSPI_MODE_ADC_SP;
+				LiberaSoftDBG<<"Acquire ADC Data Single Pass";
+				cfg.operation = liberaconfig::acquire;
+				cfg.datasize=sizeof(CSPI_ADC_SP_ATOM);
+			} else {
+				cfg.adc.mode&=~liberaconfig::adc_specific::sp;
+			}
+		}
+		if(operation&LIBERA_IOP_MODE_AVG){
+			cfg.mode =CSPI_MODE_AVERAGE;
+			cfg.atom_count = 1;
+			LiberaSoftDBG<<"Acquire Average Data";
+			cfg.operation = liberaconfig::acquire;
+			cfg.datasize=sizeof(CSPI_AVERAGE_ATOM);
 
-                SET_ENV(MTVCXOFFS, mtvcxoffs);
-                SET_ENV(MTNCOSHFT, mtncoshft);
-                SET_ENV(MTPHSOFFS, mtphsoffs);
-                SET_ENV( MTUNLCKTR, mtunlcktr);
-                SET_ENV( MTSYNCIN, mtsyncin);
-                SET_ENV(STUNLCKTR, stunlcktr);
+		}
 
-                SET_ENV( PM, pm.mode);
-               SET_ENV( SR, sr.enable);
-                SET_ENV(SP, sp.threshold);
-               
-            }
-        
-            break;
-        case LIBERA_IOP_CMD_GETENV:{
-            char *pdata=(char*)data;
-            CSPI_BITMASK mask = ~(0LL);
-            cfg.operation = liberaconfig::listenv;
-            LiberaSoftDBG<<"GET ENV";
-            
-            std::stringstream ss;
-            myenv.health.fan[0]=(int)wave->generate();
-            
-            ss<<myenv;
-            strncpy(pdata,ss.str().c_str(),std::min((uint32_t)sizeb,(uint32_t)ss.str().size()));
-            break;
-        }
-        case LIBERA_IOP_CMD_SETTIME:{
-            
+		break;
+	case LIBERA_IOP_CMD_SET_SAMPLES:
+		cfg.atom_count = *(int *)data;
+		LiberaSoftDBG<<"Setting Samples:"<<cfg.atom_count;
 
-        return 0;
+		break;
+	case LIBERA_IOP_CMD_SET_OFFSET:
+		cfg.dd.offset = *(int *)data;
+		LiberaSoftDBG<<"Setting Offset:"<<cfg.dd.offset;
 
-        }
-         
-    }
-    
-    if(cfg.operation == liberaconfig::acquire){
-        CSPI_BITMASK event_mask=0;
-        if (cfg.mask & liberaconfig::want_trigger) {
-            event_mask |= CSPI_EVENT_TRIGGET;
-        }
+		break;
+	case LIBERA_IOP_CMD_SETENV:{
+		cfg.operation = liberaconfig::setenv;
+		libera_env_t* cmd_env=(libera_env_t*)data;
+		CSPI_ENVPARAMS &env=myenv;
 
-	
-        LiberaSoftDBG<<"connecting to HW..cfg:x"<<std::hex<<cfg.mask<<std::dec;
+		SET_ENV(KX,Kx);
+		SET_ENV(KY,Ky);
+		SET_ENV(XOFFSET,Xoffset);
+		SET_ENV(YOFFSET,Yoffset);
+		SET_ENV(QOFFSET,Qoffset);
+		SET_ENV(SWITCH,switches);
+		SET_ENV(GAIN,gain);
+		SET_ENV(AGC,agc);
+		SET_ENV(DSC,dsc);
+		SET_ENV(ILK,ilk.mode);
 
-       /* raw_data = (char*)realloc(raw_data,cfg.atom_count*cfg.datasize);
+		SET_ENV(ILKSTATUS, ilk_status);
+		SET_ENV(PMOFFSET, PMoffset);
+
+		SET_ENV(PMDEC, PMdec);
+
+		SET_ENV(TRIGDELAY, trig_delay);
+
+		SET_ENV(EXTSWITCH, external_switching);
+		SET_ENV(SWDELAY, switching_delay);
+		SET_ENV(TRIGMODE,trig_mode);
+		SET_ENV(DDC_MAFLENGTH, ddc_maflength);
+		SET_ENV(DDC_MAFDELAY, ddc_mafdelay);
+
+		SET_ENV(NOTCH1, notch1[0]);
+		SET_ENV( NOTCH2, notch2[0]);
+		SET_ENV(POLYPHASE_FIR, polyphase_fir[0]);
+
+		SET_ENV(MTVCXOFFS, mtvcxoffs);
+		SET_ENV(MTNCOSHFT, mtncoshft);
+		SET_ENV(MTPHSOFFS, mtphsoffs);
+		SET_ENV( MTUNLCKTR, mtunlcktr);
+		SET_ENV( MTSYNCIN, mtsyncin);
+		SET_ENV(STUNLCKTR, stunlcktr);
+
+		SET_ENV( PM, pm.mode);
+		SET_ENV( SR, sr.enable);
+		SET_ENV(SP, sp.threshold);
+
+	}
+
+	break;
+	case LIBERA_IOP_CMD_GETENV:{
+		char *pdata=(char*)data;
+		CSPI_BITMASK mask = ~(0LL);
+		cfg.operation = liberaconfig::listenv;
+		LiberaSoftDBG<<"GET ENV";
+
+		std::stringstream ss;
+		myenv.health.fan[0]=(int)10;
+
+		ss<<myenv;
+		strncpy(pdata,ss.str().c_str(),std::min((uint32_t)sizeb,(uint32_t)ss.str().size()));
+		break;
+	}
+	case LIBERA_IOP_CMD_SETTIME:{
+
+
+		return 0;
+
+	}
+
+	}
+
+	if(cfg.operation == liberaconfig::acquire){
+		CSPI_BITMASK event_mask=0;
+		if (cfg.mask & liberaconfig::want_trigger) {
+			event_mask |= CSPI_EVENT_TRIGGET;
+		}
+
+
+		LiberaSoftDBG<<"connecting to HW..cfg:x"<<std::hex<<cfg.mask<<std::dec;
+
+		/* raw_data = (char*)realloc(raw_data,cfg.atom_count*cfg.datasize);
         if(raw_data==NULL){
             cfg.operation = liberaconfig::unknown;
              LiberaSoftERR<<"Cannot allocate buffer of:"<<cfg.atom_count*cfg.datasize <<" bytes";
              return -100;
         }*/
-	p.mode = cfg.mode;
-        
-	CSPI_BITMASK param_mask = CSPI_CON_MODE;
-	if (event_mask) param_mask |= (CSPI_CON_HANDLER|CSPI_CON_EVENTMASK);
-        LiberaSoftDBG<<"Setting connection parameters on:"<<con_handle<<" :"<<param_mask;
+		p.mode = cfg.mode;
 
-	
-        LiberaSoftDBG<<"Connected with HW mode:"<<cfg.mode;
+		CSPI_BITMASK param_mask = CSPI_CON_MODE;
+		if (event_mask) param_mask |= (CSPI_CON_HANDLER|CSPI_CON_EVENTMASK);
+		LiberaSoftDBG<<"Setting connection parameters on:"<<con_handle<<" :"<<param_mask;
 
-    }
-  
-    return 0;
+
+		LiberaSoftDBG<<"Connected with HW mode:"<<cfg.mode;
+
+	}
+
+	return 0;
 }
