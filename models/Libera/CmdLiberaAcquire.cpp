@@ -74,9 +74,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
             *perr|=LIBERA_ERROR_STOP_ACQUIRE;
            
             getAttributeCache()->setOutputDomainAsChanged();
-            
+            CMDCUERR_<<"Cannot stop acquire";
             BC_END_RUNNIG_PROPERTY;
-            throw chaos::CException(ret, "Cannot stop acquire", __FUNCTION__);
+            
 
         }
 	//requested mode
@@ -99,7 +99,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	}
         
         if(!data->hasKey("mode")) {
-            throw chaos::CException(1, "You have to specify a mode", __FUNCTION__);
+        	BC_END_RUNNIG_PROPERTY;
+            return;
         } else {
             tmode = data->getInt32Value("mode");
         }
@@ -178,7 +179,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
               *perr|=LIBERA_ERROR_SWCONFIG;
               getAttributeCache()->setOutputDomainAsChanged();
               BC_END_RUNNIG_PROPERTY
-              throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
+			  CMDCUERR_<<"Unsupported mode";
+
+              //throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
 
             }
         
@@ -189,8 +192,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
        
         
         if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
-            BC_END_RUNNIG_PROPERTY
-            throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
+        	 BC_END_RUNNIG_PROPERTY
+        	CMDCUERR_<<"cannot start acquire end command";
+            //throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
 
         }
         
@@ -389,8 +393,10 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
              *perr|=LIBERA_ERROR_STOP_ACQUIRE;
         }
        getAttributeCache()->setOutputDomainAsChanged();
-       BC_END_RUNNIG_PROPERTY;   
-       throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
+       BC_END_RUNNIG_PROPERTY
+       CMDCUERR_<<"Error Acquiring err:"<<*perr;
+       return;
+       //throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
      }
     CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
     getAttributeCache()->setOutputDomainAsChanged();

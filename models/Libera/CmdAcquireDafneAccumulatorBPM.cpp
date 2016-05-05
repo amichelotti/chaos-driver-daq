@@ -41,6 +41,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   int cnt;
 
   last_command=data;
+
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
                
@@ -185,6 +186,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
 	    ::driver::misc::CmdSync::setHandler(last_command);
 	    sleep(1);
 	  }
+
         samples_v = *samples[cnt];
         acquire_v = *acquire[cnt];
           a= *va[cnt];
