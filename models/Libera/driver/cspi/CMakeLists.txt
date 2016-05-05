@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 project(chaos_driver_libera_cspi)
 
 ADD_DEFINITIONS(-D_LIBERACSPI_)
-INCLUDE_DIRECTORIES(../../ ../libera-driver-2-04-ebpp ../msp/src)
+INCLUDE_DIRECTORIES(../../ ../libera-driver-2-04-ebpp ../msp/src .)
 set (CMAKE_C_FLAGS "-std=gnu99 -DEBPP -DCORDIC_IGNORE_GAIN -D_REENTRANT -Idriver/libera-driver-2-04-ebpp -Imsp/src -I/cspi")
 
 SET(LiberaCSPI_src  LiberaBrillianceCSPIDriver.cpp cordic.c pool.c cspi.c cspi_events.c ebpp.c)
