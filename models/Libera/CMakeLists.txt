@@ -3,18 +3,12 @@ project(chaos_driver_libera)
 SET(DAQ_src LiberaData.cpp  CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  DafneAccumulatorBPMSync.cpp ChaosControllerLibera.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp)
 ADD_DEFINITIONS(-DEBPP)
 SET(BasicDAQClient_src test/DAQClient.cpp)
-#IF("${CMAKE_C_COMPILER}" MATCHES "arm-infn-linux-gnueabi-gcc") 
-  ADD_SUBDIRECTORY(driver/cspi)
-#ENDIF()
-
-#IF("${CMAKE_C_COMPILER}" MATCHES "i686-nptl-linux-gnu-gcc")
-  ADD_SUBDIRECTORY(driver/mci)
-#ENDIF()
-
+ADD_SUBDIRECTORY(driver/cspi)
+ADD_SUBDIRECTORY(driver/mci)
 ADD_SUBDIRECTORY(driver/soft)
 
 
-INCLUDE_DIRECTORIES( driver/cspi driver/libera-driver-2-04-ebpp/ .)
+INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/soft driver/libera-driver-2-04-ebpp/ .)
 ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
 ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)

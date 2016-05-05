@@ -22,11 +22,11 @@
 #include <chaos/cu_toolkit/control_manager/IOCU.h>
 #ifdef LIBERA
 #ifdef _LIBERACSPI_
-#include <driver/daq/models/Libera/LiberaBrillianceCSPIDriver.h>
+#include "LiberaBrillianceCSPIDriver.h"
 #endif
-#include <driver/daq/models/Libera/LiberaSoftDriver.h>
+#include "LiberaSoftDriver.h"
 #ifdef _LIBERAMCI_
-#include <driver/daq/models/Libera/LiberaBrilliancePlusDriver.h>
+#include "LiberaBrilliancePlusDriver.h"
 #endif
 #endif
 #include "SCLiberaCU.h"

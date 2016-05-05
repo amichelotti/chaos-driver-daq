@@ -71,7 +71,7 @@ typedef struct libera_env {
     int32_t value;
 } libera_env_t;
 
-#include <driver/daq/models/Libera/cspi/cspi.h>
+#include "cspi.h"
 
     typedef CSPI_DD_ATOM libera_dd_t;
     typedef CSPI_SA_ATOM libera_sa_t;
