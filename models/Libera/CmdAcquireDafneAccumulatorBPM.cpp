@@ -43,7 +43,14 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   last_command=data;
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
-               
+               tomode = 0;
+               mode_sync.setTimeout(10000000);
+                CTRLDBG_<<" WAITING for exiting acquire";
+
+			   if(mode_sync.sync(tomode)==0){
+				   CTRLERR_<<" cannot synchronize pool to:"<<tomode;
+
+			   }
                 BC_END_RUNNIG_PROPERTY;
                 return;
             }
@@ -240,10 +247,10 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
         ATTRDBG_<<"%% WARNING "<<e.errorMessage;
     }
  
-     if(mode_v==0){
+     /*if(mode_v==0){
         ATTRDBG_<<"exiting from acquire, by mode =0";
         BC_END_RUNNIG_PROPERTY;
-        }
+      }*/
     
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
      getAttributeCache()->setOutputAttributeValue("SAMPLES",(void*)&samples_v,sizeof(samples_v));

@@ -34,7 +34,7 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial
 
 TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_cutoolkit chaos_common  common_serial ${FrameworkLib})
 TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
-TARGET_LINK_LIBRARIES(BPMSync ${DAQ_LIBRARY} chaos_driver_misc  chaos_uitoolkit  chaos_cutoolkit chaos_common ${FrameworkLib})
+TARGET_LINK_LIBRARIES(BPMSync chaos_driver_misc  chaos_uitoolkit  chaos_cutoolkit chaos_common ${FrameworkLib})
 
 INSTALL_TARGETS(/bin daqLiberaServer)
 INSTALL_TARGETS(/bin daqLiberaClient)
