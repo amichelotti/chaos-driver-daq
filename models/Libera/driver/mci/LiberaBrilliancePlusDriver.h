@@ -123,6 +123,7 @@ struct liberaconfig
 
      DOD *rSignalDOD;
      RStream *rStream;
+     isig::SignalSourceSharedPtr signal_sa,signal_dod;
      RStream::Client* sclient;
      DOD::Client dodclient;
 

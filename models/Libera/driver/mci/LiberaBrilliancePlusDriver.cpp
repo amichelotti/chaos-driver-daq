@@ -24,7 +24,7 @@ limitations under the License.
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
 #include <boost/lexical_cast.hpp>
 
-
+#if 0
 const std::string cSaStream          = "boards.raf3.signals.sa";                          /* name of SA stream signal                                                */
 const std::string cFaStream          = "boards.raf3.signals.fa";                          /* name of FA stream signal                                                */
 const std::string cAdcDod            = "boards.raf3.signals.adc";                         /* name of adc "data on demand" signal                                     */
@@ -32,6 +32,8 @@ const std::string cTbtDod            = "boards.raf3.signals.ddc_synthetic";     
 const std::string cTdpDod            = "boards.raf3.signals.tdp_synthetic";               /* name of turn-by-turn (TDP) "data on demand"                             */
 const std::string cAGCNode           = "boards.raf3.conditioning.tuning.agc.enabled";     /* path to the AGC node                                                    */
 const std::string cPowerLevelNode    = "boards.raf3.conditioning.tuning.agc.power_level"; /* path to the Power Level node                                            */
+#endif
+
 
 #define LiberaSoftLAPP_		LAPP_ << "[LiberaBrilliancePlusDriver] "
 #define LiberaSoftDBG		LDBG_ << "[LiberaBrilliancePlusDriver "<<__PRETTY_FUNCTION__<<" ]"
@@ -117,9 +119,9 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 					ss << std::endl;
 				}
 				LiberaSoftDBG<<"Raw:"<<ss.str();
-			}
-			else {
-				std::cout <<  "Read error: " << ret << std::endl;
+			} else {
+				LiberaSoftERR <<  "[SA] Read error: " << ret;
+				return -3;
 			}
 
 			return 1;
@@ -127,11 +129,12 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 
 		 if(bcount<(cfg.atom_count*cfg.datasize)){
 			 LiberaSoftERR<<"POSSIBLE error, buffer is smaller than required"<<rc;
-		          }
+		 }
 		int count = std::min(bcount/cfg.datasize,cfg.atom_count);
 
 
 		if(addr==CHANNEL_DD){
+
 			LiberaSoftDBG<<" DA read count:"<<count;
 			libera_dd_t*dd=(libera_dd_t*)buffer;
 			auto mci_buffer(dodclient.CreateBuffer(2048));
@@ -160,11 +163,13 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 								LiberaSoftDBG<<" DD["<<cnt<<"] VA:"<<dd[cnt].Va<<" VB:"<<dd[cnt].Vb<<" VC:"<<dd[cnt].Vc<<" VD:"<<dd[cnt].Vd;
 				}
 			}else {
-				std::cout <<  "Read error: " << ret << std::endl;
+			  LiberaSoftERR <<  " [DOD] Read error: " << ret;
+			  return -5;
 			}
 
 
 			return count;
+
 		}
 	}
 
@@ -243,30 +248,42 @@ static boost::regex drv_opt("(\\d+),(.+)");
 int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 	//const char* argv[1];
 	//argv[0]="LiberaBrilliancePlusDriver";
+  if(buffer==NULL){
+    LiberaSoftDBG<<" skipping initialization no initialization string done" ;
+    return 0;
+  }
 	if( cfg.operation!=liberaconfig::deinit){
 		LiberaSoftERR<<"must be deinitialized to initialize";
-		return -2;
+		return 0;
 	}
 	mci::Init();
 	root = mci::Connect();
-	snode = root.GetNode(mci::Tokenize(cSaStream));
-	dodnode = root.GetNode(mci::Tokenize(cAdcDod));
-	isig::SignalSourceSharedPtr signal0 = mci::CreateRemoteSignal(snode);
-	isig::SignalSourceSharedPtr signal1 = mci::CreateRemoteSignal(dodnode);
-	DOD *rSignal = dynamic_cast<DOD*> (signal1.get());
-	RStream *rStream = dynamic_cast<RStream*> (signal0.get());
+	std::string board_name_stream=(char*)buffer;
+	std::string board_name_dod=(char*)buffer;
+	board_name_stream+=".sa";
+	board_name_dod+=".adc";
+
+	snode = root.GetNode(mci::Tokenize(board_name_stream));
+	dodnode = root.GetNode(mci::Tokenize(board_name_dod));
+	LiberaSoftDBG<<" getting node:\""<<board_name_stream<<"\" \""<<board_name_dod<<"\"" ;
+	signal_sa = mci::CreateRemoteSignal(snode);
+	signal_dod = mci::CreateRemoteSignal(dodnode);
+	DOD *rSignal = dynamic_cast<DOD*> (signal_dod.get());
+	RStream *rStream = dynamic_cast<RStream*> (signal_sa.get());
 
 	/* instantiate client for reading data from the signal */
+	try{
+	  dodclient =rSignal->CreateClient("mydodClient");
 
-	dodclient =rSignal->CreateClient("mydodClient");
 
-
-	sclient = new RStream::Client(rStream,"myStreamClient");
-	if( sclient==NULL){
-		LiberaSoftERR<< "cannot create Clients";
-		return -1;
+	  sclient = new RStream::Client(rStream,"myStreamClient");
+	  sclient->SetReadTimeout(std::chrono::seconds(5));
+	} catch (std::exception e){
+	  LiberaSoftERR<<"error creating client:"<<e.what();
+	  return -1;
 	}
 	cfg.operation=liberaconfig::init;
+	LiberaSoftDBG<<" Init Done";
 	return 0;
 }
 
@@ -275,10 +292,9 @@ int LiberaBrilliancePlusDriver::deinitIO() {
 		LiberaSoftERR<<"Already de-initializad";
 	}
 	mci::Shutdown();
-
 	if(sclient){
-		delete sclient;
-		sclient=NULL;
+	  delete sclient;
+	  sclient=NULL;
 	}
 	cfg.operation = liberaconfig::deinit;
 	return 0;
@@ -317,7 +333,7 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 			LiberaSoftDBG<<"IO SET ENV \""<<#cpimask<<"\" bitmask:"<<cmd_env->selector<<" value="<<cmd_env->value;\
 		}
 
-
+	try{
 	switch(operation){
 	case LIBERA_IOP_CMD_GET_TS:
 		CSPI_TIMESTAMP ts;
@@ -334,7 +350,7 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 	case LIBERA_IOP_CMD_STOP:
 		LiberaSoftDBG<<"IOP STOP"<<driver_mode;
 		if(cfg.operation = liberaconfig::acquire && cfg.mode == CSPI_MODE_DD){
-			dodclient.Close();
+		  dodclient.Close();
 		}
 		if(cfg.operation = liberaconfig::acquire && cfg.mode == CSPI_MODE_SA){
 			sclient->Close();
@@ -370,9 +386,10 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 			LiberaSoftDBG<<"Acquire Data on Demand";
 			auto ret = dodclient.Open(isig::eModeDodOnEvent, 2048);
 			if (ret != isig::eSuccess) {
-				LiberaSoftERR<<"Cannot open DOD client";
-				return -1;
+			  LiberaSoftERR<<"Cannot open DOD client";
+			  return -1;
 			}
+			LiberaSoftDBG<<"Open DOD client succeeded";
 			cfg.mode =CSPI_MODE_DD;
 			cfg.operation = liberaconfig::acquire;
 			cfg.datasize=sizeof(CSPI_DD_ATOM);
@@ -389,6 +406,7 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 			cfg.datasize=sizeof(CSPI_SA_ATOM);
 			cfg.mode =CSPI_MODE_SA;
 			cfg.operation = liberaconfig::acquire;
+			LiberaSoftDBG<<"Open stream client succeeded";
 			return 0;
 		}
 		if(driver_mode&LIBERA_IOP_MODE_PM){
@@ -537,6 +555,10 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 		LiberaSoftDBG<<"Connected with HW mode:"<<cfg.mode;
 
 	}
-
+	
+	} catch(std::exception e){
+	  LiberaSoftERR<<"Error performing operation:"<<e.what();
+	  return -100;
+	}
 	return 0;
 }
