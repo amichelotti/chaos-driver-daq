@@ -7,8 +7,9 @@ ADD_SUBDIRECTORY(driver/cspi)
 ADD_SUBDIRECTORY(driver/mci)
 ADD_SUBDIRECTORY(driver/soft)
 
+ADD_DEFINITIONS(${DRIVERS_FLAGS})
 
-INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/soft driver/libera-driver-2-04-ebpp/ .)
+INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ .)
 LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/driver/mci/lib)
 ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
@@ -18,7 +19,8 @@ IF(BUILD_FORCE_STATIC)
 
    ADD_LIBRARY(${PROJECT_NAME} STATIC ${DAQ_src} )
 
- #  set_target_properties(BPMSync PROPERTIES LINK_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
+   #set_target_properties(BPMSync PROPERTIES LINK_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
+   set_target_properties(daqLiberaServer PROPERTIES LINK_FLAGS "-Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
 ELSE()
   ADD_LIBRARY(${PROJECT_NAME} SHARED ${DAQ_src})	
 	 

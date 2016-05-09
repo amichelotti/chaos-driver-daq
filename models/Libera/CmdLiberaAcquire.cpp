@@ -136,6 +136,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
          if(tmode&LIBERA_IOP_MODE_DD){
              if(tsamples>0){
+	       int ret;
                 //getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
                // getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
                 getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", tsamples*sizeof(int32_t));
@@ -144,14 +145,24 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
                 getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", tsamples*sizeof(int32_t));
                 getAttributeCache()->setOutputAttributeNewSize("X_ACQ", tsamples*sizeof(double));
                 getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", tsamples*sizeof(double));
-                driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
+		if( (ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
+		  BC_END_RUNNIG_PROPERTY
+		    CMDCUERR_<<"Error performing IO_MODE_DD: "<<ret;
+		  return;
+		}
                 samples=tsamples;
 
              }
             } else if (tmode&LIBERA_IOP_MODE_SA){
                 if(tsamples>0){
+		  int ret;
                    // getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
-                    driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
+		  if((ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
+		      BC_END_RUNNIG_PROPERTY
+			CMDCUERR_<<"Error performing IO_MODE_SA: "<<ret;
+		      return;
+
+		    }
                     samples=tsamples;
 
                 }
@@ -179,7 +190,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
               *perr|=LIBERA_ERROR_SWCONFIG;
               getAttributeCache()->setOutputDomainAsChanged();
               BC_END_RUNNIG_PROPERTY
-			  CMDCUERR_<<"Unsupported mode";
+		CMDCUERR_<<"Unsupported mode";
 
               //throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
 
@@ -193,8 +204,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         
         if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
         	 BC_END_RUNNIG_PROPERTY
-        	CMDCUERR_<<"cannot start acquire end command";
+		   CMDCUERR_<<"cannot start acquire end command, mode "<<tmode<<" samples:"<<tsamples;
             //throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
+		 return;
 
         }
         
