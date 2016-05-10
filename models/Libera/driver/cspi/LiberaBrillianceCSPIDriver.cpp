@@ -532,6 +532,16 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
 
             if(driver_mode&LIBERA_IOP_MODE_DD){
               cfg.mode =CSPI_MODE_DD;
+		libera_env_t cmd_env;
+		CSPI_ENVPARAMS env;
+		cmd_env.value=15;
+		env.switches=cmd_env.value;
+		cmd_env.selector=CSPI_ENV_SWITCH;
+		rc = cspi_setenvparam(env_handle,(CSPI_ENVPARAMS*) &env, cmd_env.selector);
+		if (CSPI_OK != rc) {
+		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc;
+		  return rc;
+		}
               LiberaBrillianceCSPILDBG_<<"Acquire Data on Demand";
               cfg.operation = liberaconfig::acquire;
               cfg.datasize=sizeof(CSPI_DD_ATOM);
@@ -539,7 +549,18 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             }
             if(driver_mode&LIBERA_IOP_MODE_SA){
                 cfg.mode =CSPI_MODE_SA;
+		libera_env_t cmd_env;
+		CSPI_ENVPARAMS env;
+		cmd_env.value=255;
+		env.switches=cmd_env.value;
+		cmd_env.selector=CSPI_ENV_SWITCH;
+		rc = cspi_setenvparam(env_handle,(CSPI_ENVPARAMS*) &env, cmd_env.selector);
+		if (CSPI_OK != rc) {
+		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc;
+		  return rc;
+		}
                 LiberaBrillianceCSPILDBG_<<"Acquire Data on Streaming";
+		
                 cfg.operation = liberaconfig::acquire;
                 cfg.datasize=sizeof(CSPI_SA_ATOM);
             }
