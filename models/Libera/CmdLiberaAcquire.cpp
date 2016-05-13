@@ -335,7 +335,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             *x  = mm.x;
             *y  = mm.y;
             *q  = pnt.Q;
-            *sum  = pnt.Sum;
+            *sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
             *q1 = pnt.Cx;
             *q2 = pnt.Cy;
              (*acquire_loops)++;
