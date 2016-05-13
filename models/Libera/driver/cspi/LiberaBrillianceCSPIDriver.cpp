@@ -391,7 +391,7 @@ int LiberaBrillianceCSPIDriver::initIO(void *buffer, int sizeb) {
        LiberaBrillianceCSPILERR_<<"not in deinit state:"<<cfg.operation;
        return 0;
     }
-    cfg.operation = liberaconfig::init;
+
     cfg.atom_count=1;
     cfg.datasize=0;
     cfg.mask =0;
@@ -406,15 +406,17 @@ int LiberaBrillianceCSPIDriver::initIO(void *buffer, int sizeb) {
     rc = cspi_setenvparam(env_handle,&ep,ef);
     if (CSPI_OK != rc) {
       LiberaBrillianceCSPILERR_<<"Cannot set env:"<<rc;
-        return rc;
+      deinitIO();
+      return rc;
     }
     rc = cspi_allochandle(CSPI_HANDLE_CON, env_handle, &con_handle);
     
     if (CSPI_OK != rc) {
+      deinitIO();
         LiberaBrillianceCSPILERR_<<"Cannot allocate CSPI connection resources";    
         return rc;
     }
-    
+    cfg.operation = liberaconfig::init;
     return 0;
 }
 
