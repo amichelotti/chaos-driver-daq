@@ -131,7 +131,7 @@ struct bpmpos {
     }
     for(int cnt=0;cnt<7;cnt++){
         x = a[type][0] * U + a[type][1] * y*y*U +  a[type][2]*y*y*y*y*U + a[type][3] *x*x*U +a[type][4]*x*x*y*y*U+a[type][5]*x*x*x*x*U;
-        y = b[type][1] * V + b[type][1] * y*y*V +  b[type][2]*y*y*y*y*V + b[type][3] *x*x*V +b[type][4]*x*x*y*y*V+b[type][5]*x*x*x*x*V;
+        y = b[type][0] * V + b[type][1] * y*y*V +  b[type][2]*y*y*y*y*V + b[type][3] *x*x*V +b[type][4]*x*x*y*y*V+b[type][5]*x*x*x*x*V;
     }
     
     /*MATLAB*/
