@@ -111,7 +111,7 @@ struct liberaconfig
     
     int trigger_time_ms;
     mci::Node root ;
-    mci::Node snode,dodnode ;
+    mci::Node snode,dodnode,gainNode ;
 
        /* instantiate remote signal entity */
     isig::SignalSourceSharedPtr signal;
@@ -126,7 +126,7 @@ struct liberaconfig
      isig::SignalSourceSharedPtr signal_sa,signal_dod;
      RStream::Client* sclient;
      DOD::Client dodclient;
-
+     std::string nodeBase;
     CSPI_ENVPARAMS myenv;
 public:
     LiberaBrilliancePlusDriver();
