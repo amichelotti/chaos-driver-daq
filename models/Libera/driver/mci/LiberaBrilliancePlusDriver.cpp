@@ -137,7 +137,7 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 
 			LiberaSoftDBG<<" DA read count:"<<count;
 			libera_dd_t*dd=(libera_dd_t*)buffer;
-			auto mci_buffer(dodclient.CreateBuffer(2048));
+			auto mci_buffer(dodclient.CreateBuffer(count));
 			isig::SignalMeta meta;
 			int ret = dodclient.Read(mci_buffer, meta);
 			if (ret == isig::eSuccess) {
@@ -163,7 +163,7 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 								LiberaSoftDBG<<" DD["<<cnt<<"] VA:"<<dd[cnt].Va<<" VB:"<<dd[cnt].Vb<<" VC:"<<dd[cnt].Vc<<" VD:"<<dd[cnt].Vd;
 				}
 			}else {
-			  LiberaSoftERR <<  " [DOD] Read error: " << ret;
+			  LiberaSoftERR <<  " [DOD] Read error reading samples: " << count<<" ret:"<<ret;
 			  return -5;
 			}
 
@@ -260,11 +260,15 @@ int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 	root = mci::Connect();
 	std::string board_name_stream=(char*)buffer;
 	std::string board_name_dod=(char*)buffer;
-	board_name_stream+=".sa";
-	board_name_dod+=".adc";
-
+	board_name_stream+=".signals.sa";
+	board_name_dod+=".signals.adc";
+	nodeBase = (char*)buffer;
 	snode = root.GetNode(mci::Tokenize(board_name_stream));
 	dodnode = root.GetNode(mci::Tokenize(board_name_dod));
+	std::string gain=nodeBase+".conditioning.switching";
+	LiberaSoftDBG<<"Gain Node:"<<gain;
+	gainNode = root.GetNode(mci::Tokenize(gain));
+	LiberaSoftDBG<<"Gain Node opened:"<<gain;
 	LiberaSoftDBG<<" getting node:\""<<board_name_stream<<"\" \""<<board_name_dod<<"\"" ;
 	signal_sa = mci::CreateRemoteSignal(snode);
 	signal_dod = mci::CreateRemoteSignal(dodnode);
@@ -278,6 +282,9 @@ int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 
 	  sclient = new RStream::Client(rStream,"myStreamClient");
 	  sclient->SetReadTimeout(std::chrono::seconds(5));
+#if BASE_VER_MAJOR >= 3
+	  dodclient.SetReadTimeout(std::chrono::seconds(5));
+#endif
 	} catch (std::exception e){
 	  LiberaSoftERR<<"error creating client:"<<e.what();
 	  return -1;
@@ -334,6 +341,7 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 		}
 
 	try{
+
 	switch(operation){
 	case LIBERA_IOP_CMD_GET_TS:
 		CSPI_TIMESTAMP ts;
@@ -353,7 +361,7 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 		  dodclient.Close();
 		}
 		if(cfg.operation = liberaconfig::acquire && cfg.mode == CSPI_MODE_SA){
-			sclient->Close();
+	  sclient->Close();
 		}
 		cfg.operation = liberaconfig::unknown;
 
@@ -383,11 +391,20 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 		//const size_t modes[] = {CSPI_MODE_DD, CSPI_MODE_SA, CSPI_MODE_PM, CSPI_MODE_ADC, CSPI_MODE_AVERAGE};
 
 		if(driver_mode&LIBERA_IOP_MODE_DD){
-			LiberaSoftDBG<<"Acquire Data on Demand";
-			auto ret = dodclient.Open(isig::eModeDodOnEvent, 2048);
+	  isig::AccessMode_e acc=isig::eModeDodNow;
+	  LiberaSoftDBG<<"Acquire Data on Demand samples:"<<cfg.atom_count;
+	  if(cfg.mask&cfg.want_trigger){
+	  acc=isig::eModeDodOnEvent;
+	}
+	  auto ret = dodclient.Open(acc, cfg.atom_count,0);
 			if (ret != isig::eSuccess) {
 			  LiberaSoftERR<<"Cannot open DOD client";
 			  return -1;
+			}
+			LiberaSoftDBG<<"Setting Gain";
+			bool ok = gainNode.SetValue(false);
+			if (ok==false) {
+			  LiberaSoftERR<<"Cannot set gain to false";
 			}
 			LiberaSoftDBG<<"Open DOD client succeeded";
 			cfg.mode =CSPI_MODE_DD;
@@ -397,6 +414,14 @@ int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 		}
 		if(driver_mode&LIBERA_IOP_MODE_SA){
 			LiberaSoftDBG<<"Acquire Data on Streaming";
+
+			LiberaSoftDBG<<"Setting Gain";
+			bool ok = gainNode.SetValue(true);
+			if (ok==false) {
+			  LiberaSoftERR<<"Cannot set gain to true";
+			}
+
+			
 			auto ret = sclient->Open();
 			if (ret != isig::eSuccess) {
 				LiberaSoftERR<<"Cannot open stream client";
