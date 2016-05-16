@@ -110,8 +110,8 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 				tt->Vb =mci_buffer[0][1];
 				tt->Vc =mci_buffer[0][2];
 				tt->Vd =mci_buffer[0][3];
-
-				LiberaSoftDBG<<" SA VA:"<<tt->Va<<" VB:"<<tt->Vb<<" VC:"<<tt->Vc<<" VD:"<<tt->Vd;
+				tt->Sum = tt->Va + tt->Vb + tt->Vc + tt->Vd;
+				LiberaSoftDBG<<" SA VA:"<<tt->Va<<" VB:"<<tt->Vb<<" VC:"<<tt->Vc<<" VD:"<<tt->Vd << " Sum:"<<tt->Sum;
 				for (size_t i = 0; i < mci_buffer.GetLength(); ++i) {
 					for (size_t j = 0; j < columns ; ++j) {
 						ss << "["<<i<<"]"<<std::setw(11) <<  mci_buffer[i][j] <<  "  ";
@@ -160,6 +160,7 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 								dd[cnt].Vb=mci_buffer[cnt][1];
 								dd[cnt].Vc=mci_buffer[cnt][2];
 								dd[cnt].Vd=mci_buffer[cnt][3];
+								
 								LiberaSoftDBG<<" DD["<<cnt<<"] VA:"<<dd[cnt].Va<<" VB:"<<dd[cnt].Vb<<" VC:"<<dd[cnt].Vc<<" VD:"<<dd[cnt].Vd;
 				}
 			}else {
