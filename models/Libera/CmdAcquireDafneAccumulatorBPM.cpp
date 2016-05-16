@@ -96,6 +96,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     acquire=driver->getRemoteVariables("ACQUISITION");
     samples=driver->getRemoteVariables("SAMPLES");
     poly_type=driver->getRemoteVariables("POLYTYPE");
+    sum_acq = driver->getRemoteVariables("SUM");
     
     if((va.size()==vb.size())&&(vb.size()==vc.size())&&(vc.size()==vd.size())&&(vd.size()==mode.size())&&(mode.size()==acquire.size())&&(acquire.size()==samples.size())&&(va_acq.size()==samples.size())&&(vb_acq.size()==samples.size())&&(vc_acq.size()==samples.size())&&(vd_acq.size()==samples.size())&&(poly_type.size()==samples.size())){
         CTRLDBG_<<" Array BPM size:"<<va.size();
@@ -122,10 +123,13 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
         std::vector<ChaosDatasetAttribute*> rattrs_xx=driver->getRemoteVariables("X");
         std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
+        std::vector<ChaosDatasetAttribute*> rattrs_sum=driver->getRemoteVariables("SUM");
+
         rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
         rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
         rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
-        
+        rattrs.insert(rattrs.end(),rattrs_sum.begin(),rattrs_sum.end());
+
     for(cnt=0;cnt<elem_size;cnt++){
         samples_v=*samples[cnt];
         //10ms
@@ -140,6 +144,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         acquire[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
         samples[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
         poly_type[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,1000000);
+        sum_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,1000000);
 
         x_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
         y_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);

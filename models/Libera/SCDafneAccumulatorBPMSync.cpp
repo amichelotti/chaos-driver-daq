@@ -65,9 +65,15 @@ The api that can be called withi this method are listed into
 (chaosframework/Documentation/html/group___control___unit___definition___api.html)
 */
 void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CException) {
+	int ret;
      driver=new remoteGroupAccessInterface(getAccessoInstanceByIndex(0));
-     if((driver == NULL) || (driver->connect()!=0)){
-         throw chaos::CException(-1,"cannot connect with driver",__PRETTY_FUNCTION__);
+     if(driver == NULL){
+    	 throw chaos::CException(-1,"not accessor found for remoteGroupAccessInterface",__PRETTY_FUNCTION__);
+     }
+     if(((ret=driver->connect())!=0)){
+    	 std::stringstream ss;
+    	 ss<<"cannot connect with driver remoteGroupAccess, ret:"<<ret;
+         throw chaos::CException(-2,ss.str().c_str(),__PRETTY_FUNCTION__);
      }
     //insert your definition code here
       installCommand<CmdDefaultDafneAccumulatorBPM>("default");
@@ -81,9 +87,13 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
         std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
         std::vector<ChaosDatasetAttribute*> rattrs_xx=driver->getRemoteVariables("X");
         std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
+        std::vector<ChaosDatasetAttribute*> rattrs_sum=driver->getRemoteVariables("SUM");
+
         rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
         rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
         rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
+        rattrs.insert(rattrs.end(),rattrs_sum.begin(),rattrs_sum.end());
+
         
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         std::string name=(*i)->getGroup()+chaos::PATH_SEPARATOR+(*i)->getName();
