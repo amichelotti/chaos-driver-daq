@@ -22,12 +22,18 @@ BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, t
 BATCH_COMMAND_CLOSE_DESCRIPTION()
 
 CmdAcquireDafneAccumulatorBPM::CmdAcquireDafneAccumulatorBPM() {
-    
+	dafne_status = new ChaosDatasetAttribute("DAFNE/STATUS/dafne_status");
+	CTRLDBG_<<"accessing dafne status:"<<dafne_status;
+
 }
 
 
 
 CmdAcquireDafneAccumulatorBPM::~CmdAcquireDafneAccumulatorBPM() {
+	CTRLDBG_<<"removing dafne status:"<<dafne_status;
+
+	delete dafne_status;
+
 }
 
 uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
@@ -111,7 +117,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
     CTRLDBG_<<" WAITING for mode:"<<tomode;
     mode_sync.setTimeout(10000000);
    
-    if(mode_sync.sync(tomode)==0){
+    if(mode_sync.sync(tomode)<0){
         CTRLERR_<<" cannot synchronize pool to:"<<tomode;
         BC_END_RUNNIG_PROPERTY;
         return;
@@ -129,6 +135,10 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
         rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
         rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
         rattrs.insert(rattrs.end(),rattrs_sum.begin(),rattrs_sum.end());
+
+       // CTRLDBG_<<"dafne status:"<<(int32_t)*dafne_status;
+
+      rattrs.push_back(dafne_status);
 
     for(cnt=0;cnt<elem_size;cnt++){
         samples_v=*samples[cnt];

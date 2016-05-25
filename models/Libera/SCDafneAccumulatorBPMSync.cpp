@@ -89,10 +89,12 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
         std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
         std::vector<ChaosDatasetAttribute*> rattrs_sum=driver->getRemoteVariables("SUM");
 
+        ChaosDatasetAttribute dafne_status("DAFNE/STATUS/dafne_status");
         rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
         rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
         rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
         rattrs.insert(rattrs.end(),rattrs_sum.begin(),rattrs_sum.end());
+        rattrs.push_back(&dafne_status);
 
         
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){

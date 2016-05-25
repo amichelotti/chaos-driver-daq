@@ -36,6 +36,7 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> acquire;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> samples;
       int elem_size;
+      ::driver::misc::ChaosDatasetAttribute* dafne_status;
       ::driver::misc::ChaosDatasetAttributeSinchronizer mode_sync;
       std::vector< ::driver::misc::ChaosDatasetAttribute* > rattrs;
       c_data::CDataWrapper* last_command;
