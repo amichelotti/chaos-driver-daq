@@ -9,7 +9,7 @@ ADD_SUBDIRECTORY(driver/soft)
 
 ADD_DEFINITIONS(${DRIVERS_FLAGS})
 
-INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ .)
+INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ . driver/mci/include/omniORB4)
 LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/driver/mci/lib)
 ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
