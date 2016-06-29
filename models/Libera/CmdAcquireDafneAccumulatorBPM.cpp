@@ -9,6 +9,7 @@
 #include <boost/format.hpp>
 #include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
 #include <driver/daq/models/Libera/CmdAcquireDafneAccumulatorBPM.h>
+#define RECOVER_PERIOD 100
 
 using namespace driver::daq::libera;
 using namespace ::driver::misc;
@@ -23,7 +24,10 @@ BATCH_COMMAND_CLOSE_DESCRIPTION()
 
 CmdAcquireDafneAccumulatorBPM::CmdAcquireDafneAccumulatorBPM() {
 	dafne_status = new ChaosDatasetAttribute("DAFNE/STATUS/dafne_status");
+	linac_mode = new ChaosDatasetAttribute("DAFNE/STATUS/linac_mode");
+
 	CTRLDBG_<<"accessing dafne status:"<<dafne_status;
+
 
 }
 
@@ -33,6 +37,7 @@ CmdAcquireDafneAccumulatorBPM::~CmdAcquireDafneAccumulatorBPM() {
 	CTRLDBG_<<"removing dafne status:"<<dafne_status;
 
 	delete dafne_status;
+	delete linac_mode;
 
 }
 
@@ -45,7 +50,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   tomode=0;
   int32_t samples_v;
   int cnt;
-
+  recover=RECOVER_PERIOD;
   last_command=data;
 
     if(data->hasKey("enable")) {
@@ -139,6 +144,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
        // CTRLDBG_<<"dafne status:"<<(int32_t)*dafne_status;
 
       rattrs.push_back(dafne_status);
+      rattrs.push_back(linac_mode);
 
     for(cnt=0;cnt<elem_size;cnt++){
         samples_v=*samples[cnt];
@@ -193,7 +199,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
     
     int cntt;
     int cnt;
-   
+
  
     for(cnt=0;cnt<elem_size;cnt++){
           bpmpos mm; 
@@ -202,12 +208,19 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
           int poly;
           double dx,dy;
           mode_v= *mode[cnt];
-	  if(mode_v != tomode){
+	 /* if((mode_v != tomode)&&(recover--==0)){
 
 	    CTRLDBG_<<" Reapply command because \""<<rattrs[cnt]->getPath()<<"\" has mode ="<<mode_v;
 	    ::driver::misc::CmdSync::setHandler(last_command);
 	    sleep(1);
-	  }
+
+	  }*/
+       if(mode_v !=tomode){
+           CTRLDBG_<<"["<<cnt<<"] not any more synchronized to:"<<tomode<<" now:"<<tomode<<" exiting acquire";
+
+           BC_END_RUNNIG_PROPERTY;
+    	   return;
+       }
 
         samples_v = *samples[cnt];
         acquire_v = *acquire[cnt];

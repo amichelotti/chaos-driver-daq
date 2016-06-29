@@ -76,12 +76,11 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
          throw chaos::CException(-2,ss.str().c_str(),__PRETTY_FUNCTION__);
      }
     //insert your definition code here
-      installCommand<CmdDefaultDafneAccumulatorBPM>("default");
+      installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdDefaultDafneAccumulatorBPM),1);
       installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdAcquireDafneAccumulatorBPM));
-
-	installCommand<CmdEnvDafneAccumulatorBPM>("env");
+      installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdEnvDafneAccumulatorBPM));
+	//installCommand<CmdEnvDafneAccumulatorBPM>("env");
 	//installCommand<CmdDafneAccumulatorBPM>("time");
-        setDefaultCommand("default");
 
         std::vector<ChaosDatasetAttribute*> rattrs= driver->getRemoteVariables("X_ACQ");
         std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
@@ -90,11 +89,14 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
         std::vector<ChaosDatasetAttribute*> rattrs_sum=driver->getRemoteVariables("SUM");
 
         ChaosDatasetAttribute dafne_status("DAFNE/STATUS/dafne_status");
+        ChaosDatasetAttribute linac_mode("DAFNE/STATUS/linac_mode");
+
         rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
         rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
         rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
         rattrs.insert(rattrs.end(),rattrs_sum.begin(),rattrs_sum.end());
         rattrs.push_back(&dafne_status);
+        rattrs.push_back(&linac_mode);
 
         
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){

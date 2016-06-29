@@ -12,7 +12,7 @@ namespace driver {
         
         namespace daq {
             namespace libera{
-	      class CmdEnvDafneAccumulatorBPM : public ::driver::misc::CmdSync {
+            DEFINE_BATCH_COMMAND_CLASS(CmdEnvDafneAccumulatorBPM,::driver::misc::CmdSync) {
     
       
       std::vector< ::driver::misc::ChaosDatasetAttribute*> va;
