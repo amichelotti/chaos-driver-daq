@@ -21,11 +21,11 @@
 #define ChaosRTControlUnit_SCDafneAccumulatorBPMSync_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <driver/misc/ChaosControllerGroup.h>
-#include <driver/misc/ChaosDatasetAttribute.h>
-#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
+#include <driver/misc/core/ChaosControllerGroup.h>
+#include <driver/misc/core/ChaosDatasetAttribute.h>
+#include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
-#include <driver/misc/SCDataSync.h>
+#include <driver/misc/core/SCDataSync.h>
    
     namespace driver {
         

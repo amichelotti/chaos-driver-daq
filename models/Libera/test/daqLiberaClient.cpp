@@ -25,9 +25,9 @@
 #include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/ui_toolkit/HighLevelApi/HLDataApi.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
-#include <driver/misc/ChaosControllerGroup.h>
-#include <driver/misc/ChaosDatasetAttribute.h>
-#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
+#include <driver/misc/core/ChaosControllerGroup.h>
+#include <driver/misc/core/ChaosDatasetAttribute.h>
+#include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
 
 
 //#include <fstream>

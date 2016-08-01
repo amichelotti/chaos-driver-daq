@@ -7,8 +7,8 @@
 
 #ifndef CMDDEFAULTDAFNEACCUMULATORBPM_H
 #define	CMDDEFAULTDAFNEACCUMULATORBPM_H
-#include <driver/misc/CmdSync.h>
-#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
+#include <driver/misc/core/CmdSync.h>
+#include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
 #include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
 
 namespace driver {
