@@ -9,7 +9,7 @@ ADD_SUBDIRECTORY(driver/soft)
 
 ADD_DEFINITIONS(${DRIVERS_FLAGS})
 
-INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ . driver/mci/include/omniORB4)
+INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ . ../ ../../ driver/mci/include/omniORB4)
 LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/driver/mci/lib)
 ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
@@ -29,8 +29,8 @@ ENDIF()
 SET(DAQ_LIBRARY ${PROJECT_NAME} ${DRIVERS_LIB})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial chaos_driver_misc common_misc_wavegenerators ${FrameworkLib})
 
-TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_cutoolkit chaos_common  common_serial ${FrameworkLib})
-TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
+TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_driver_misc chaos_cutoolkit chaos_common  common_serial chaos_driver_misc${FrameworkLib})
+TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_driver_misc chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
 TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME} chaos_driver_misc  chaos_uitoolkit  chaos_cutoolkit chaos_common ${FrameworkLib})
 
 
