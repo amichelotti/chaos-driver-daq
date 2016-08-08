@@ -1,6 +1,5 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(daq)
-include($ENV{CHAOS_BUNDLE}/tools/project_template/CMakeChaos.txt)
 ADD_SUBDIRECTORY(models)
 
 

@@ -7,7 +7,7 @@
 
 #ifndef CMDENVDAFNEACCUMULATORBPM_H
 #define	CMDENVDAFNEACCUMULATORBPM_H
-#include <driver/misc/CmdSync.h>
+#include <driver/misc/core/CmdSync.h>
 namespace driver {
         
         namespace daq {
