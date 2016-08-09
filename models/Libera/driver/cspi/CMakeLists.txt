@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6)
+cmake_minimum_required(VERSION 2.8)
 project(chaos_driver_libera_cspi)
 
 ADD_DEFINITIONS(-D_LIBERACSPI_)
@@ -19,6 +19,7 @@ IF("${CMAKE_C_COMPILER}" MATCHES "arm-infn-linux-gnueabi-gcc")
 ELSE()
   FILE(WRITE UnitServerIgnore "disabled ${PROJECT_NAME}")
 ENDIF()
+
 
 
    

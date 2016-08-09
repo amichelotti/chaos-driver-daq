@@ -71,7 +71,8 @@ typedef struct libera_env {
     int32_t value;
 } libera_env_t;
 
-#include "cspi.h"
+
+#include <driver/daq/models/Libera/driver/cspi/cspi.h>
 
     typedef CSPI_DD_ATOM libera_dd_t;
     typedef CSPI_SA_ATOM libera_sa_t;
@@ -80,7 +81,7 @@ typedef struct libera_env {
     typedef CSPI_AVERAGE_ATOM libera_avg_t;
     typedef CSPI_AVERAGE_ATOM libera_avg_t;
     typedef CSPI_TIMESTAMP libera_ts_t;
-    
+
     class libera_desc{
     protected:
         std::vector<const char*>p;

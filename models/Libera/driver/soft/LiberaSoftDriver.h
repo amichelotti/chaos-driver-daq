@@ -21,7 +21,7 @@ limitations under the License.
 #define __LiberaSoftDriver_H__
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
 #define CSPI
-#include "LiberaData.h"
+#include <driver/daq/models/Libera/LiberaData.h>
 #include <common/misc/wavegenerators/WaveBase.h>
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaSoftDriver);
 
