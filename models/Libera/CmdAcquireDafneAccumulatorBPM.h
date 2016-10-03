@@ -7,8 +7,8 @@
 
 #ifndef CMDACQDAFNEACCUMULATORBPM_H
 #define	CMDACQDAFNEACCUMULATORBPM_H
-#include <driver/misc/CmdSync.h>
-#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
+#include <driver/misc/core/CmdSync.h>
+#include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
 namespace driver {
         
         namespace daq {
@@ -25,6 +25,8 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vb_acq;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vc_acq;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> vd_acq;
+      std::vector< ::driver::misc::ChaosDatasetAttribute*> sum_acq;
+
       std::vector< ::driver::misc::ChaosDatasetAttribute*> poly_type;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> x;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> y;
@@ -34,8 +36,11 @@ namespace driver {
       std::vector< ::driver::misc::ChaosDatasetAttribute*> acquire;
       std::vector< ::driver::misc::ChaosDatasetAttribute*> samples;
       int elem_size;
+      ::driver::misc::ChaosDatasetAttribute* dafne_status,*linac_mode;
       ::driver::misc::ChaosDatasetAttributeSinchronizer mode_sync;
       std::vector< ::driver::misc::ChaosDatasetAttribute* > rattrs;
+      c_data::CDataWrapper* last_command;
+      int tomode,recover;
 public:
     CmdAcquireDafneAccumulatorBPM();
    

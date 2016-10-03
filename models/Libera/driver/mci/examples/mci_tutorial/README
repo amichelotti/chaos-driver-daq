@@ -1,0 +1,45 @@
+This directory contains several examples that demonstrate the access to MCI layer in Libera instrument on platform B (Brilliance+, Single Pass E/H, Hadron).
+
+To build all examples at once, simply type 'make' from the command line:
+
+    libera@libera-dev:~/mci_tutorial$ cd ~/mci_tutorial
+    libera@libera-dev:~/mci_tutorial$ make
+
+This will build binaries in each directory. The 'Makefile' lists the subdirectories (SUBDIRS) in a sequence that is sorted by the difficulty starting from simplest to more demanding examples.
+
+Edit 'Makefile.names' to set the version of Libera BASE that is installed in the OS. Default in this image is 2.8.
+Do not edit 'Makefile.rules'
+
+'common.h' contains definition of example nodes. These nodes can be modified to access other parameters and signals. They serve as examples only.
+
+When adding other parameter nodes or signals, make sure to set the correct format (UInt32, Int16, etc.). Proper type can be retrieved while connected to Libera Brilliance+ and checking the type of selected node. See 2 examples (check 'components_type' and 'Value type' lines):
+
+    root@libera:~# libera-ireg dump boards.raf3.signals.fa
+    access_type=Stream
+    atom_size=64
+    group_size=1024
+    components_names=[Va,Vb,Vc,Vd,Sum,Q,X,Y,LMT_l,LMT_h,r1,r2,r3,r4,r5,status]
+    components_number=16
+    components_type=int32
+
+    root@james:~# libera-ireg info boards.raf3.conditioning.tuning.agc.power_level
+    ---------------------------------------------------
+      Registry hostname    : cache
+      Node name            : power_level
+      Value                : -65
+      Value type           : Long ()
+      Validator expression : [-80, 0]
+      Num of values        : 1
+      Full path            : boards.raf3.conditioning.tuning.agc.power_level
+      Num of children      : 0
+      Flags                : readable writable persistent
+      Root                 : false
+      Parent node name     : agc
+      Children             : No children for this node
+    ---------------------------------------------------
+
+
+*************************************************************
+
+Author: Peter Leban (peter.leban@i-tech.si)
+Date: June 27, 2015

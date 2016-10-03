@@ -74,9 +74,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
             *perr|=LIBERA_ERROR_STOP_ACQUIRE;
            
             getAttributeCache()->setOutputDomainAsChanged();
-            
+            CMDCUERR_<<"Cannot stop acquire";
             BC_END_RUNNIG_PROPERTY;
-            throw chaos::CException(ret, "Cannot stop acquire", __FUNCTION__);
+            
 
         }
 	//requested mode
@@ -99,7 +99,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	}
         
         if(!data->hasKey("mode")) {
-            throw chaos::CException(1, "You have to specify a mode", __FUNCTION__);
+        	BC_END_RUNNIG_PROPERTY;
+            return;
         } else {
             tmode = data->getInt32Value("mode");
         }
@@ -135,6 +136,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
          if(tmode&LIBERA_IOP_MODE_DD){
              if(tsamples>0){
+	       int ret;
                 //getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
                // getAttributeCache()->setOutputAttributeNewSize("DD", tsamples*sizeof(libera_dd_t));
                 getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", tsamples*sizeof(int32_t));
@@ -143,14 +145,24 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
                 getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", tsamples*sizeof(int32_t));
                 getAttributeCache()->setOutputAttributeNewSize("X_ACQ", tsamples*sizeof(double));
                 getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", tsamples*sizeof(double));
-                driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
+		if( (ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
+		  BC_END_RUNNIG_PROPERTY
+		    CMDCUERR_<<"Error performing IO_MODE_DD: "<<ret;
+		  return;
+		}
                 samples=tsamples;
 
              }
             } else if (tmode&LIBERA_IOP_MODE_SA){
                 if(tsamples>0){
+		  int ret;
                    // getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
-                    driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0);
+		  if((ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
+		      BC_END_RUNNIG_PROPERTY
+			CMDCUERR_<<"Error performing IO_MODE_SA: "<<ret;
+		      return;
+
+		    }
                     samples=tsamples;
 
                 }
@@ -178,7 +190,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
               *perr|=LIBERA_ERROR_SWCONFIG;
               getAttributeCache()->setOutputDomainAsChanged();
               BC_END_RUNNIG_PROPERTY
-              throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
+		CMDCUERR_<<"Unsupported mode";
+
+              //throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
 
             }
         
@@ -189,8 +203,10 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
        
         
         if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
-            BC_END_RUNNIG_PROPERTY
-            throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
+        	 BC_END_RUNNIG_PROPERTY
+		   CMDCUERR_<<"cannot start acquire end command, mode "<<tmode<<" samples:"<<tsamples;
+            //throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
+		 return;
 
         }
         
@@ -319,7 +335,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             *x  = mm.x;
             *y  = mm.y;
             *q  = pnt.Q;
-            *sum  = pnt.Sum;
+            *sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
             *q1 = pnt.Cx;
             *q2 = pnt.Cy;
              (*acquire_loops)++;
@@ -389,8 +405,10 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
              *perr|=LIBERA_ERROR_STOP_ACQUIRE;
         }
        getAttributeCache()->setOutputDomainAsChanged();
-       BC_END_RUNNIG_PROPERTY;   
-       throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
+       BC_END_RUNNIG_PROPERTY
+       CMDCUERR_<<"Error Acquiring err:"<<*perr;
+       return;
+       //throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
      }
     CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
     getAttributeCache()->setOutputDomainAsChanged();

@@ -7,13 +7,18 @@
 
 #ifndef CMDDEFAULTDAFNEACCUMULATORBPM_H
 #define	CMDDEFAULTDAFNEACCUMULATORBPM_H
-#include <driver/misc/CmdSync.h>
-#include <driver/misc/ChaosDatasetAttributeSinchronizer.h>
+#include <driver/misc/core/CmdSync.h>
+#include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
+#include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
+
 namespace driver {
         
         namespace daq {
             namespace libera{
-	      class CmdDefaultDafneAccumulatorBPM : public ::driver::misc::CmdSync {
+
+            DEFINE_BATCH_COMMAND_CLASS(CmdDefaultDafneAccumulatorBPM,::driver::misc::CmdSync){
+
+
     
       
       std::vector< ::driver::misc::ChaosDatasetAttribute*> va;

@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2010 Instrumentation Technologies
+ * All Rights Reserved.
+ *
+ * $Id: i_notification.idl 11980 2011-06-15 10:36:13Z matej.kenda $
+ */
+
+#ifndef _INET_NOTIFICATION_IDL
+#define _INET_NOTIFICATION_IDL
+
+#include "i_types.idl"
+
+#pragma prefix "i-tech.si"
+
+module i_NET {
+
+    struct NotificationData {
+      NodePath path;
+      long type;
+      any data;
+      unsigned long pos;
+    };
+	
+    interface Notification {
+        void Emit(in NotificationData a_data);        
+    };
+
+};
+
+#endif // _INET_NOTIFICATION_IDL

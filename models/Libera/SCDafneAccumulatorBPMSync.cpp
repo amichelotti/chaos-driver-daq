@@ -57,7 +57,7 @@ SCDafneAccumulatorBPMSync::~SCDafneAccumulatorBPMSync() {
 
 }
 
-using namespace driver::daq::libera;
+using namespace ::driver::daq::libera;
 //!Return the definition of the control unit
 /*!
 The api that can be called withi this method are listed into
@@ -65,15 +65,39 @@ The api that can be called withi this method are listed into
 (chaosframework/Documentation/html/group___control___unit___definition___api.html)
 */
 void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CException) {
+	int ret;
+     driver=new remoteGroupAccessInterface(getAccessoInstanceByIndex(0));
+     if(driver == NULL){
+    	 throw chaos::CException(-1,"not accessor found for remoteGroupAccessInterface",__PRETTY_FUNCTION__);
+     }
+     if(((ret=driver->connect())!=0)){
+    	 std::stringstream ss;
+    	 ss<<"cannot connect with driver remoteGroupAccess, ret:"<<ret;
+         throw chaos::CException(-2,ss.str().c_str(),__PRETTY_FUNCTION__);
+     }
     //insert your definition code here
-      installCommand<CmdDefaultDafneAccumulatorBPM>("default");
+      installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdDefaultDafneAccumulatorBPM),1);
       installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdAcquireDafneAccumulatorBPM));
-
-	installCommand<CmdEnvDafneAccumulatorBPM>("env");
+      installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdEnvDafneAccumulatorBPM));
+	//installCommand<CmdEnvDafneAccumulatorBPM>("env");
 	//installCommand<CmdDafneAccumulatorBPM>("time");
-        setDefaultCommand("default");
 
-        std::vector<ChaosDatasetAttribute*> rattrs= driver->getRemoteVariables();
+        std::vector<ChaosDatasetAttribute*> rattrs= driver->getRemoteVariables("X_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_y=driver->getRemoteVariables("Y_ACQ");
+        std::vector<ChaosDatasetAttribute*> rattrs_xx=driver->getRemoteVariables("X");
+        std::vector<ChaosDatasetAttribute*> rattrs_yy=driver->getRemoteVariables("Y");
+        std::vector<ChaosDatasetAttribute*> rattrs_sum=driver->getRemoteVariables("SUM");
+
+        ChaosDatasetAttribute dafne_status("DAFNE/STATUS/dafne_status");
+        ChaosDatasetAttribute linac_mode("DAFNE/STATUS/linac_mode");
+
+        rattrs.insert(rattrs.end(),rattrs_y.begin(),rattrs_y.end());
+        rattrs.insert(rattrs.end(),rattrs_xx.begin(),rattrs_xx.end());
+        rattrs.insert(rattrs.end(),rattrs_yy.begin(),rattrs_yy.end());
+        rattrs.insert(rattrs.end(),rattrs_sum.begin(),rattrs_sum.end());
+        rattrs.push_back(&dafne_status);
+        rattrs.push_back(&linac_mode);
+
         
     for (std::vector<ChaosDatasetAttribute*>::iterator i=rattrs.begin();i!=rattrs.end();i++){
         std::string name=(*i)->getGroup()+chaos::PATH_SEPARATOR+(*i)->getName();

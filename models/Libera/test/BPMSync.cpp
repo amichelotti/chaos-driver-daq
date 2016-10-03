@@ -24,7 +24,7 @@
 #include <chaos/cu_toolkit/ChaosCUToolkit.h>
 #include "DafneAccumulatorBPMSync.h"
 #include "SCDafneAccumulatorBPMSync.h"
-#include <driver/misc/remoteGroupAccessDriver.h>
+#include <driver/misc/core/remoteGroupAccessDriver.h>
 
 
 using namespace chaos;

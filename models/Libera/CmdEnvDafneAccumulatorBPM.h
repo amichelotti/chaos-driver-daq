@@ -7,12 +7,12 @@
 
 #ifndef CMDENVDAFNEACCUMULATORBPM_H
 #define	CMDENVDAFNEACCUMULATORBPM_H
-#include <driver/misc/CmdSync.h>
+#include <driver/misc/core/CmdSync.h>
 namespace driver {
         
         namespace daq {
             namespace libera{
-	      class CmdEnvDafneAccumulatorBPM : public ::driver::misc::CmdSync {
+            DEFINE_BATCH_COMMAND_CLASS(CmdEnvDafneAccumulatorBPM,::driver::misc::CmdSync) {
     
       
       std::vector< ::driver::misc::ChaosDatasetAttribute*> va;
