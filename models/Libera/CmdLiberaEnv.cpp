@@ -44,7 +44,7 @@ CMDCUDBG_<<"checking environment "<< # param; \
             if((ret=driver->iop(LIBERA_IOP_CMD_SETENV,&env,sizeof(libera_env_t)))!=0){\
                 *perr|=LIBERA_ERROR_SETTING_ENV;\
                 getAttributeCache()->setOutputDomainAsChanged();\
-                BC_END_RUNNIG_PROPERTY;\
+                BC_END_RUNNING_PROPERTY;\
                 throw chaos::CException(ret, "Cannot set environment", __FUNCTION__);\
             }\
             CMDCUDBG_<<"Sucessfully applied \""<< # param <<"\" ("<<std::hex<<env.selector<<dec<<")="<<env.value ;\
@@ -57,7 +57,7 @@ CMDCUDBG_<<"checking environment "<< # param; \
             *perr|=LIBERA_ERROR_STOP_ACQUIRE;
             getAttributeCache()->setOutputDomainAsChanged();
 
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             throw chaos::CException(ret, "Cannot stop acquire", __FUNCTION__);
         }
         
@@ -96,5 +96,5 @@ CMDCUDBG_<<"checking environment "<< # param; \
             CMDCUDBG_<<"AFTER ENV:STATUS:"<<status;
             getAttributeCache()->setOutputDomainAsChanged();
         }
-        BC_END_RUNNIG_PROPERTY;
+        BC_END_RUNNING_PROPERTY;
 }

@@ -75,7 +75,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
            
             getAttributeCache()->setOutputDomainAsChanged();
             
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             throw chaos::CException(ret, "Cannot stop acquire", __FUNCTION__);
 
         }
@@ -88,7 +88,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
                 *pmode=0;
                 getAttributeCache()->setOutputDomainAsChanged();
 
-                BC_END_RUNNIG_PROPERTY;
+                BC_END_RUNNING_PROPERTY;
                 return;
             }
 	}
@@ -177,7 +177,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
             } else {
               *perr|=LIBERA_ERROR_SWCONFIG;
               getAttributeCache()->setOutputDomainAsChanged();
-              BC_END_RUNNIG_PROPERTY
+              BC_END_RUNNING_PROPERTY
               throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
 
             }
@@ -189,7 +189,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
        
         
         if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
-            BC_END_RUNNIG_PROPERTY
+            BC_END_RUNNING_PROPERTY
             throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
 
         }
@@ -232,7 +232,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
          boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
          
         start_acquire=start_test.time_of_day().total_milliseconds();
-        BC_NORMAL_RUNNIG_PROPERTY;
+        BC_NORMAL_RUNNING_PROPERTY;
         usleep(wait_for_us);
 }
 
@@ -247,7 +247,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
             CMDCUDBG_ << "Acquiring time "<<acquire_duration << " expired";
             *pmode=0;
             getAttributeCache()->setOutputDomainAsChanged();
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             return;
 
         }
@@ -271,7 +271,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
             *perr|=LIBERA_ERROR_ALLOCATE_DATASET;
 
             getAttributeCache()->setOutputDomainAsChanged();
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             return;
         }*/
         
@@ -377,7 +377,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
         }
         *pmode=0;
         getAttributeCache()->setOutputDomainAsChanged();
-        BC_END_RUNNIG_PROPERTY;
+        BC_END_RUNNING_PROPERTY;
         return;
     } else if(loops>0){
         loops--;
@@ -389,7 +389,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
              *perr|=LIBERA_ERROR_STOP_ACQUIRE;
         }
        getAttributeCache()->setOutputDomainAsChanged();
-       BC_END_RUNNIG_PROPERTY;   
+       BC_END_RUNNING_PROPERTY;   
        throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
      }
     CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
@@ -400,7 +400,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
 //void CmdBTFdaqAcquire::ccHandler() {
 //	AbstractPowerSupplyCommand::ccHandler();
 //	
-//	BC_EXEC_RUNNIG_PROPERTY
+//	BC_EXEC_RUNNING_PROPERTY
 //	CMDCU_ << "Check if we are gone";
 //	switch(state_to_go) {
 //		case 0://we need to go in stanby
@@ -408,7 +408,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
 //				setWorkState(false);
 //				//we are terminated the command
 //				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-//				BC_END_RUNNIG_PROPERTY
+//				BC_END_RUNNING_PROPERTY
 //				return;
 //			}
 //			break;
@@ -419,7 +419,7 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
 //				setWorkState(false);
 //				//we are terminated the command
 //				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-//				BC_END_RUNNIG_PROPERTY
+//				BC_END_RUNNING_PROPERTY
 //				return;
 //			}
 //			break;

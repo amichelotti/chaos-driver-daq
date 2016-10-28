@@ -60,7 +60,7 @@ void CmdBTFdaqDefault::setHandler(c_data::CDataWrapper *data) {
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
 
-	BC_NORMAL_RUNNIG_PROPERTY
+	BC_NORMAL_RUNNING_PROPERTY
 
 }
 

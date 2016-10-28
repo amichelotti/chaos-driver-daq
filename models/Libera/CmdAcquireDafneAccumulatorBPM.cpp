@@ -63,7 +63,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 				   CTRLERR_<<" cannot synchronize pool to:"<<tomode;
 
 			   }
-                BC_END_RUNNIG_PROPERTY;
+                BC_END_RUNNING_PROPERTY;
                 return;
             }
    }
@@ -88,7 +88,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
                     CTRLERR_<<" cannot synchronize pool to:"<<tomode;
 
                 }
-                BC_END_RUNNIG_PROPERTY;
+                BC_END_RUNNING_PROPERTY;
                 return;
             }
    }
@@ -124,7 +124,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
    
     if(mode_sync.sync(tomode)<0){
         CTRLERR_<<" cannot synchronize pool to:"<<tomode;
-        BC_END_RUNNIG_PROPERTY;
+        BC_END_RUNNING_PROPERTY;
         return;
     }
     mode_sync.setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
@@ -218,7 +218,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
        if(mode_v !=tomode){
            CTRLDBG_<<"["<<cnt<<"] not any more synchronized to:"<<tomode<<" now:"<<tomode<<" exiting acquire";
 
-           BC_END_RUNNIG_PROPERTY;
+           BC_END_RUNNING_PROPERTY;
     	   return;
        }
 
@@ -279,7 +279,7 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
  
      /*if(mode_v==0){
         ATTRDBG_<<"exiting from acquire, by mode =0";
-        BC_END_RUNNIG_PROPERTY;
+        BC_END_RUNNING_PROPERTY;
       }*/
     
      getAttributeCache()->setOutputAttributeValue("MODE",(void*)&mode_v,sizeof(mode_v));
