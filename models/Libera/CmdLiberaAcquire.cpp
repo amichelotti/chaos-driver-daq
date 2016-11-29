@@ -75,7 +75,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
            
             getAttributeCache()->setOutputDomainAsChanged();
             CMDCUERR_<<"Cannot stop acquire";
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             
 
         }
@@ -88,7 +88,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
                 *pmode=0;
                 getAttributeCache()->setOutputDomainAsChanged();
 
-                BC_END_RUNNIG_PROPERTY;
+                BC_END_RUNNING_PROPERTY;
                 return;
             }
 	}
@@ -99,7 +99,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	}
         
         if(!data->hasKey("mode")) {
-        	BC_END_RUNNIG_PROPERTY;
+        	BC_END_RUNNING_PROPERTY;
             return;
         } else {
             tmode = data->getInt32Value("mode");
@@ -146,7 +146,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
                 getAttributeCache()->setOutputAttributeNewSize("X_ACQ", tsamples*sizeof(double));
                 getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", tsamples*sizeof(double));
 		if( (ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
-		  BC_END_RUNNIG_PROPERTY
+		  BC_END_RUNNING_PROPERTY
 		    CMDCUERR_<<"Error performing IO_MODE_DD: "<<ret;
 		  return;
 		}
@@ -158,7 +158,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 		  int ret;
                    // getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
 		  if((ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
-		      BC_END_RUNNIG_PROPERTY
+		      BC_END_RUNNING_PROPERTY
 			CMDCUERR_<<"Error performing IO_MODE_SA: "<<ret;
 		      return;
 
@@ -189,7 +189,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
             } else {
               *perr|=LIBERA_ERROR_SWCONFIG;
               getAttributeCache()->setOutputDomainAsChanged();
-              BC_END_RUNNIG_PROPERTY
+              BC_END_RUNNING_PROPERTY
 		CMDCUERR_<<"Unsupported mode";
 
               //throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
@@ -203,7 +203,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
        
         
         if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
-        	 BC_END_RUNNIG_PROPERTY
+        	 BC_END_RUNNING_PROPERTY
 		   CMDCUERR_<<"cannot start acquire end command, mode "<<tmode<<" samples:"<<tsamples;
             //throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
 		 return;
@@ -248,7 +248,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
          
         start_acquire=start_test.time_of_day().total_milliseconds();
-        BC_NORMAL_RUNNIG_PROPERTY;
+        BC_NORMAL_RUNNING_PROPERTY;
         usleep(wait_for_us);
 }
 
@@ -263,7 +263,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             CMDCUDBG_ << "Acquiring time "<<acquire_duration << " expired";
             *pmode=0;
             getAttributeCache()->setOutputDomainAsChanged();
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             return;
 
         }
@@ -287,7 +287,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             *perr|=LIBERA_ERROR_ALLOCATE_DATASET;
 
             getAttributeCache()->setOutputDomainAsChanged();
-            BC_END_RUNNIG_PROPERTY;
+            BC_END_RUNNING_PROPERTY;
             return;
         }*/
         
@@ -393,7 +393,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
         }
         *pmode=0;
         getAttributeCache()->setOutputDomainAsChanged();
-        BC_END_RUNNIG_PROPERTY;
+        BC_END_RUNNING_PROPERTY;
         return;
     } else if(loops>0){
         loops--;
@@ -405,7 +405,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
              *perr|=LIBERA_ERROR_STOP_ACQUIRE;
         }
        getAttributeCache()->setOutputDomainAsChanged();
-       BC_END_RUNNIG_PROPERTY
+       BC_END_RUNNING_PROPERTY
        CMDCUERR_<<"Error Acquiring err:"<<*perr;
        return;
        //throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
@@ -418,7 +418,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 //void CmdLiberaAcquire::ccHandler() {
 //	AbstractPowerSupplyCommand::ccHandler();
 //	
-//	BC_EXEC_RUNNIG_PROPERTY
+//	BC_EXEC_RUNNING_PROPERTY
 //	CMDCU_ << "Check if we are gone";
 //	switch(state_to_go) {
 //		case 0://we need to go in stanby
@@ -426,7 +426,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 //				setWorkState(false);
 //				//we are terminated the command
 //				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-//				BC_END_RUNNIG_PROPERTY
+//				BC_END_RUNNING_PROPERTY
 //				return;
 //			}
 //			break;
@@ -437,7 +437,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 //				setWorkState(false);
 //				//we are terminated the command
 //				CMDCU_ << boost::str( boost::format("State reached %1% [%2%] we end command") % o_status % *o_status_id);
-//				BC_END_RUNNIG_PROPERTY
+//				BC_END_RUNNING_PROPERTY
 //				return;
 //			}
 //			break;

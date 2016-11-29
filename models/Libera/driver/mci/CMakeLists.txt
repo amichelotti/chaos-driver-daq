@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(chaos_driver_libera_mci)
 FILE(WRITE UnitServerIgnore "disabled ${PROJECT_NAME}")
-IF("${CMAKE_C_COMPILER}" MATCHES "i686-nptl-linux-gnu-gcc")
+IF("${CMAKE_C_COMPILER}" MATCHES "i686-nptl-linux-gnu-gcc" AND NOT CHAOS_STATIC)
+
   MESSAGE(STATUS "Enabling compilation MCI")
   ADD_DEFINITIONS(-D_LIBERAMCI_ -std=c++11)
   LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/lib)

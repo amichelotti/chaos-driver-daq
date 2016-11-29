@@ -30,12 +30,12 @@ SET(DAQ_LIBRARY ${PROJECT_NAME} ${DRIVERS_LIB})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial chaos_driver_misc common_misc_wavegenerators ${FrameworkLib})
 
 TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_driver_misc chaos_cutoolkit chaos_common  common_serial chaos_driver_misc ${FrameworkLib})
-TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_driver_misc chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
+ TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_driver_misc chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
 TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME} chaos_driver_misc  chaos_uitoolkit  chaos_cutoolkit chaos_common ${FrameworkLib})
 
 
 INSTALL_TARGETS(/bin daqLiberaServer)
-INSTALL_TARGETS(/bin daqLiberaClient)
+ INSTALL_TARGETS(/bin daqLiberaClient)
 INSTALL_TARGETS(/bin BPMSync) 
 
 

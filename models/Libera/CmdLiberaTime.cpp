@@ -26,7 +26,7 @@ driver::daq::libera::CmdLiberaTime::~CmdLiberaTime(){
 }
 void driver::daq::libera::CmdLiberaTime::acquireHandler() {
     CMDCUDBG_<<"Acquire not implemented ";
-     BC_END_RUNNIG_PROPERTY;
+     BC_END_RUNNING_PROPERTY;
 
 }
 
@@ -47,7 +47,7 @@ void driver::daq::libera::CmdLiberaTime::setHandler(c_data::CDataWrapper *data) 
             if((ret=driver->iop(LIBERA_IOP_CMD_SETTIME,(void*)t,strlen(t)+1))!=0){
                 *perr|=LIBERA_ERROR_SETTING_ENV;
               
-                BC_END_RUNNIG_PROPERTY;
+                BC_END_RUNNING_PROPERTY;
                 CMDCUERR_<<"cannot set time:\""<<t<<"\" ret: "<<ret;
             }else {
                  CMDCUERR_<<"setting time ok:\""<<t<<"\" ret: "<<ret;
