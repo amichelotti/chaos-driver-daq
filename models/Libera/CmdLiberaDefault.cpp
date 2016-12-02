@@ -66,11 +66,35 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	}
 	CMDCUDBG_<< "retrived BasicIODriver:"<<driver;
 
-	 int32_t *perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
+	perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
+type=*getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "POLYTYPE");
+         mode = tmode;
+         va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
+         vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
+         vc = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC");
+         vd = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD");
+         x = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "X");
+         y = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Y");
+         q = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q");
+         sum = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM");
+         q1 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
+         q2 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
+         psamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SAMPLES");
+         pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
+        mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
+         st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
+        va_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA_ACQ");
+        vb_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
+        vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
+        vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
+        sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
 
+        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
+         acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
 	BC_NORMAL_RUNNING_PROPERTY
 
 }

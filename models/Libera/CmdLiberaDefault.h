@@ -44,7 +44,12 @@ namespace driver {
                      const uint32_t	*i_command_timeout;
                      uint64_t     *mt; // machine time
                       uint64_t     *st; // system time
-                     
+                    int32_t* va,*vb,*vc,*vd,*x,*y,*q,*sum,*q1,*q2;
+                    int32_t* va_acq,*vb_acq,*vc_acq,*vd_acq,*sum_acq;
+                    double *x_acq,*y_acq;
+                    
+                    int32_t* psamples,*pmode,*perr;
+                    int64_t*acquire_loops;
                     chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
                 
 			// return the implemented handler

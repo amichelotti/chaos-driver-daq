@@ -68,7 +68,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         	
 
 
-        perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
             *perr|=LIBERA_ERROR_STOP_ACQUIRE;
@@ -210,29 +209,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
         }
         
-         type=*getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "POLYTYPE");
-         mode = tmode;
-         va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
-         vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
-         vc = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC");
-         vd = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD");
-         x = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "X");
-         y = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Y");
-         q = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q");
-         sum = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM");
-         q1 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
-         q2 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
-         psamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SAMPLES");
-         pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
-        mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
-         st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
-        va_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA_ACQ");
-        vb_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
-        vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
-        vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
-        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
-        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
-         acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
+         
          if(mode&LIBERA_IOP_MODE_PERMLOOP){
              loops=-1;
          } else {
@@ -314,7 +291,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
                 x_acq[cnt]=pnt[cnt].X;
 		y_acq[cnt]=pnt[cnt].Y;
             }
-
+            
              (*acquire_loops)++;
         } else {
            *perr|=LIBERA_ERROR_READING;

@@ -86,15 +86,88 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 	//set it has default
 	setDefaultCommand("default");
 	SCCULDBG<<"defining dataset";
+        
+        addAttributeToDataSet("timeout",
+						  "Time out triggering",
+						  DataType::TYPE_INT32,
+						  DataType::Input);
+        
+        //// Configuration
+        addAttributeToDataSet("COEFF_U0",
+						  "CoeffU0 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        addAttributeToDataSet("COEFF_U1",
+						  "CoeffU1 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+         
+        addAttributeToDataSet("COEFF_U2",
+						  "CoeffA2 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        
+         addAttributeToDataSet("COEFF_U3",
+						  "CoeffU3 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        addAttributeToDataSet("COEFF_U4",
+						  "CoeffU4 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+         
+        addAttributeToDataSet("COEFF_U5",
+						  "CoeffU5 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        
+        
+        addAttributeToDataSet("COEFF_V0",
+						  "CoeffV0 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        addAttributeToDataSet("COEFF_V1",
+						  "CoeffV1 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+         
+        addAttributeToDataSet("COEFF_V2",
+						  "CoeffV2 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        
+         addAttributeToDataSet("COEFF_V3",
+						  "CoeffV3 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        addAttributeToDataSet("COEFF_V4",
+						  "CoeffV4 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+         
+        addAttributeToDataSet("COEFF_V5",
+						  "CoeffV5 Poly",
+						  DataType::TYPE_DOUBLE,
+						  DataType::Input);
+        
+        
+        ////
         addAttributeToDataSet("MODE",
 						  "Libera Mode",
 						  DataType::TYPE_INT32,
-						  DataType::Output);
+						  DataType::Bidirectional);
         
         addAttributeToDataSet("SAMPLES",
 						  "Samples to acquire",
 						  DataType::TYPE_INT32,
-						  DataType::Output);
+						  DataType::Bidirectional);
 	addAttributeToDataSet("ACQUISITION",
 						  "Acquisition number",
 						  DataType::TYPE_INT64,
@@ -102,11 +175,11 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("MT",
 						  "Machine Time",
 						  DataType::TYPE_INT64,
-						  DataType::Output);
+						  DataType::Bidirectional);
         addAttributeToDataSet("ST",
 						  "System Time",
 						  DataType::TYPE_INT64,
-						  DataType::Output);
+						  DataType::Bidirectional);
         
         
         addAttributeToDataSet("VA","Volt A",DataType::TYPE_INT32,chaos::DataType::Output);
@@ -123,20 +196,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("Q2","Q2",DataType::TYPE_INT32,chaos::DataType::Output);
 
         
-	addAttributeToDataSet("timeout",
-						  "Time out triggering",
-						  DataType::TYPE_INT32,
-						  DataType::Input);
-        
-        addAttributeToDataSet("POLYTYPE",
-						  "Poly to use to fit the position from Voltages (0=BPB 1=BPSA)",
-						  DataType::TYPE_INT32,
-						  DataType::Input);
-        
-        addAttributeToDataSet("error",
-						  "error status",
-						  DataType::TYPE_INT32,
-						  DataType::Output);
+	
+      
         addAttributeToDataSet("STATUS",
 						  "status",
 						  DataType::TYPE_STRING,
@@ -153,7 +214,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addBinaryAttributeAsSubtypeToDataSet("VB_ACQ","VB ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("VC_ACQ","VC ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("VD_ACQ","VD ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
-	
+	addBinaryAttributeAsSubtypeToDataSet("SUM_ACQ","SUM ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
+
         addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
      /*
@@ -179,7 +241,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::Output,1 * sizeof(libera_avg_t));
         
 
-	
+        addAlarm("acquire",
+            "Notify acquire issue");	
 }
 
 void SCLiberaCU::unitDefineCustomAttribute() {
