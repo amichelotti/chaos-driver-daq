@@ -70,8 +70,6 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         *perr=0;
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
-type=*getAttributeCache()->getROPtr<int32_t>(DOMAIN_INPUT, "POLYTYPE");
-         mode = tmode;
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
          vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
          vc = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC");

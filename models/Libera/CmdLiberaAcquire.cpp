@@ -66,26 +66,27 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
 	setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
         	
+        setAlarmSeverity("acquire", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 
-        *perr=0;
         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
             *perr|=LIBERA_ERROR_STOP_ACQUIRE;
-           
+             setAlarmSeverity("acquire", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
+             metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,"stop acquire command failed" );
+
             getAttributeCache()->setOutputDomainAsChanged();
             CMDCUERR_<<"Cannot stop acquire";
-            BC_END_RUNNING_PROPERTY;
-            
-
+            BC_FAULT_RUNNING_PROPERTY;
+            return;
         }
 	//requested mode
 	if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
                 loops=0;
              	CMDCUDBG_ << "Disable acquire";
-                pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
                 *pmode=0;
                 getAttributeCache()->setOutputDomainAsChanged();
+                metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"disabling acquire" );
 
                 BC_END_RUNNING_PROPERTY;
                 return;
@@ -98,7 +99,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	}
         
         if(!data->hasKey("mode")) {
-        	BC_END_RUNNING_PROPERTY;
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelWarning,"no mode was given" );
+
+            BC_END_RUNNING_PROPERTY;
             return;
         } else {
             tmode = data->getInt32Value("mode");
