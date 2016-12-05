@@ -159,6 +159,21 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         
         
         ////
+        addAttributeToDataSet("DD",
+						  "Enable DataOnDemand acquisition",
+						  DataType::TYPE_BOOLEAN,
+						  DataType::Bidirectional);
+        
+        addAttributeToDataSet("SA",
+						  "Enable Slow acquisition",
+						  DataType::TYPE_BOOLEAN,
+						  DataType::Bidirectional);
+        
+        addAttributeToDataSet("TRIGGER",
+						  "Enable Trigger acquisition(not in SA)",
+						  DataType::TYPE_BOOLEAN,
+						  DataType::Bidirectional);
+        
         addAttributeToDataSet("MODE",
 						  "Libera Mode",
 						  DataType::TYPE_INT32,
@@ -241,8 +256,11 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::Output,1 * sizeof(libera_avg_t));
         
 
-        addAlarm("acquire",
-            "Notify acquire issue");	
+        addAlarm("mode_not_reached",
+            "Notify mode is not reached");
+
+        addAlarm("acquisition_error",
+            "Notify an error");	
 }
 
 void SCLiberaCU::unitDefineCustomAttribute() {
@@ -251,7 +269,7 @@ void SCLiberaCU::unitDefineCustomAttribute() {
 
 // Abstract method for the initialization of the control unit
 void SCLiberaCU::unitInit() throw(CException) {
-	SCCUAPP "unitInit";
+        metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Initializing");
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=AbstractControlUnit::getAccessoInstanceByIndex(0);
 	if(accessor==NULL){
 		throw chaos::CException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
@@ -271,16 +289,21 @@ void SCLiberaCU::unitInit() throw(CException) {
 
 // Abstract method for the start of the control unit
 void SCLiberaCU::unitStart() throw(CException) {
+        metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Starting");
 	
 }
 
 // Abstract method for the stop of the control unit
 void SCLiberaCU::unitStop() throw(CException) {
+            metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Stopping");
+
 	
 }
 
 // Abstract method for the deinit of the control unit
 void SCLiberaCU::unitDeinit() throw(CException) {
+            metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Deinit");
+
     if(driver!=NULL){
         delete driver;
         driver = NULL;

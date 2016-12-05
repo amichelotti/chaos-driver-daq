@@ -68,6 +68,12 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 
 	perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
         *perr=0;
+        idd=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
+        isa=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
+        itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
+        imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
+        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLE");
+        
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");

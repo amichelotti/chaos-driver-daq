@@ -66,7 +66,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
 	setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
         	
-        setAlarmSeverity("acquire", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+        setAlarmSeverity("mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+        setAlarmSeverity("acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 
         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
@@ -148,7 +149,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
                 getAttributeCache()->setOutputAttributeNewSize("X_ACQ", tsamples*sizeof(double));
                 getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", tsamples*sizeof(double));
 		if( (ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
-		  BC_END_RUNNING_PROPERTY
+		  BC_FAULT_RUNNING_PROPERTY;
+                  
 		    CMDCUERR_<<"Error performing IO_MODE_DD: "<<ret;
 		  return;
 		}
@@ -160,7 +162,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 		  int ret;
                    // getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
 		  if((ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
-		      BC_END_RUNNING_PROPERTY
+		  BC_FAULT_RUNNING_PROPERTY;
 			CMDCUERR_<<"Error performing IO_MODE_SA: "<<ret;
 		      return;
 
@@ -205,7 +207,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
        
         
         if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
-        	 BC_END_RUNNING_PROPERTY
+            BC_FAULT_RUNNING_PROPERTY;
+             metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("cannot start acquire mode %1% samples %2%",%tmode %tsamples));
+
 		   CMDCUERR_<<"cannot start acquire end command, mode "<<tmode<<" samples:"<<tsamples;
             //throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
 		 return;
@@ -224,10 +228,16 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
          *psamples=samples;
          *acquire_loops=0;
          getAttributeCache()->setOutputDomainAsChanged();
-        CMDCU_<<" start acquiring mode:"<<mode<<" samples:"<<samples<<" offset:"<<offset<<" loops:"<<loops<<" WAIT COMMAND FOR:"<<wait_for_us;
+         metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("start acquire mode %1% samples %2%",%*pmode %*psamples ));
+
          boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
          
         start_acquire=start_test.time_of_day().total_milliseconds();
+        *isamples=samples;
+        *imode=mode;
+        *idd=mode&LIBERA_IOP_MODE_DD;
+        *isa=mode&LIBERA_IOP_MODE_SA;
+        *itrigger=mode&LIBERA_IOP_MODE_TRIGGERED;
         BC_NORMAL_RUNNING_PROPERTY;
         usleep(wait_for_us);
 }

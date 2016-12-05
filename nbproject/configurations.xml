@@ -2435,8 +2435,10 @@
                            projectFiles="true">
               <itemPath>../../chaosframework/chaos/common/async_central/AsyncCentralManager.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/async_central/AsyncCentralManager.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/async_central/AsyncPoolRunner.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/async_central/TimerHandler.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/async_central/TimerHandler.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/async_central/async_central.h</itemPath>
             </logicalFolder>
             <logicalFolder name="batch_command"
                            displayName="batch_command"
@@ -2446,15 +2448,18 @@
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandConstants.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandDescription.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandDescription.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandException.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandExecutor.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandExecutor.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandSandbox.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandSandbox.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandSandboxEventHandler.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/batch_command/BatchCommandTypes.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/batch_command/batch_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="bson" displayName="bson" projectFiles="true">
               <logicalFolder name="base" displayName="base" projectFiles="true">
+                <itemPath>../../chaosframework/chaos/common/bson/base/disallow_copying.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/base/error_codes.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/base/error_codes.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/base/parse_number.cpp</itemPath>
@@ -2474,6 +2479,7 @@
                 <itemPath>../../chaosframework/chaos/common/bson/murmurhash3/MurmurHash3.h</itemPath>
               </logicalFolder>
               <logicalFolder name="mutable" displayName="mutable" projectFiles="true">
+                <itemPath>../../chaosframework/chaos/common/bson/mutable/algorithm.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/mutable/const_element-inl.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/mutable/const_element.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/mutable/damage_vector.h</itemPath>
@@ -2485,16 +2491,26 @@
                 <itemPath>../../chaosframework/chaos/common/bson/mutable/element.h</itemPath>
               </logicalFolder>
               <logicalFolder name="platform" displayName="platform" projectFiles="true">
+                <itemPath>../../chaosframework/chaos/common/bson/platform/atomic_intrinsics.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/atomic_intrinsics_gcc_intel.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/atomic_word.h</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/platform/basic.h</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/platform/compiler.h</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/platform/compiler_gcc.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/cstdint.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/float_utils.h</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/platform/hash_namespace.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/process_id.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/process_id.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/random.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/platform/random.h</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/platform/strtoll.h</itemPath>
               </logicalFolder>
               <logicalFolder name="util" displayName="util" projectFiles="true">
+                <logicalFolder name="concurrency" displayName="concurrency" projectFiles="true">
+                  <itemPath>../../chaosframework/chaos/common/bson/util/concurrency/mutex.h</itemPath>
+                  <itemPath>../../chaosframework/chaos/common/bson/util/concurrency/threadlocal.h</itemPath>
+                </logicalFolder>
                 <logicalFolder name="mongoutils" displayName="mongoutils" projectFiles="true">
                   <itemPath>../../chaosframework/chaos/common/bson/util/mongoutils/str.h</itemPath>
                 </logicalFolder>
@@ -2504,12 +2520,14 @@
                 <itemPath>../../chaosframework/chaos/common/bson/util/base64.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/base64.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/bson_extract.cpp</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/util/bson_extract.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/bufreader.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/builder.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/embedded_builder.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/hex.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/hex.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/jsobj.cpp</itemPath>
+                <itemPath>../../chaosframework/chaos/common/bson/util/jsobj.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/json.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/json.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/bson/util/md5.cpp</itemPath>
@@ -2523,8 +2541,10 @@
                 <itemPath>../../chaosframework/chaos/common/bson/util/time_support.h</itemPath>
               </logicalFolder>
               <itemPath>../../chaosframework/chaos/common/bson/bson-inl.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/bson/bson.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/bson/bson_builder_base.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/bson/bson_db.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/bson/bson_field.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/bson/bson_validate.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/bson/bson_validate.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/bson/bsonelement.h</itemPath>
@@ -2595,12 +2615,15 @@
                 <itemPath>../../chaosframework/chaos/common/data/entity_db/EntityDB.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/data/entity_db/EntityDB.h</itemPath>
               </logicalFolder>
+              <itemPath>../../chaosframework/chaos/common/data/CDataBuffer.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/data/CDataVariant.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/data/CDataWrapper.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/data/CDataWrapper.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/data/CUSchemaDB.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/data/CUSchemaDB.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/data/DatasetDB.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/data/DatasetDB.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/data/TemplatedDataSDWrapper.h</itemPath>
             </logicalFolder>
             <logicalFolder name="direct_io" displayName="direct_io" projectFiles="true">
               <logicalFolder name="channel" displayName="channel" projectFiles="true">
@@ -2635,6 +2658,7 @@
                 <itemPath>../../chaosframework/chaos/common/direct_io/impl/ZMQDirectIOServer.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/direct_io/impl/ZMQDirectIOServer.h</itemPath>
               </logicalFolder>
+              <itemPath>../../chaosframework/chaos/common/direct_io/DirectIO.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/direct_io/DirectIOClient.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/direct_io/DirectIOClient.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/direct_io/DirectIOClientConnection.cpp</itemPath>
@@ -2694,6 +2718,7 @@
                 <itemPath>../../chaosframework/chaos/common/event/evt_desc/CustomEventDescriptor.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/event/evt_desc/EventDescriptor.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/event/evt_desc/EventDescriptor.h</itemPath>
+                <itemPath>../../chaosframework/chaos/common/event/evt_desc/EventFactory.h</itemPath>
                 <itemPath>../../chaosframework/chaos/common/event/evt_desc/InstrumentEventDescriptor.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/event/evt_desc/InstrumentEventDescriptor.h</itemPath>
               </logicalFolder>
@@ -2711,6 +2736,7 @@
               <itemPath>../../chaosframework/chaos/common/event/EventHandler.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/event/EventServer.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/event/EventServer.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/event/event.h</itemPath>
             </logicalFolder>
             <logicalFolder name="exception" displayName="exception" projectFiles="true">
               <itemPath>../../chaosframework/chaos/common/exception/CException.h</itemPath>
@@ -2738,6 +2764,7 @@
               <itemPath>../../chaosframework/chaos/common/io/IODataDriver.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/io/IODirectIODriver.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/io/IODirectIODriver.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/io/QueryCursor.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/io/QueryFuture.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/io/QueryFuture.h</itemPath>
             </logicalFolder>
@@ -2756,6 +2783,7 @@
               <itemPath>../../chaosframework/chaos/common/message/MDSMessageChannel.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/message/MessageChannel.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/message/MessageChannel.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/message/MessageRequestDomain.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/message/MessageRequestFuture.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/message/MessageRequestFuture.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/message/MultiAddressMessageChannel.cpp</itemPath>
@@ -2780,6 +2808,7 @@
               <itemPath>../../chaosframework/chaos/common/metric/MetricCollector.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/metric/MetricCollectorIO.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/metric/MetricCollectorIO.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/metric/metric.h</itemPath>
             </logicalFolder>
             <logicalFolder name="network" displayName="network" projectFiles="true">
               <itemPath>../../chaosframework/chaos/common/network/CNodeNetworkAddress.h</itemPath>
@@ -2790,12 +2819,14 @@
               <itemPath>../../chaosframework/chaos/common/network/PerformanceManagment.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/network/URL.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/network/URL.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/network/URLHAServiceFeeder.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/network/URLServiceFeeder.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/network/URLServiceFeeder.h</itemPath>
             </logicalFolder>
             <logicalFolder name="plugin" displayName="plugin" projectFiles="true">
               <itemPath>../../chaosframework/chaos/common/plugin/AbstractPlugin.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/plugin/AbstractPlugin.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/plugin/PluginDefinition.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/plugin/PluginDiscover.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/plugin/PluginDiscover.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/plugin/PluginInspector.cpp</itemPath>
@@ -2823,6 +2854,7 @@
                 <itemPath>../../chaosframework/chaos/common/rpc/zmq/ZMQServer.cpp</itemPath>
                 <itemPath>../../chaosframework/chaos/common/rpc/zmq/ZMQServer.h</itemPath>
               </logicalFolder>
+              <itemPath>../../chaosframework/chaos/common/rpc/ChaosRpc.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/rpc/RpcClient.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/rpc/RpcClient.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/rpc/RpcClientMetricCollector.cpp</itemPath>
@@ -2835,6 +2867,7 @@
               <itemPath>../../chaosframework/chaos/common/rpc/RpcServerMetricCollector.h</itemPath>
             </logicalFolder>
             <logicalFolder name="sync_rpc" displayName="sync_rpc" projectFiles="true">
+              <itemPath>../../chaosframework/chaos/common/sync_rpc/ChaosSyncRpc.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/sync_rpc/HTTPRpcSyncServer.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/sync_rpc/HTTPRpcSyncServer.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/sync_rpc/RpcSyncServer.cpp</itemPath>
@@ -2849,16 +2882,20 @@
               <itemPath>../../chaosframework/chaos/common/thread/WaitSemaphore.h</itemPath>
             </logicalFolder>
             <logicalFolder name="utility" displayName="utility" projectFiles="true">
+              <itemPath>../../chaosframework/chaos/common/utility/AbstractListener.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/utility/AbstractListenerContainer.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/AggregatedCheckList.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/AggregatedCheckList.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/ArrayPointer.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/Atomic.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/utility/Bimap.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/CheckList.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/CheckList.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/Delegate.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/InetUtility.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/InizializableService.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/InizializableService.h</itemPath>
+              <itemPath>../../chaosframework/chaos/common/utility/LockableObject.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/NamedService.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/NamedService.h</itemPath>
               <itemPath>../../chaosframework/chaos/common/utility/ObjectFactoryRegister.h</itemPath>
@@ -2886,10 +2923,26 @@
                            projectFiles="true">
               <itemPath>../../chaosframework/chaos/cu_toolkit/command_manager/CommandManager.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/command_manager/CommandManager.h</itemPath>
+              <itemPath>../../chaosframework/chaos/cu_toolkit/command_manager/CommandManagerDefaultAdapters.h</itemPath>
             </logicalFolder>
             <logicalFolder name="control_manager"
                            displayName="control_manager"
                            projectFiles="true">
+              <logicalFolder name="execution_pool"
+                             displayName="execution_pool"
+                             projectFiles="true">
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/execution_pool/ExecutionPool.h</itemPath>
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/execution_pool/execution_pool_constants.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="handler" displayName="handler" projectFiles="true">
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/handler/AbstractAttributeHandler.h</itemPath>
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/handler/DatasetAttributeHandler.h</itemPath>
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/handler/handler.h</itemPath>
+              </logicalFolder>
+              <logicalFolder name="script" displayName="script" projectFiles="true">
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/script/EUScriptableWrapper.h</itemPath>
+                <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/script/ScriptableExecutionUnit.h</itemPath>
+              </logicalFolder>
               <logicalFolder name="slow_command"
                              displayName="slow_command"
                              projectFiles="true">
@@ -2904,6 +2957,7 @@
               </logicalFolder>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/AbstractControlUnit.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/AbstractControlUnit.h</itemPath>
+              <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/AbstractExecutionUnit.h</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/AttributeSharedCacheWrapper.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/AttributeSharedCacheWrapper.h</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/ControlManager.cpp</itemPath>
@@ -2914,6 +2968,7 @@
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/SCAbstractControlUnit.h</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/WorkUnitManagement.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/WorkUnitManagement.h</itemPath>
+              <itemPath>../../chaosframework/chaos/cu_toolkit/control_manager/control_manager_constants.h</itemPath>
             </logicalFolder>
             <logicalFolder name="data_manager"
                            displayName="data_manager"
@@ -2954,6 +3009,7 @@
               <itemPath>../../chaosframework/chaos/ui_toolkit/HighLevelApi/DeviceController.h</itemPath>
               <itemPath>../../chaosframework/chaos/ui_toolkit/HighLevelApi/HLDataApi.cpp</itemPath>
               <itemPath>../../chaosframework/chaos/ui_toolkit/HighLevelApi/HLDataApi.h</itemPath>
+              <itemPath>../../chaosframework/chaos/ui_toolkit/HighLevelApi/HLInfrastructureApi.h</itemPath>
             </logicalFolder>
             <logicalFolder name="LowLevelApi" displayName="LowLevelApi" projectFiles="true">
               <itemPath>../../chaosframework/chaos/ui_toolkit/LowLevelApi/LLDataApi.h</itemPath>
@@ -3232,6 +3288,8 @@
         <itemPath>../../common/vme/caen/caen792_drv.h</itemPath>
         <itemPath>../../common/vme/caen/caen965_drv.c</itemPath>
         <itemPath>../../common/vme/caen/caen965_drv.h</itemPath>
+        <itemPath>../../common/vme/caen/caen_common.c</itemPath>
+        <itemPath>../../common/vme/caen/caen_common.h</itemPath>
         <itemPath>../../common/vme/caen/caen_qdc.c</itemPath>
         <itemPath>../../common/vme/caen/caen_qdc.h</itemPath>
       </logicalFolder>
@@ -3277,28 +3335,29 @@
       <flagsDictionary>
         <element flagsID="0" commonFlags="-O3 -O2"/>
         <element flagsID="1" commonFlags="-O3 -fPIC -O2"/>
-        <element flagsID="2" commonFlags="-fPIC -fPIC -fPIC -fPIC -O2"/>
-        <element flagsID="3"
-                 commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -O3 -fPIC -O2"/>
+        <element flagsID="2" commonFlags="-fPIC -fPIC -fPIC -O2"/>
+        <element flagsID="3" commonFlags="-fPIC -fPIC -fPIC -fPIC -O2"/>
         <element flagsID="4"
-                 commonFlags="-mtune=generic -march=x86-64 -O2 -O2 -fPIC -fstack-protector"/>
+                 commonFlags="-fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -fPIC -O3 -fPIC -O2"/>
         <element flagsID="5"
-                 commonFlags="-mtune=generic -march=x86-64 -O2 -O3 -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -O2 -O2 -fPIC -fstack-protector"/>
         <element flagsID="6"
-                 commonFlags="-mtune=generic -march=x86-64 -O2 -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -O2 -O3 -fPIC -fstack-protector"/>
         <element flagsID="7"
-                 commonFlags="-mtune=generic -march=x86-64 -O3 -O2 -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -O2 -fPIC -fstack-protector"/>
         <element flagsID="8"
-                 commonFlags="-mtune=generic -march=x86-64 -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -O3 -O2 -fPIC -fstack-protector"/>
         <element flagsID="9"
-                 commonFlags="-mtune=generic -march=x86-64 -g -O3 -O2 -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -fPIC -fstack-protector"/>
         <element flagsID="10"
-                 commonFlags="-mtune=generic -march=x86-64 -g -O3 -O2 -std=gnu99 -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -g -O3 -O2 -fPIC -fstack-protector"/>
         <element flagsID="11"
-                 commonFlags="-mtune=generic -march=x86-64 -g -g -O2 -std=gnu99 -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -g -O3 -O2 -std=gnu99 -fPIC -fstack-protector"/>
         <element flagsID="12"
-                 commonFlags="-mtune=generic -march=x86-64 -g -g -g -fPIC -fstack-protector"/>
+                 commonFlags="-mtune=generic -march=x86-64 -g -g -O2 -std=gnu99 -fstack-protector"/>
         <element flagsID="13"
+                 commonFlags="-mtune=generic -march=x86-64 -g -g -g -fPIC -fstack-protector"/>
+        <element flagsID="14"
                  commonFlags="-mtune=generic -march=x86-64 -g -g -g -g -O2 -O3 -fPIC -fstack-protector"/>
       </flagsDictionary>
       <codeAssistance>
@@ -3319,7 +3378,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
@@ -3393,7 +3452,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
@@ -3435,7 +3494,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
@@ -3509,7 +3568,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
@@ -3583,7 +3642,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
@@ -3640,7 +3699,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail/impl</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
@@ -3728,7 +3787,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
             <pElem>../../chaosframework/chaos/common/utility</pElem>
@@ -3789,7 +3848,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -3888,7 +3947,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
@@ -3937,7 +3996,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -4052,7 +4111,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -4167,7 +4226,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
             <pElem>../../chaosframework/chaos/common/bson/platform</pElem>
@@ -4188,7 +4247,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/platform</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
@@ -4207,7 +4266,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/platform</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
@@ -4226,7 +4285,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/murmurhash3</pElem>
             <pElem>../../chaosframework</pElem>
@@ -4238,7 +4297,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
             <pElem>../../chaosframework</pElem>
@@ -4250,7 +4309,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
@@ -4318,14 +4377,14 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/bson/mutable/document.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaosframework/chaos/common/bson/mutable</pElem>
@@ -4392,7 +4451,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
             <pElem>../../chaosframework/chaos/common/bson/base</pElem>
@@ -4460,7 +4519,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
             <pElem>../../chaosframework/chaos/common/bson</pElem>
@@ -4491,7 +4550,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
             <pElem>../../chaosframework</pElem>
@@ -4503,7 +4562,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework</pElem>
             <pElem>../../chaosframework/bin/bin_common</pElem>
@@ -4514,7 +4573,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -4576,7 +4635,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
@@ -4593,7 +4652,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
@@ -4662,7 +4721,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
             <pElem>../../chaosframework/chaos/common/bson/base</pElem>
@@ -4683,7 +4742,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -4753,7 +4812,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -4822,7 +4881,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
           </incDir>
@@ -4832,7 +4891,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/bson/base</pElem>
             <pElem>../../chaosframework/chaos/common/bson/util</pElem>
@@ -4861,7 +4920,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -4902,14 +4961,14 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/data/CDataWrapper.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -4972,7 +5031,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5053,7 +5112,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/utility</pElem>
@@ -5122,7 +5181,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5217,21 +5276,21 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/data/broker/reader/ReaderDataService.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/data/cache/AbstractSharedDomainCache.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5297,7 +5356,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5388,7 +5447,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5457,7 +5516,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5547,7 +5606,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/data/cache</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/detail</pElem>
@@ -5563,7 +5622,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5630,7 +5689,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/data/cache</pElem>
             <pElem>../../chaosframework</pElem>
@@ -5641,7 +5700,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5715,7 +5774,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5792,14 +5851,14 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/data/entity_db/EntityDB.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/data/entity_db</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
@@ -5826,21 +5885,21 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/data/entity_db/sqlite_impl/sqlite3.c"
             ex="false"
             tool="0"
             flavor2="2">
-        <cTool flags="13">
+        <cTool flags="14">
         </cTool>
       </item>
       <item path="../../chaosframework/chaos/common/direct_io/DirectIOClient.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -5963,7 +6022,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6045,7 +6104,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6168,7 +6227,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6290,7 +6349,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -6384,7 +6443,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6510,7 +6569,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6613,7 +6672,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
@@ -6726,7 +6785,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6803,7 +6862,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6850,7 +6909,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -6966,7 +7025,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
@@ -7037,7 +7096,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
@@ -7103,7 +7162,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
@@ -7174,7 +7233,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -7245,7 +7304,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
@@ -7316,7 +7375,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
             <pElem>../../chaosframework/chaos/common/utility</pElem>
@@ -7329,7 +7388,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
             <pElem>../../chaosframework/chaos/common/network</pElem>
@@ -7351,7 +7410,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/direct_io/channel</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
@@ -7377,7 +7436,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
@@ -7443,7 +7502,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -7550,7 +7609,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -7644,7 +7703,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
@@ -7744,7 +7803,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -7857,7 +7916,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -7948,7 +8007,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -8066,7 +8125,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -8185,7 +8244,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -8304,7 +8363,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -8424,7 +8483,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -8516,7 +8575,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -8627,7 +8686,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -8736,7 +8795,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -8841,7 +8900,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -8939,7 +8998,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -9026,7 +9085,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -9101,7 +9160,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -9234,7 +9293,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -9309,7 +9368,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
@@ -9371,7 +9430,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
@@ -9434,7 +9493,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
@@ -9497,7 +9556,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/event/evt_desc</pElem>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
@@ -9518,7 +9577,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
@@ -9581,7 +9640,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
@@ -9718,7 +9777,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/healt_system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
@@ -9782,7 +9841,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/general</pElem>
             <pElem>../../chaosframework/chaos/common/io</pElem>
@@ -9859,7 +9918,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -9996,7 +10055,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -10069,21 +10128,21 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/memory/ManagedMemory.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/message/DeviceMessageChannel.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
@@ -10214,7 +10273,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -10345,7 +10404,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -10478,7 +10537,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -10554,7 +10613,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -10687,7 +10746,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -10820,7 +10879,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
@@ -10951,7 +11010,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
@@ -11082,7 +11141,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/metric</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
@@ -11183,7 +11242,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/metric</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
@@ -11285,7 +11344,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -11386,7 +11445,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
@@ -11488,7 +11547,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -11607,7 +11666,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
@@ -11721,7 +11780,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -11862,7 +11921,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -11993,7 +12052,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/regex/v4</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
@@ -12020,7 +12079,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -12092,7 +12151,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/plugin</pElem>
             <pElem>../../chaosframework</pElem>
@@ -12104,7 +12163,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/plugin</pElem>
             <pElem>../../chaosframework</pElem>
@@ -12116,7 +12175,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/plugin</pElem>
             <pElem>../../chaosframework</pElem>
@@ -12128,7 +12187,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/function</pElem>
@@ -12153,14 +12212,14 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/common/rpc/RpcClient.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -12263,7 +12322,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -12385,7 +12444,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/rpc</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
@@ -12471,7 +12530,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
@@ -12594,7 +12653,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
@@ -12709,7 +12768,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
             <pElem>../../chaosframework/chaos/common/rpc/zmq</pElem>
@@ -12800,7 +12859,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -12908,7 +12967,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/sync_rpc</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
@@ -12968,7 +13027,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13039,7 +13098,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/utility</pElem>
             <pElem>../../chaosframework</pElem>
@@ -13051,7 +13110,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13144,7 +13203,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13202,7 +13261,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13295,7 +13354,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13388,7 +13447,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13540,14 +13599,14 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/cu_toolkit/control_manager/AbstractControlUnit.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13706,7 +13765,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13796,7 +13855,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -13965,7 +14024,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -14103,7 +14162,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -14241,7 +14300,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -14409,7 +14468,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/cu_toolkit/control_manager/slow_command</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
@@ -14528,7 +14587,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -14660,14 +14719,14 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../chaosframework/chaos/cu_toolkit/data_manager/DataManager.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -14804,7 +14863,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -14888,7 +14947,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -15000,7 +15059,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
@@ -15103,7 +15162,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
@@ -15205,7 +15264,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -15307,7 +15366,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -15410,7 +15469,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
@@ -15513,7 +15572,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
@@ -15655,7 +15714,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaosframework/chaos/common/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
@@ -15795,7 +15854,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
@@ -15929,18 +15988,18 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="5">
+        <ccTool flags="6">
         </ccTool>
       </item>
       <item path="../../common/debug/core/debug.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
         </ccTool>
       </item>
       <item path="../../common/misc/wavegenerators/RndWave.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="4">
+        <ccTool flags="5">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../common/misc/wavegenerators</pElem>
@@ -15966,7 +16025,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="4">
+        <ccTool flags="5">
           <incDir>
             <pElem>../../common/misc/wavegenerators</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
@@ -15983,7 +16042,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="4">
+        <ccTool flags="5">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -16009,125 +16068,127 @@
             ex="false"
             tool="0"
             flavor2="2">
-        <cTool flags="9">
+        <cTool flags="10">
         </cTool>
       </item>
       <item path="../../common/vme/caen/caen965_drv.c"
             ex="false"
             tool="0"
             flavor2="2">
-        <cTool flags="9">
+        <cTool flags="10">
         </cTool>
+      </item>
+      <item path="../../common/vme/caen/caen_common.c" ex="true" tool="3" flavor2="0">
       </item>
       <item path="../../common/vme/caen/caen_qdc.c" ex="true" tool="3" flavor2="0">
       </item>
       <item path="../../common/vme/sis/sis3800_drv.c" ex="false" tool="0" flavor2="2">
-        <cTool flags="9">
+        <cTool flags="10">
         </cTool>
       </item>
       <item path="../../common/vme/vmedrv/universe2/vmelib.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="7">
+        <ccTool flags="8">
         </ccTool>
       </item>
       <item path="../../common/vme/vmewrap/vmewrap.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="7">
+        <ccTool flags="8">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose.c"
             ex="false"
             tool="0"
             flavor2="2">
-        <cTool flags="12">
+        <cTool flags="13">
         </cTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Controller.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Mutex.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Request.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Response.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Server.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Session.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Sessions.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/StreamResponse.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/UploadFile.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/Utils.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/mongoose-cpp/mongoose/WebController.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
         </ccTool>
       </item>
       <item path="../../external/zeromq4-x/src/address.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16137,7 +16198,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16147,7 +16208,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16157,7 +16218,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16167,7 +16228,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16177,7 +16238,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16187,7 +16248,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16197,7 +16258,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16207,7 +16268,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16217,7 +16278,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16227,7 +16288,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16237,7 +16298,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16247,7 +16308,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16257,7 +16318,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16267,7 +16328,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16277,7 +16338,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16287,7 +16348,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16297,7 +16358,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16307,7 +16368,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16317,7 +16378,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16327,7 +16388,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16337,7 +16398,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16347,7 +16408,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16357,7 +16418,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16367,7 +16428,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16377,7 +16438,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16387,7 +16448,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16397,7 +16458,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/include</pElem>
             <pElem>../../external/zeromq4-x/src</pElem>
@@ -16408,7 +16469,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16418,7 +16479,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16428,7 +16489,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16438,7 +16499,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16448,7 +16509,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16458,7 +16519,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16468,7 +16529,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16478,7 +16539,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16488,7 +16549,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16498,7 +16559,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16508,7 +16569,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16518,7 +16579,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16528,7 +16589,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/include</pElem>
             <pElem>../../external/zeromq4-x/src</pElem>
@@ -16539,7 +16600,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16549,7 +16610,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16559,7 +16620,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16569,7 +16630,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16579,7 +16640,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16589,7 +16650,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16599,7 +16660,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16609,7 +16670,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16619,7 +16680,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16629,7 +16690,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16639,7 +16700,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16649,7 +16710,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16659,7 +16720,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16669,7 +16730,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16679,7 +16740,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/src</pElem>
           </incDir>
@@ -16689,7 +16750,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="8">
+        <ccTool flags="9">
           <incDir>
             <pElem>../../external/zeromq4-x/include</pElem>
             <pElem>../../external/zeromq4-x/src</pElem>
@@ -16697,7 +16758,7 @@
         </ccTool>
       </item>
       <item path="../misc/core/ChaosController.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -16851,7 +16912,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -17003,7 +17064,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -17141,7 +17202,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -17276,7 +17337,7 @@
         </ccTool>
       </item>
       <item path="../misc/core/CmdSync.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -17427,7 +17488,7 @@
         </ccTool>
       </item>
       <item path="../misc/core/SCDataSync.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -17582,7 +17643,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -17730,7 +17791,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -17881,6 +17942,31 @@
             <pElem>models/Libera/cspi</pElem>
           </incDir>
         </cTool>
+      </folder>
+      <folder path="0/models/Libera/test">
+        <ccTool>
+          <incDir>
+            <pElem>../../chaosframework</pElem>
+            <pElem>../..</pElem>
+            <pElem>..</pElem>
+            <pElem>../../chaosframework/chaos-distrib-x86_64-Linux/include</pElem>
+            <pElem>models/Libera/driver/cspi</pElem>
+            <pElem>models/Libera/driver/mci</pElem>
+            <pElem>models/Libera/driver/mci/include</pElem>
+            <pElem>models/Libera/driver/soft</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models</pElem>
+            <pElem>.</pElem>
+            <pElem>models/Libera/driver/mci/include/omniORB4</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>CHAOS</Elem>
+            <Elem>DEBUG</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+          </preprocessorList>
+        </ccTool>
       </folder>
       <folder path="0/models/btf/test">
         <ccTool>
@@ -19179,145 +19265,35 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="2">
           <incDir>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/v4</pElem>
+            <pElem>../../chaosframework</pElem>
+            <pElem>../..</pElem>
+            <pElem>..</pElem>
+            <pElem>../../chaosframework/chaos-distrib-x86_64-Linux/include</pElem>
+            <pElem>models/Libera/driver/cspi</pElem>
+            <pElem>models/Libera/driver/mci</pElem>
+            <pElem>models/Libera/driver/mci/include</pElem>
+            <pElem>models/Libera/driver/soft</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/base</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/driver/misc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/util</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/function</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/integer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/optional</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/posix_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/concept/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/tools</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/policies</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility/type_dispatch</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/core</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/expressions</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/sources</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/keywords</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/bind</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/atomic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/container/vector</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/support</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/serialization</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/back</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail/preprocessed</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/transform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/tuple/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/generic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/local/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/posix</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/functional/hash/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/pending</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/uuid</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/unordered/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/circular_buffer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/log</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/cache</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/async_central</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/network</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/batch_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/pool</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/message</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/configuration</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/evt_desc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/rpc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/action</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity_db</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/ui_toolkit/HighLevelApi</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/general</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/platform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/mongoose</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include</pElem>
+            <pElem>models</pElem>
+            <pElem>.</pElem>
+            <pElem>models/Libera/driver/mci/include/omniORB4</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>CHAOS</Elem>
+            <Elem>DEBUG</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="models/Libera/CmdAcquireDafneAccumulatorBPM.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -19499,7 +19475,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -19652,7 +19628,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -19803,7 +19779,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaAcquire.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaosframework</pElem>
             <pElem>../..</pElem>
@@ -19829,7 +19805,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaDefault.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaosframework</pElem>
             <pElem>../..</pElem>
@@ -19855,7 +19831,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaEnv.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaosframework</pElem>
             <pElem>../..</pElem>
@@ -19881,7 +19857,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/CmdLiberaTime.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaosframework</pElem>
             <pElem>../..</pElem>
@@ -19910,7 +19886,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -20069,7 +20045,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -20175,7 +20151,7 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="7">
+        <ccTool flags="8">
           <incDir>
             <pElem>../../chaos-x86_64-dynamic-release/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-dynamic-release/include/boost/smart_ptr/detail</pElem>
@@ -20299,7 +20275,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/LiberaData.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="7">
+        <ccTool flags="8">
           <incDir>
             <pElem>models/Libera</pElem>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
@@ -20310,7 +20286,7 @@
         </ccTool>
       </item>
       <item path="models/Libera/LiberaSoftDriver.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
@@ -20444,164 +20420,33 @@
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="3">
           <incDir>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/sources</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility/type_dispatch</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/v4</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/core</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/control_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/driver/misc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/sync/spin</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/integer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/function</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/tools</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/policies</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/intrusive/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/sync</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/streams</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/posix_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/optional</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/bind</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/functional/hash/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/atomic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/tuple/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/concept/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/expressions</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/keywords</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/container/vector</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/support</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/serialization</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/back</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail/preprocessed</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/transform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/generic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/local/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/posix</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/uuid</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/unordered/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/circular_buffer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/atomic</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/heap</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/heap/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/pending</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/multi_index</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/multi_index/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/log</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/batch_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/cache</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/async_central</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/network</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/pool</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/message</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/plugin</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/action</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity_db</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/control_manager/slow_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/data_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/driver_manager/driver</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/driver_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/command_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/configuration</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/evt_desc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/rpc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/ui_toolkit/HighLevelApi</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/dispatcher</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/general</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/base</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/platform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/util</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/mongoose</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include</pElem>
+            <pElem>../../chaosframework</pElem>
             <pElem>../..</pElem>
+            <pElem>..</pElem>
+            <pElem>../../chaosframework/chaos-distrib-x86_64-Linux/include</pElem>
+            <pElem>models/Libera/driver/cspi</pElem>
+            <pElem>models/Libera/driver/mci</pElem>
+            <pElem>models/Libera/driver/mci/include</pElem>
+            <pElem>models/Libera/driver/soft</pElem>
+            <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
+            <pElem>models/Libera</pElem>
+            <pElem>models</pElem>
+            <pElem>.</pElem>
+            <pElem>models/Libera/driver/mci/include/omniORB4</pElem>
           </incDir>
+          <preprocessorList>
+            <Elem>CHAOS</Elem>
+            <Elem>DEBUG</Elem>
+            <Elem>EBPP</Elem>
+            <Elem>LIBERA</Elem>
+            <Elem>chaos_driver_libera_EXPORTS</Elem>
+          </preprocessorList>
         </ccTool>
       </item>
       <item path="models/Libera/SCLiberaCU.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="2">
+        <ccTool flags="3">
           <incDir>
             <pElem>../../chaosframework</pElem>
             <pElem>../..</pElem>
@@ -20627,11 +20472,11 @@
         </ccTool>
       </item>
       <item path="models/Libera/cspi/cordic.c" ex="false" tool="0" flavor2="2">
-        <cTool flags="10">
+        <cTool flags="11">
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi.c" ex="false" tool="0" flavor2="2">
-        <cTool flags="10">
+        <cTool flags="11">
           <incDir>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera/msp/src</pElem>
@@ -20640,7 +20485,7 @@
         </cTool>
       </item>
       <item path="models/Libera/cspi/cspi_events.c" ex="false" tool="0" flavor2="2">
-        <cTool flags="11">
+        <cTool flags="12">
           <incDir>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera</pElem>
@@ -20648,7 +20493,7 @@
         </cTool>
       </item>
       <item path="models/Libera/cspi/ebpp.c" ex="false" tool="0" flavor2="2">
-        <cTool flags="11">
+        <cTool flags="12">
           <incDir>
             <pElem>models/Libera/driver/libera-driver-2-04-ebpp</pElem>
             <pElem>models/Libera</pElem>
@@ -20656,467 +20501,29 @@
         </cTool>
       </item>
       <item path="models/Libera/cspi/pool.c" ex="false" tool="0" flavor2="2">
-        <cTool flags="10">
+        <cTool flags="11">
         </cTool>
       </item>
       <item path="models/Libera/test/BPMSync.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
-          <incDir>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/sources</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility/type_dispatch</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/v4</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/core</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/control_manager</pElem>
-            <pElem>models/Libera/test</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/sync/spin</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/function</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/integer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/posix_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/optional</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/concept/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/tools</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/policies</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/intrusive/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/expressions</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/keywords</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/bind</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/atomic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/container/vector</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/support</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/serialization</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/back</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail/preprocessed</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/transform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/tuple/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/generic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/local/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/posix</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/functional/hash/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/pending</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/uuid</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/unordered/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/circular_buffer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/sync</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/streams</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/heap</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/heap/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/log</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/batch_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/async_central</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/cache</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/network</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/pool</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/message</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/plugin</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/configuration</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/evt_desc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/rpc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/action</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity_db</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/control_manager/slow_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/data_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/driver_manager/driver</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/driver_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/command_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/dispatcher</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/ui_toolkit/HighLevelApi</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/general</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/base</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/platform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/util</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/mongoose</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/driver/misc</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include</pElem>
-            <pElem>../..</pElem>
-          </incDir>
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaClient.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
-          <incDir>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/sources</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/function</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/driver/misc</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility/type_dispatch</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/v4</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/detail</pElem>
-            <pElem>models/Libera/test</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/core</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/configuration</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/integer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/optional</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/posix_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/concept/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/tools</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/policies</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/expressions</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/keywords</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/bind</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/atomic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/container/vector</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/support</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/serialization</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/back</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail/preprocessed</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/transform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/tuple/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/generic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/local/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/posix</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/functional/hash/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/pending</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/uuid</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/unordered/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/circular_buffer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/multi_index</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/multi_index/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/log</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/cache</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/async_central</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/network</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/batch_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/pool</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/message</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/evt_desc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/rpc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/action</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity_db</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/ui_toolkit/HighLevelApi</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/ui_toolkit</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/general</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/base</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/platform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/util</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/mongoose</pElem>
-            <pElem>models/Libera/cspi</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include</pElem>
-            <pElem>../..</pElem>
-          </incDir>
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="models/Libera/test/daqLiberaServer.cpp"
             ex="false"
             tool="1"
             flavor2="4">
-        <ccTool flags="6">
-          <incDir>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/attributes</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/smart_ptr</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/sources</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/utility</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/euml</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/gregorian</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/utility/type_dispatch</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/exception/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/v4</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/core</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/pthread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/control_manager</pElem>
-            <pElem>models/Libera/test</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/sync/spin</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/config</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl/aux_/preprocessed/gcc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/mpl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/integer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/thread/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/function</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/type_traits/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/iterator/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/chrono</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ratio</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/tools</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/math/policies</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/intrusive/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/sync</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/interprocess/streams</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/date_time/posix_time</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/optional</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/bind</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/format</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/functional/hash/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/atomic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/tuple/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/range/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/concept/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/algorithm/string/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/numeric/conversion</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/expressions</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/log/keywords</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/move</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter/aux_</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/parameter</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/container/vector</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/support</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/fusion/iterator</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/serialization</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/back</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/mpl_graph</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/msm/front</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/detail/preprocessed</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/proto/transform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/detail/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/generic/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/ip/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/local/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/asio/posix</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/uuid</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/random</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/unordered/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/circular_buffer</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/lockfree</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/heap</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/heap/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex/pending</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/regex</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/program_options/detail</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/boost/ptr_container</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/exception</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/log</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/batch_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/cache</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/async_central</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/thread</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/plugin</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/network</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/pool</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/direct_io/impl</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/message</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/action</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity_db</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/data/entity</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/control_manager/slow_command</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/data_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/driver_manager/driver</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/driver_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/cu_toolkit/command_manager</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/configuration</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/evt_desc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event/channel</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/event</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/rpc</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/dispatcher</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/general</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/base</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/platform</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson/util</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/chaos/common/bson</pElem>
-            <pElem>../../common/misc/wavegenerators</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include/mongoose</pElem>
-            <pElem>models/Libera</pElem>
-            <pElem>../..</pElem>
-            <pElem>../../chaos-x86_64-static-profile/include</pElem>
-          </incDir>
+        <ccTool flags="2">
         </ccTool>
       </item>
       <item path="models/btf/RTBTFSync.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="3">
+        <ccTool flags="4">
           <incDir>
             <pElem>.</pElem>
             <pElem>../..</pElem>
@@ -21133,7 +20540,7 @@
         </ccTool>
       </item>
       <item path="models/btf/RTBTFdaqCU.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -21270,7 +20677,7 @@
         </ccTool>
       </item>
       <item path="models/btf/RTBTFdaqSimCU.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
           <incDir>
             <pElem>../../chaos-x86_64-static-profile/include/boost/system</pElem>
             <pElem>../../chaos-x86_64-static-profile/include/boost/exception</pElem>
@@ -21405,7 +20812,7 @@
         </ccTool>
       </item>
       <item path="models/btf/test/main.cpp" ex="false" tool="1" flavor2="4">
-        <ccTool flags="6">
+        <ccTool flags="7">
         </ccTool>
       </item>
     </conf>
