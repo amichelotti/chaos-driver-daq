@@ -74,6 +74,18 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
         isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLE");
         
+        odd=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
+        osa=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
+        ioffset=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
+        for(int cnt=0;cnt<6;cnt++){
+            char uname[256];
+            char vname[256];
+
+            sprintf(uname,"COEFF_U%d",cnt);
+            sprintf(vname,"COEFF_V%d",cnt);
+            u[cnt]=getAttributeCache()->getROPtr<double>(DOMAIN_INPUT, uname);
+            v[cnt]=getAttributeCache()->getROPtr<double>(DOMAIN_INPUT, vname);
+        }
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");

@@ -238,6 +238,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
         *idd=mode&LIBERA_IOP_MODE_DD;
         *isa=mode&LIBERA_IOP_MODE_SA;
         *itrigger=mode&LIBERA_IOP_MODE_TRIGGERED;
+         getAttributeCache()->setInputDomainAsChanged();
+
         BC_NORMAL_RUNNING_PROPERTY;
         usleep(wait_for_us);
 }
@@ -246,7 +248,8 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
      boost::posix_time::ptime curr;
      int ret;
      libera_ts_t ts;
-    
+     setAlarmSeverity("acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+
     if(acquire_duration !=0){
         curr= boost::posix_time::microsec_clock::local_time();
         if((curr.time_of_day().total_milliseconds() - start_acquire) > (acquire_duration*1000)){
@@ -259,7 +262,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
         }
     }
     
-    if(mode&LIBERA_IOP_MODE_DD){
+    if(*imode&LIBERA_IOP_MODE_DD){
         CMDCUDBG_ << "Acquiring DD";
         if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
             if(mt)
@@ -300,18 +303,20 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
                 vb_acq[cnt]=pnt[cnt].Vb;
                 vc_acq[cnt]=pnt[cnt].Vc;
                 vd_acq[cnt]=pnt[cnt].Vd;
-		//                mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
+		//mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
                 x_acq[cnt]=pnt[cnt].X;
 		y_acq[cnt]=pnt[cnt].Y;
             }
             
              (*acquire_loops)++;
-        } else {
-           *perr|=LIBERA_ERROR_READING;
 
-            CMDCUERR_<<"Error reading DD ret:"<<ret<<", mode:"<<mode<<" samples:"<<samples;
+        } else {
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("DD Acquire mode %1% samples %2%",%*imode %*psamples ));
+
+         setAlarmSeverity("acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
+
         }
-    } else if(mode&LIBERA_IOP_MODE_SA){
+    } else if(*imode&LIBERA_IOP_MODE_SA){
         libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
         if((ret=driver->read((void*)&pnt,0,sizeof(libera_sa_t)))>=0){
@@ -321,7 +326,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             *vb = pnt.Vb;
             *vc = pnt.Vc;
             *vd = pnt.Vd;
-            mm=bpm_voltage_to_mm(type,pnt.Va,pnt.Vb,pnt.Vc,pnt.Vd);
+            mm=bpm_voltage_to_mm(u,v,pnt.Va,pnt.Vb,pnt.Vc,pnt.Vd);
             *x  = mm.x;
             *y  = mm.y;
             *q  = pnt.Q;
@@ -334,11 +339,11 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             CMDCUDBG_ << "SA read:"<<pnt;
 
         } else {
-             *perr|=LIBERA_ERROR_READING;
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("SA Acquire mode %1% samples %2%",%*imode %*psamples ));
+          setAlarmSeverity("acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
 
-            CMDCUERR_<<"Error reading SA ret:"<<ret<<", mode:"<<mode<<" samples:"<<samples;
         }
-    } else if(mode&LIBERA_IOP_MODE_CONTINUOUS){
+    } else if(*imode&LIBERA_IOP_MODE_CONTINUOUS){
          libera_cw_t*pnt=(libera_cw_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "ADC_CW");
 
          if(driver->read(pnt,0,samples*sizeof(libera_cw_t))>=0){
@@ -346,60 +351,52 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
               CMDCUDBG_ << "ADC CW read:"<<pnt[0];
 
         } else {
-            *perr|=LIBERA_ERROR_READING;
-
-            CMDCUERR_<<"Error reading ADC CONTINUOUS, mode:"<<mode<<" samples:"<<samples;
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("CW Acquire mode %1% samples %2%",%*imode %*psamples ));
         }
-    } else if(mode&LIBERA_IOP_MODE_SINGLEPASS){
+    } else if(*imode&LIBERA_IOP_MODE_SINGLEPASS){
         libera_sp_t*pnt = (libera_sp_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "ADC_SP");
          if(driver->read(pnt,0,samples*sizeof(libera_sp_t))>=0){
               (*acquire_loops)++;
               CMDCUDBG_ << "ADC SP read:"<<pnt[0];
 
         } else {
-             *perr|=LIBERA_ERROR_READING;
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("SP Acquire mode %1% samples %2%",%*pmode %*psamples ));
+         setAlarmSeverity("acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
 
-            CMDCUERR_<<"Error reading ADC SINGLE PASS, mode:"<<mode<<" samples:"<<samples;
         }
-    } else if(mode&LIBERA_IOP_MODE_AVG){
+    } else if(*imode&LIBERA_IOP_MODE_AVG){
         libera_avg_t *pnt=(libera_avg_t *)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "AVG");
          if(driver->read(pnt,0,samples*sizeof(libera_avg_t))>=0){
            (*acquire_loops)++;
             CMDCUDBG_ << "AVG read:"<<pnt[0];
 
         } else {
-            *perr|=LIBERA_ERROR_READING;
-
-            CMDCUERR_<<"Error reading Average, mode:"<<mode<<" samples:"<<samples;
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("AVG Acquire mode %1% samples %2%",%*imode %*psamples ));
+          setAlarmSeverity("acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
         }
     }
         
     
-    if((loops==0)|| (*pmode==0)){
+    if((loops==0)|| (*imode==0)){
         int ret;
         CMDCUDBG_ << "Acquiring loop ended after:"<<*acquire_loops<<" acquisitions.";
+          metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,CHAOS_FORMAT("Acquiring mode %1% loop ended after %1% samples %2%",%*pmode %*acquire_loops ));
+
         if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
              *perr|=LIBERA_ERROR_STOP_ACQUIRE;
         }
         *pmode=0;
+        *imode=0;
         getAttributeCache()->setOutputDomainAsChanged();
+        getAttributeCache()->setInputDomainAsChanged();
+
         BC_END_RUNNING_PROPERTY;
         return;
     } else if(loops>0){
         loops--;
     }
      
-     if(*perr!=0){
-       *pmode=0;
-        if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
-             *perr|=LIBERA_ERROR_STOP_ACQUIRE;
-        }
-       getAttributeCache()->setOutputDomainAsChanged();
-       BC_END_RUNNING_PROPERTY
-       CMDCUERR_<<"Error Acquiring err:"<<*perr;
-       return;
-       //throw chaos::CException(*perr, "Error Acquiring", __FUNCTION__);
-     }
+    
     CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
     getAttributeCache()->setOutputDomainAsChanged();
 

@@ -164,20 +164,47 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::TYPE_BOOLEAN,
 						  DataType::Bidirectional);
         
+        
+        addHandlerOnInputAttributeName< SCLiberaCU, bool >(this,&SCLiberaCU::setDD,"DD");
+
+        
         addAttributeToDataSet("SA",
 						  "Enable Slow acquisition",
 						  DataType::TYPE_BOOLEAN,
 						  DataType::Bidirectional);
         
+        
+        addHandlerOnInputAttributeName< SCLiberaCU, bool >(this,&SCLiberaCU::setSA,"SA");
+
+        
+        
+         addAttributeToDataSet("ADC",
+						  "Enable ADC acquisition",
+						  DataType::TYPE_BOOLEAN,
+						  DataType::Bidirectional);
+        
+        
+        addHandlerOnInputAttributeName< SCLiberaCU, bool >(this,&SCLiberaCU::setADC,"ADC");
+
+        
         addAttributeToDataSet("TRIGGER",
 						  "Enable Trigger acquisition(not in SA)",
 						  DataType::TYPE_BOOLEAN,
-						  DataType::Bidirectional);
+						  DataType::Input);
+        
+        
+        addAttributeToDataSet("OFFSET",
+						  "Offset in acquisition",
+						  DataType::TYPE_INT32,
+						  DataType::Input);
         
         addAttributeToDataSet("MODE",
 						  "Libera Mode",
 						  DataType::TYPE_INT32,
 						  DataType::Bidirectional);
+        
+       addHandlerOnInputAttributeName< SCLiberaCU, int32_t >(this,&SCLiberaCU::setMode,"MODE");
+
         
         addAttributeToDataSet("SAMPLES",
 						  "Samples to acquire",
@@ -283,7 +310,10 @@ void SCLiberaCU::unitInit() throw(CException) {
             throw chaos::CException(-3, "Cannot initialize driver", __FUNCTION__);
 
         }
-	
+	itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
+        imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
+        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLE");
+        
 	SCCULDBG << "Initialization done";	
 }
 
@@ -309,4 +339,67 @@ void SCLiberaCU::unitDeinit() throw(CException) {
         driver = NULL;
     }
 	
+}
+bool SCLiberaCU::sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t samples,int32_t offset,bool sync){
+    
+     uint64_t cmd_id;
+    bool result = true;
+    std::auto_ptr<chaos::common::data::CDataWrapper> cmd_pack(new CDataWrapper());
+    
+    cmd_pack->addInt32Value("mode", mode);
+    cmd_pack->addInt32Value("enable", enable);
+    cmd_pack->addInt32Value("offset", offset);
+    cmd_pack->addInt32Value("samples", samples);
+    cmd_pack->addInt32Value("loops", loops);
+
+    //send command
+    
+        submitBatchCommand("acquire",
+                cmd_pack.release(),
+                cmd_id,
+                0,
+                50,
+                enable?SubmissionRuleType::SUBMIT_NORMAL : SubmissionRuleType::SUBMIT_AND_KILL);
+   
+    if (sync) {
+        //! whait for the current command id to finisch
+        result = waitOnCommandID(cmd_id);
+    }
+    return result;
+
+}
+
+bool SCLiberaCU::setDD(const std::string &name, bool value, uint32_t size){
+    int32_t mode=LIBERA_IOP_MODE_DD | (*itrigger)?LIBERA_IOP_MODE_TRIGGERED:0;
+    if(value){
+       return sendAcquire(mode,1,-1,*isamples,*ioffset,false);
+    } 
+    
+    
+    
+    return sendAcquire(0,0,-1,*isamples,0,false);
+    
+     
+}
+
+bool SCLiberaCU::setSA(const std::string &name, bool value, uint32_t size){
+    int32_t mode=LIBERA_IOP_MODE_SA ;
+    if(value){
+       return sendAcquire(mode,1,-1,*isamples,*ioffset,false);
+    } 
+    
+    return sendAcquire(0,0,-1,*isamples,0,false);
+}
+bool SCLiberaCU::setADC(const std::string &name, bool value, uint32_t size){
+     int32_t mode=LIBERA_IOP_MODE_ADC ;
+    if(value){
+       return sendAcquire(mode,1,-1,*isamples,*ioffset,false);
+    } 
+    
+    return sendAcquire(0,0,-1,*isamples,*ioffset,false);
+}
+
+                        
+bool  SCLiberaCU::setMode(const std::string &name, int32_t value, uint32_t size){
+    return sendAcquire(value,1,-1,*isamples,*ioffset,false);
 }

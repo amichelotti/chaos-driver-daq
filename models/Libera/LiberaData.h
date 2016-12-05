@@ -119,20 +119,18 @@ struct bpmpos {
     float y;
 };
 
-   inline bpmpos bpm_voltage_to_mm(uint32_t type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
+
+  
+   inline bpmpos bpm_voltage_to_mm(const double *u[6],const double *v[6],int32_t va,int32_t vb,int32_t vc,int32_t vd){
     bpmpos pos;
     float x=0,y=0;
     if((va +vb +vc+vd)==0)return pos;
     float U= ((double)(vb +vd -va -vc))/(va +vb +vc+vd);
     float V= ((double)(va +vb -vc -vd))/(va +vb +vc+vd);
-    float a[2][6]={{28.5574,-0.046125,5.43125e-5,0.0172085,-1.15991e-5,1.94837e-7},{9.8435 ,-0.022408,0.00014638 ,0.034859 ,-1.4584e-6  ,-9.9279e-6}};
-    float b[2][6]={{28.5574,0.0172085,1.94837e-7,-0.046125,-1.15991e-5,5.43125e-5},{32.0137,0.0432143,0.000222447,-0.339764,-0.000318269,0.00167884}};
-    if(type>1){
-        return pos;
-    }
+ 
     for(int cnt=0;cnt<7;cnt++){
-        x = a[type][0] * U + a[type][1] * y*y*U +  a[type][2]*y*y*y*y*U + a[type][3] *x*x*U +a[type][4]*x*x*y*y*U+a[type][5]*x*x*x*x*U;
-        y = b[type][0] * V + b[type][1] * y*y*V +  b[type][2]*y*y*y*y*V + b[type][3] *x*x*V +b[type][4]*x*x*y*y*V+b[type][5]*x*x*x*x*V;
+        x = *u[0] * U + *u[1] * y*y*U +  (*u[2])*y*y*y*y*U + (*u[3]) *x*x*U +(*u[4])*x*x*y*y*U+(*u[5])*x*x*x*x*U;
+        y = *v[0] * V + (*v[1]) * y*y*V +  (*v[2])*y*y*y*y*V + (*v[3]) *x*x*V +(*v[4])*x*x*y*y*V+(*v[5])*x*x*x*x*V;
     }
     
     /*MATLAB*/
@@ -155,7 +153,17 @@ end*/
     return pos;
 }
 
-   
+   inline bpmpos bpm_voltage_to_mm(int type,int32_t va,int32_t vb,int32_t vc,int32_t vd){
+       
+    const double a[2][6]={{28.5574,-0.046125,5.43125e-5,0.0172085,-1.15991e-5,1.94837e-7},{9.8435 ,-0.022408,0.00014638 ,0.034859 ,-1.4584e-6  ,-9.9279e-6}};
+    const double b[2][6]={{28.5574,0.0172085,1.94837e-7,-0.046125,-1.15991e-5,5.43125e-5},{32.0137,0.0432143,0.000222447,-0.339764,-0.000318269,0.00167884}};
+    const double *u[6],*v[6];
+    for(int cnt=0;cnt<6;cnt++){
+        u[cnt]=&a[type][cnt];
+        v[cnt]=&b[type][cnt];
+    }   
+    return bpm_voltage_to_mm(u,v,va,vb,vc,vd);
+   } 
 
     
     

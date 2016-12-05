@@ -48,8 +48,9 @@ namespace driver {
                     int32_t* va_acq,*vb_acq,*vc_acq,*vd_acq,*sum_acq;
                     double *x_acq,*y_acq;
                     
-                    int32_t* psamples,*pmode,*perr,*imode,*isamples;
-                    bool*idd,*isa,*itrigger;
+                    int32_t* psamples,*pmode,*perr,*imode,*isamples,*ioffset;
+                    bool*idd,*isa,*itrigger,*odd,*osa;
+                    const double* u[6],*v[6];
                     int64_t*acquire_loops;
                     chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
                 
