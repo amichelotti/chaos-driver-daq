@@ -77,15 +77,39 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         odd=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
         osa=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
         ioffset=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
-        for(int cnt=0;cnt<6;cnt++){
-            char uname[256];
-            char vname[256];
 
-            sprintf(uname,"COEFF_U%d",cnt);
-            sprintf(vname,"COEFF_V%d",cnt);
-            u[cnt]=getAttributeCache()->getROPtr<double>(DOMAIN_INPUT, uname);
-            v[cnt]=getAttributeCache()->getROPtr<double>(DOMAIN_INPUT, vname);
+        config=getAttributeCache()->getRWPtr<CDataWrapper>(DOMAIN_INPUT, "config");
+        u[0]=1;
+        v[0]=1;
+        if(config){
+        	if(config->hasKey("coeff_u")&&config->isVector("coeff_u")){
+        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_u");
+        		for(int cnt=0;cnt<p->size();cnt++){
+        			if(cnt<6){
+        				u[cnt] = p->getDoubleElementAtIndex(cnt);
+        				CMDCUDBG_<< "u["<<cnt<<"]="<<u[cnt];
+
+        			}
+        		}
+        	}
+
+        	if(config->hasKey("coeff_v")&&config->isVector("coeff_v")){
+        	        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_v");
+        	        		for(int cnt=0;cnt<p->size();cnt++){
+        	        			if(cnt<6){
+        	        				v[cnt] = p->getDoubleElementAtIndex(cnt);
+        	        				CMDCUDBG_<< "v["<<cnt<<"]="<<v[cnt];
+
+        	        			}
+        	        		}
+        	        	}
+
         }
+        for(int cnt=1;cnt<6;cnt++){
+        	u[cnt]=v[cnt]=0;
+
+        }
+
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");

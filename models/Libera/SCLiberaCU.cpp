@@ -92,70 +92,12 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::TYPE_INT32,
 						  DataType::Input);
         
+        
         //// Configuration
-        addAttributeToDataSet("COEFF_U0",
-						  "CoeffU0 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        addAttributeToDataSet("COEFF_U1",
-						  "CoeffU1 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-         
-        addAttributeToDataSet("COEFF_U2",
-						  "CoeffA2 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        
-         addAttributeToDataSet("COEFF_U3",
-						  "CoeffU3 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        addAttributeToDataSet("COEFF_U4",
-						  "CoeffU4 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-         
-        addAttributeToDataSet("COEFF_U5",
-						  "CoeffU5 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        
-        
-        addAttributeToDataSet("COEFF_V0",
-						  "CoeffV0 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        addAttributeToDataSet("COEFF_V1",
-						  "CoeffV1 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-         
-        addAttributeToDataSet("COEFF_V2",
-						  "CoeffV2 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        
-         addAttributeToDataSet("COEFF_V3",
-						  "CoeffV3 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-        
-        addAttributeToDataSet("COEFF_V4",
-						  "CoeffV4 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
-         
-        addAttributeToDataSet("COEFF_V5",
-						  "CoeffV5 Poly",
-						  DataType::TYPE_DOUBLE,
-						  DataType::Input);
+        addAttributeToDataSet("config","Coefficients for polynomial filtering Voltage to Position",chaos::DataType::TYPE_JSONOBJ,chaos::DataType::Input);
+
+
+       
         
         
         ////
