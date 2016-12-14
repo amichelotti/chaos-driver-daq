@@ -151,7 +151,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("SAMPLES",
 						  "Samples to acquire",
 						  DataType::TYPE_INT32,
-						  DataType::Bidirectional);
+						  DataType::Input);
 	addAttributeToDataSet("ACQUISITION",
 						  "Acquisition number",
 						  DataType::TYPE_INT64,
@@ -254,7 +254,7 @@ void SCLiberaCU::unitInit() throw(CException) {
         }
 	itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
         imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
-        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLE");
+        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
         
 	SCCULDBG << "Initialization done";	
 }

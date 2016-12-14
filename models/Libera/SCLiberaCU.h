@@ -57,7 +57,7 @@ namespace driver {
 			void unitDeinit() throw(chaos::CException);
                         
                         
-                         int32_t* psamples,*pmode,*perr,*imode,*isamples,*ioffset;
+                         int32_t *pmode,*perr,*imode,*isamples,*ioffset;
                          bool *itrigger;
 			
 		public:

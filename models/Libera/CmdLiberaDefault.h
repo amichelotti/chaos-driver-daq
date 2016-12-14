@@ -48,7 +48,7 @@ namespace driver {
                     int32_t* va_acq,*vb_acq,*vc_acq,*vd_acq,*sum_acq;
                     double *x_acq,*y_acq;
                     
-                    int32_t* psamples,*pmode,*perr,*imode,*isamples,*ioffset;
+                    int32_t *pmode,*imode,*isamples,*ioffset;
                     bool*idd,*isa,*itrigger,*odd,*osa;
                      CDataWrapper* config;
                     double u[6],v[6];

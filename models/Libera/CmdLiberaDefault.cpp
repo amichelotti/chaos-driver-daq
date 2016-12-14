@@ -66,13 +66,11 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	}
 	CMDCUDBG_<< "retrived BasicIODriver:"<<driver;
 
-	perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
-        *perr=0;
         idd=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
         isa=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
         itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
         imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
-        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLE");
+        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
         
         odd=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
         osa=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
@@ -122,7 +120,6 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
          sum = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM");
          q1 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
          q2 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
-         psamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SAMPLES");
          pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
         mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
