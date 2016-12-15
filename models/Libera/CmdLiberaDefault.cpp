@@ -85,7 +85,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         		for(int cnt=0;cnt<p->size();cnt++){
         			if(cnt<6){
         				u[cnt] = p->getDoubleElementAtIndex(cnt);
-        				CMDCUDBG_<< "u["<<cnt<<"]="<<u[cnt];
+        				CMDCUDBG_<< "COEFF u["<<cnt<<"]="<<u[cnt];
 
         			}
         		}
