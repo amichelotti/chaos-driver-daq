@@ -52,6 +52,8 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
+    setBusyFlag(false);;
+    getAttributeCache()->setOutputDomainAsChanged();
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=driverAccessorsErogator->getAccessoInstanceByIndex(0);
@@ -72,8 +74,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
         isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
         
-        odd=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
-        osa=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
+
         ioffset=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
 
         config=getAttributeCache()->getRWPtr<CDataWrapper>(DOMAIN_INPUT, "config");
@@ -102,12 +103,14 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         	        		}
         	        	}
 
-        }
-        for(int cnt=1;cnt<6;cnt++){
-        	u[cnt]=v[cnt]=0;
+        } else {
+			for(int cnt=1;cnt<6;cnt++){
+				u[cnt]=v[cnt]=0;
 
+			}
         }
-
+        odd=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
+               osa=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
          va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");

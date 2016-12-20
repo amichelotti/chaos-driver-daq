@@ -152,6 +152,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  "Samples to acquire",
 						  DataType::TYPE_INT32,
 						  DataType::Input);
+
 	addAttributeToDataSet("ACQUISITION",
 						  "Acquisition number",
 						  DataType::TYPE_INT64,
@@ -198,10 +199,11 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addBinaryAttributeAsSubtypeToDataSet("VB_ACQ","VB ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("VC_ACQ","VC ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("VD_ACQ","VD ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
-	addBinaryAttributeAsSubtypeToDataSet("SUM_ACQ","SUM ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
 
         addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+    	addBinaryAttributeAsSubtypeToDataSet("SUM_ACQ","SUM ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
+
      /*
       *    addAttributeToDataSet("SA",
 						  "Data Streaming",
@@ -241,21 +243,24 @@ void SCLiberaCU::unitInit() throw(CException) {
         metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Initializing");
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=AbstractControlUnit::getAccessoInstanceByIndex(0);
 	if(accessor==NULL){
-		throw chaos::CException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
+		throw chaos::CFatalException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
 	}
 	driver = new chaos::cu::driver_manager::driver::BasicIODriverInterface(accessor);
 	if(driver==NULL){
-		throw chaos::CException(-2, "Cannot allocate driver resources", __FUNCTION__);
+		throw chaos::CFatalException(-2, "Cannot allocate driver resources", __FUNCTION__);
 	}
 	
         if(driver->initIO(0,0)!=0){
-            throw chaos::CException(-3, "Cannot initialize driver", __FUNCTION__);
+            throw chaos::CFatalException(-3, "Cannot initialize driver", __FUNCTION__);
 
         }
 	itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
-        imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
-        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
-        
+    imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
+    isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
+    ioffset = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
+    if(!(itrigger && imode && isamples && ioffset)){
+    	throw CFatalException(-1,"cannot retrieve cache pointers",__PRETTY_FUNCTION__);
+    }
 	SCCULDBG << "Initialization done";	
 }
 
@@ -285,7 +290,7 @@ void SCLiberaCU::unitDeinit() throw(CException) {
 bool SCLiberaCU::sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t samples,int32_t offset,bool sync){
     
      uint64_t cmd_id;
-    bool result = true;
+    bool result = false;
     std::auto_ptr<chaos::common::data::CDataWrapper> cmd_pack(new CDataWrapper());
     
     cmd_pack->addInt32Value("mode", mode);
@@ -304,7 +309,7 @@ bool SCLiberaCU::sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t sa
                 enable?SubmissionRuleType::SUBMIT_NORMAL : SubmissionRuleType::SUBMIT_AND_KILL);
    
     if (sync) {
-        //! whait for the current command id to finisch
+        //! whait for the current command id to finish
         result = waitOnCommandID(cmd_id);
     }
     return result;
@@ -312,8 +317,9 @@ bool SCLiberaCU::sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t sa
 }
 
 bool SCLiberaCU::setDD(const std::string &name, bool value, uint32_t size){
-    int32_t mode=LIBERA_IOP_MODE_DD | (*itrigger)?LIBERA_IOP_MODE_TRIGGERED:0;
+    int32_t mode=LIBERA_IOP_MODE_DD | ((*itrigger)?LIBERA_IOP_MODE_TRIGGERED:0);
     if(value){
+
        return sendAcquire(mode,1,-1,*isamples,*ioffset,false);
     } 
     
@@ -330,7 +336,7 @@ bool SCLiberaCU::setSA(const std::string &name, bool value, uint32_t size){
        return sendAcquire(mode,1,-1,*isamples,*ioffset,false);
     } 
     
-    return sendAcquire(0,0,-1,*isamples,0,false);
+    return sendAcquire(0,0,-1,*isamples,0,true);
 }
 bool SCLiberaCU::setADC(const std::string &name, bool value, uint32_t size){
      int32_t mode=LIBERA_IOP_MODE_ADC ;

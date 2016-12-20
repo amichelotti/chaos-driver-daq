@@ -31,11 +31,10 @@ namespace driver {
             namespace libera {
 		
                    DEFINE_BATCH_COMMAND_CLASS(CmdLiberaAcquire,CmdLiberaDefault) {
-                    int mode,samples,loops,offset,type;
     
                    
                     int acquire_duration;
-                    uint64_t start_acquire,wait_for_us;
+                    uint64_t start_acquire,wait_for_us,loop,samples;
 		protected:
 			//implemented handler
 		    //			uint8_t implementedHandler();
