@@ -35,6 +35,7 @@ using namespace chaos::common::batch_command;
 
 using namespace chaos::cu::control_manager::slow_command;
 using namespace chaos::cu::driver_manager::driver;
+using namespace chaos::cu::control_manager;
 
 
 
@@ -227,10 +228,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::Output,1 * sizeof(libera_avg_t));
         
 
-        addAlarm("mode_not_reached",
+        addStateVariable(StateVariableTypeAlarm,"mode_not_reached",
             "Notify mode is not reached");
 
-        addAlarm("acquisition_error",
+        addStateVariable(StateVariableTypeAlarm,"acquisition_error",
             "Notify an error");	
 }
 
