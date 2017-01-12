@@ -228,10 +228,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::Output,1 * sizeof(libera_avg_t));
         
 
-        addStateVariable(StateVariableTypeAlarm,"mode_not_reached",
+        addStateVariable(StateVariableTypeAlarmDEV,"mode_not_reached",
             "Notify mode is not reached");
 
-        addStateVariable(StateVariableTypeAlarm,"acquisition_error",
+        addStateVariable(StateVariableTypeAlarmDEV,"acquisition_error",
             "Notify an error");	
 }
 
