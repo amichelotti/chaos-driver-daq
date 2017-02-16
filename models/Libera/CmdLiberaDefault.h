@@ -67,6 +67,7 @@ namespace driver {
 			 \return the mask for the runnign state
 			 */
 			void acquireHandler();
+			void endHandler();
 		public:
 			CmdLiberaDefault();
 			~CmdLiberaDefault();

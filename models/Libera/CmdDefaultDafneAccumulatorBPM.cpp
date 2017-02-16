@@ -18,7 +18,11 @@ CmdDefaultDafneAccumulatorBPM::CmdDefaultDafneAccumulatorBPM() {
 }
 
 
-
+void CmdDefaultDafneAccumulatorBPM::endHandler() {
+	 CTRLDBG_<<"Close Command:'"<<this->getAlias()<<"'";
+	setBusyFlag(false);
+	 getAttributeCache()->setOutputDomainAsChanged();
+}
 CmdDefaultDafneAccumulatorBPM::~CmdDefaultDafneAccumulatorBPM() {
 }
 

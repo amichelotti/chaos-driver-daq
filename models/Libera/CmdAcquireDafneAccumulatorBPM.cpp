@@ -52,7 +52,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
   int cnt;
   recover=RECOVER_PERIOD;
   last_command=data;
-
+  setBusyFlag(true);
     if(data->hasKey("enable")) {
             if(data->getInt32Value("enable")==0){
                tomode = 0;
