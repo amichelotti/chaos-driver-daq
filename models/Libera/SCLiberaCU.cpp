@@ -307,7 +307,7 @@ bool SCLiberaCU::sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t sa
                 cmd_id,
                 0,
                 50,
-                enable?SubmissionRuleType::SUBMIT_NORMAL : SubmissionRuleType::SUBMIT_AND_KILL);
+                SubmissionRuleType::SUBMIT_AND_KILL);
    
     if (sync) {
         //! whait for the current command id to finish
