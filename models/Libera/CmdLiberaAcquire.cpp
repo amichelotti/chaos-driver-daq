@@ -144,7 +144,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
-
+	getAttributeCache()->setOutputAttributeNewSize("SUM_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
 	getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
 
