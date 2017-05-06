@@ -29,7 +29,6 @@ using namespace chaos::common::batch_command;
 using namespace chaos::cu::control_manager::slow_command;
 using namespace driver::daq::libera;
 CmdLiberaDefault::CmdLiberaDefault() {
-  CMDCUDBG_<< "Created command default:"<<driverAccessorsErogator;
   driver =NULL;
   mt= NULL;
   st=NULL;
