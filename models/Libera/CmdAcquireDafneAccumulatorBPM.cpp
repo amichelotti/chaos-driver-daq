@@ -134,7 +134,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 
 	if(mode_sync.sync(tomode)<0){
 		CTRLERR_<<" cannot synchronize pool to:"<<tomode;
-		BC_END_RUNNING_PROPERTY;
+		BC_FAULT_RUNNING_PROPERTY;
 		return;
 	}
 	mode_sync.setUpdateMode(driver::misc::ChaosDatasetAttribute::NOTBEFORE,10000);
@@ -179,7 +179,17 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 		x[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
 		y[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
 		CDataWrapper config;
-		const char*tmp=(const char*)poly_type[cnt]->get(NULL);
+
+		const char*tmp;
+		tmp=(const char*)(poly_type[cnt]->get(NULL));
+		if(tmp==NULL){
+			CTRLERR_<<" ERROR getting config:"<<poly_type[cnt]->getPath();
+			BC_FAULT_RUNNING_PROPERTY;
+			return;
+		}
+		CTRLDBG_<<"config ["<<poly_type[cnt]->getPath()<<"]="<<tmp;
+		//CDataWrapper *config=static_cast<CDataWrapper*>(tmp);
+
 		config.setSerializedJsonData(tmp);
 		coeff_u[cnt][0] =1;
 		coeff_v[cnt][0] =1;
