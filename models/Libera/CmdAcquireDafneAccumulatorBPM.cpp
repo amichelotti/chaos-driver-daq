@@ -10,7 +10,7 @@
 #include <chaos/cu_toolkit/control_manager/slow_command/SlowCommand.h>
 #include <driver/daq/models/Libera/CmdAcquireDafneAccumulatorBPM.h>
 #define RECOVER_PERIOD 100
-
+using namespace chaos::common::data;
 using namespace driver::daq::libera;
 using namespace ::driver::misc;
 
@@ -178,7 +178,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 		y_acq[cnt]->resize(samples_v*sizeof(double));
 		x[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
 		y[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
-		CDataWrapper config;
+		chaos::common::data::CDataWrapper config;
 
 		const char*tmp;
 		tmp=(const char*)(poly_type[cnt]->get(NULL));

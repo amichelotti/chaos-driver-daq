@@ -9,6 +9,8 @@
 #include "CmdLiberaEnv.h"
 
 #include <boost/format.hpp>
+#include <chaos/common/data/cache/AbstractSharedDomainCache.h>
+using namespace chaos::common::data::cache;
 
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
@@ -40,14 +42,14 @@ CMDCUDBG_<<"checking environment "<< # param; \
             libera_env_t env;\
             env.value = data->getInt32Value(# param);\
             env.selector=CSPI_ENV_## param;\
-            CMDCUDBG_<<"Setting env \""<< # param <<"\" ("<<std::hex<<env.selector<<dec<<")="<<env.value ;\
+            CMDCUDBG_<<"Setting env \""<< # param <<"\" ("<<std::hex<<env.selector<<std::dec<<")="<<env.value ;\
             if((ret=driver->iop(LIBERA_IOP_CMD_SETENV,&env,sizeof(libera_env_t)))!=0){\
                 *perr|=LIBERA_ERROR_SETTING_ENV;\
                 getAttributeCache()->setOutputDomainAsChanged();\
                 BC_END_RUNNING_PROPERTY;\
                 throw chaos::CException(ret, "Cannot set environment", __FUNCTION__);\
             }\
-            CMDCUDBG_<<"Sucessfully applied \""<< # param <<"\" ("<<std::hex<<env.selector<<dec<<")="<<env.value ;\
+            CMDCUDBG_<<"Sucessfully applied \""<< # param <<"\" ("<<std::hex<<env.selector<<std::dec<<")="<<env.value ;\
 	}
         
         perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");

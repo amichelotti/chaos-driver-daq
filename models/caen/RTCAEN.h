@@ -243,7 +243,7 @@ public:
 
     bool setThreshold(const std::string &name,int32_t value,uint32_t size){
 
-    		std:string channel=name.substr(sizeof("THRESHOLD"));
+    		std::string channel=name.substr(sizeof("THRESHOLD"));
     		int ich=atoi(channel.c_str());
     		DPRINT("set threshold channel %d = 0x%x",ich,value);
     		caen->setThreashold(ich,value);
