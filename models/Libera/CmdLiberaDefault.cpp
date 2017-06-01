@@ -35,6 +35,7 @@ CmdLiberaDefault::CmdLiberaDefault() {
   driver =NULL;
   mt= NULL;
   st=NULL;
+  calc_poly=true;
 }
 void CmdLiberaDefault::endHandler() {
 	CMDCUDBG_<<"Close Command:'"<<this->getAlias()<<"'";
@@ -96,8 +97,11 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 
         			}
         		}
-        	}
 
+        	}
+        	if(config->hasKey("calc_poly")){
+        	        			calc_poly=config->getBoolValue("calc_poly");
+        	}
         	if(config->hasKey("coeff_v")&&config->isVector("coeff_v")){
         	        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_v");
         	        		for(int cnt=0;cnt<p->size();cnt++){
@@ -110,6 +114,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         	        	}
 
         } else {
+        	calc_poly=false;
 			for(int cnt=1;cnt<6;cnt++){
 				u[cnt]=v[cnt]=0;
 

@@ -51,6 +51,7 @@ namespace driver {
                     int32_t *pmode,*imode,*isamples,*ioffset;
                     bool*idd,*isa,*itrigger,*odd,*osa;
                     c_data::CDataWrapper* config;
+                    bool calc_poly;
                     double u[6],v[6];
                     int64_t*acquire_loops;
                     chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;

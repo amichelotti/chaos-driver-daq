@@ -302,14 +302,20 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
         }*/
 
 		if((ret=driver->read((void*)pnt,0,samples*sizeof(libera_dd_t)))>=0){
-			bpmpos mm;
 			*va = pnt[0].Va;
 			*vb = pnt[0].Vb;
 			*vc = pnt[0].Vc;
 			*vd = pnt[0].Vd;
-			//      mm=bpm_voltage_to_mm(type,pnt[0].Va,pnt[0].Vb,pnt[0].Vc,pnt[0].Vd);
-			*x  = pnt[0].X;
-			*y  = pnt[0].Y;
+			if(calc_poly){
+				bpmpos mm;
+
+					mm=  bpm_voltage_to_mm(u,v,pnt[0].Va,pnt[0].Vb,pnt[0].Vc,pnt[0].Vd);
+					*x  = mm.x;
+					*y  =mm.y;
+			} else {
+				*x  = pnt[0].X;
+				*y  = pnt[0].Y;
+			}
 			*q  = pnt[0].Q;
 			*sum  = pnt[0].Sum;
 			*q1 = 0;
@@ -321,9 +327,15 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 				vc_acq[cnt]=pnt[cnt].Vc;
 				vd_acq[cnt]=pnt[cnt].Vd;
 				sum_acq[cnt]=pnt[cnt].Sum;
+				if(calc_poly){
 				//mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
-				x_acq[cnt]=pnt[cnt].X;
-				y_acq[cnt]=pnt[cnt].Y;
+					bpmpos mm=  bpm_voltage_to_mm(u,v,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
+					x_acq[cnt]=mm.x;
+					y_acq[cnt]=mm.y;
+				} else {
+					x_acq[cnt]=pnt[cnt].X;
+					y_acq[cnt]=pnt[cnt].Y;
+				}
 			}
 
 			(*acquire_loops)++;
