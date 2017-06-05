@@ -406,8 +406,8 @@ int LiberaBrillianceCSPIDriver::initIO(void *q, int sizeb) {
     rc = cspi_setenvparam(env_handle,&ep,ef);
     if (CSPI_OK != rc) {
       LiberaBrillianceCSPILERR_<<"Cannot set env:"<<rc;
-      deinitIO();
-      return rc;
+      //      deinitIO();
+      //      return rc;
     }
     rc = cspi_allochandle(CSPI_HANDLE_CON, env_handle, &con_handle);
     
