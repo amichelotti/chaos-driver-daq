@@ -267,6 +267,21 @@ void SCLiberaCU::unitInit() throw(CException) {
 // Abstract method for the start of the control unit
 void SCLiberaCU::unitStart() throw(CException) {
         metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Starting");
+        uint64_t cmd_id;
+        std::auto_ptr<CDataWrapper> cmd_pack(new CDataWrapper());
+
+          bool result = true;
+          cmd_pack->addInt32Value("enable", 1);
+		 cmd_pack->addInt32Value("mode", 1);
+		 cmd_pack->addInt32Value("samples", 1);
+		 cmd_pack->addInt32Value("loops", -1);
+		 //send command
+		 submitBatchCommand("acquire",
+				 cmd_pack.release(),
+				 cmd_id,
+				 0,
+				 50,
+				 SubmissionRuleType::SUBMIT_NORMAL);
 	
 }
 
