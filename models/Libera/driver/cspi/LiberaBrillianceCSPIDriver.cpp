@@ -541,8 +541,8 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
 		cmd_env.selector=CSPI_ENV_SWITCH;
 		rc = cspi_setenvparam(env_handle,(CSPI_ENVPARAMS*) &env, cmd_env.selector);
 		if (CSPI_OK != rc) {
-		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc<< " during setting mode DD";
-		  //return rc;
+		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc<<" during DD";
+		  //		  return rc;
 		}
               LiberaBrillianceCSPILDBG_<<"Acquire Data on Demand";
               cfg.operation = liberaconfig::acquire;
