@@ -115,18 +115,18 @@ typedef struct libera_env {
     
    std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj);
 struct bpmpos {
-    float x;
-    float y;
+    double x;
+    double y;
 };
 
 
   
    inline bpmpos bpm_voltage_to_mm(const double *u,const double *v,int32_t va,int32_t vb,int32_t vc,int32_t vd){
     bpmpos pos;
-    float x=0,y=0;
+    double x=0,y=0;
     if((va +vb +vc+vd)==0)return pos;
-    float U= ((double)(vb +vd -va -vc))/(va +vb +vc+vd);
-    float V= ((double)(va +vb -vc -vd))/(va +vb +vc+vd);
+    double U= ((double)(vb +vd -va -vc))/(va +vb +vc+vd);
+    double V= ((double)(va +vb -vc -vd))/(va +vb +vc+vd);
  
     for(int cnt=0;cnt<7;cnt++){
         x = u[0] * U + u[1] * y*y*U +  (u[2])*y*y*y*y*U + (u[3]) *x*x*U +(u[4])*x*x*y*y*U+(u[5])*x*x*x*x*U;
