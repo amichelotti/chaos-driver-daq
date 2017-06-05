@@ -225,7 +225,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 		BC_FAULT_RUNNING_PROPERTY;
 		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("cannot start acquire mode %1% samples %2%",%tmode %tsamples));
 
-		CMDCUERR_<<"cannot start acquire end command, mode "<<tmode<<" samples:"<<tsamples;
+		CMDCUERR_<<"cannot start acquire command, mode "<<tmode<<" samples:"<<tsamples<< " ret:"<<ret;
 		//throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
 		return;
 
