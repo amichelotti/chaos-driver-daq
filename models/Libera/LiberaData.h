@@ -127,10 +127,12 @@ struct bpmpos {
     if((va +vb +vc+vd)==0)return pos;
     double U= ((double)(vb +vd -va -vc))/(va +vb +vc+vd);
     double V= ((double)(va +vb -vc -vd))/(va +vb +vc+vd);
- 
+   // std::cout<<"U:"<<U<<" V:"<<V<<" U[0]:"<<u[0]<<" V[0]:"<<v[0]<<std::endl;
     for(int cnt=0;cnt<7;cnt++){
         x = u[0] * U + u[1] * y*y*U +  (u[2])*y*y*y*y*U + (u[3]) *x*x*U +(u[4])*x*x*y*y*U+(u[5])*x*x*x*x*U;
         y = v[0] * V + (v[1]) * y*y*V +  (v[2])*y*y*y*y*V + (v[3]) *x*x*V +(v[4])*x*x*y*y*V+(v[5])*x*x*x*x*V;
+     //   std::cout<<"["<<cnt<<"]"<<" x:"<<x<<" y:"<<y<<std::endl;
+
     }
     
     /*MATLAB*/
@@ -150,6 +152,8 @@ end*/
     FIX_NUM(y);
     pos.x=x;
     pos.y=y;
+  //  std::cout<<"X:"<<pos.x<<" Y:"<<pos.y<<std::endl;
+
     return pos;
 }
 

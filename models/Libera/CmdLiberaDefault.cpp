@@ -128,8 +128,8 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
          vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
          vc = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC");
          vd = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD");
-         x = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "X");
-         y = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Y");
+         x = getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X");
+         y = getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y");
          q = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q");
          sum = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM");
          q1 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
