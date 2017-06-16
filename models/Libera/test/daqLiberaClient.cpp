@@ -190,7 +190,7 @@ int main (int argc, char* argv[] ) {
            LAPP_<<"opening "<<ofile;
 
            ofs_out.open(ofile.c_str(),std::ofstream::out );
-           if((ofs_out.good()==false) || (ofs_out == NULL)){
+           if((ofs_out.good()==false) ){
                 LERR_<<" cannot open :"<<ofile <<" for write";
                 return -3;
            }
