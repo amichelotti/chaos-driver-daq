@@ -203,7 +203,7 @@ public:
     }
     void unitDeinit() throw(chaos::CException){
    	 if(caen){
-   		 DPRINT("deallocating caen 0x%x",caen);
+   		 DPRINT("deallocating caen @%p",caen);
    			 caen->close();
    			 delete caen;
    			 caen=NULL;
