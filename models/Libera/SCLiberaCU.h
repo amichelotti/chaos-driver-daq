@@ -55,6 +55,10 @@ namespace driver {
 			 The Control Unit will be deinitialized and disposed
 			 */
 			void unitDeinit() throw(chaos::CException);
+                        
+                        
+                         int32_t *pmode,*perr,*imode,*isamples,*ioffset;
+                         bool *itrigger;
 			
 		public:
 			/*
@@ -64,6 +68,16 @@ namespace driver {
 									 const std::string& _control_unit_param,
 									 const ControlUnitDriverList& _control_unit_drivers);
 			
+                        
+                        bool setDD(const std::string &name, bool value, uint32_t size);
+                        bool setSA(const std::string &name, bool value, uint32_t size);
+                        bool setADC(const std::string &name, bool value, uint32_t size);
+                        
+                        bool setTrigger(const std::string &name, bool value, uint32_t size);
+                        bool setMode(const std::string &name, int32_t value, uint32_t size);
+                        bool sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t samples,int32_t offset,bool sync=true);
+
+
 			/*
 			 Base destructor
 			 */

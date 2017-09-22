@@ -5,8 +5,8 @@ for i in $lista;do
 echo "* connecting to $i"
 ssh root@$i /etc/init.d/chaos-us.sh stop
 done
- sleep 6
- for i in $lista;do
- echo "* connecting to $i"
- ssh root@$i /etc/init.d/chaos-us.sh start
- done
+# sleep 6
+# for i in $lista;do
+# echo "* connecting to $i"
+# ssh root@$i /etc/init.d/chaos-us.sh start
+# done

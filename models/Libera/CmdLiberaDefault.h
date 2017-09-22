@@ -25,10 +25,10 @@
 #include <chaos/cu_toolkit/driver_manager/driver/BasicIODriverInterface.h>
 #include "LiberaData.h"
 
-#define CMDCU_ LAPP_ << "["<<__FUNCTION__<<"]"
+#define CMDCU_ CUINFO
+#define CMDCUDBG_ CUDBG
+#define CMDCUERR_ CUERR
 
-#define CMDCUDBG_ LDBG_ << "[- "<<__PRETTY_FUNCTION__<<" -]"
-#define CMDCUERR_ LERR_ << "["<<__PRETTY_FUNCTION__<<"]"
 
 namespace c_data = chaos::common::data;
 namespace ccc_slow_command = chaos::cu::control_manager::slow_command;
@@ -44,7 +44,16 @@ namespace driver {
                      const uint32_t	*i_command_timeout;
                      uint64_t     *mt; // machine time
                       uint64_t     *st; // system time
-                     
+                    int32_t* va,*vb,*vc,*vd,*q,*sum,*q1,*q2;
+                    int32_t* va_acq,*vb_acq,*vc_acq,*vd_acq,*sum_acq;
+                    double *x_acq,*y_acq,*x,*y;
+                    
+                    int32_t *pmode,*imode,*isamples,*ioffset;
+                    bool*idd,*isa,*itrigger,*odd,*osa;
+                    c_data::CDataWrapper* config;
+                    bool calc_poly;
+                    double u[6],v[6];
+                    int64_t*acquire_loops;
                     chaos::cu::driver_manager::driver::BasicIODriverInterface *driver;
                 
 			// return the implemented handler
@@ -59,6 +68,7 @@ namespace driver {
 			 \return the mask for the runnign state
 			 */
 			void acquireHandler();
+			void endHandler();
 		public:
 			CmdLiberaDefault();
 			~CmdLiberaDefault();

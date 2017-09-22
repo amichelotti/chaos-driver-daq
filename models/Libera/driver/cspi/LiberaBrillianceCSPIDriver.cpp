@@ -385,7 +385,7 @@ int LiberaBrillianceCSPIDriver::assign_time(const char*time ){
        
 }
 
-int LiberaBrillianceCSPIDriver::initIO(void *buffer, int sizeb) {
+int LiberaBrillianceCSPIDriver::initIO(void *q, int sizeb) {
     size_t ef = CSPI_ENV_TRIGMODE;
     if(cfg.operation!=liberaconfig::deinit){
        LiberaBrillianceCSPILERR_<<"not in deinit state:"<<cfg.operation;
@@ -406,8 +406,8 @@ int LiberaBrillianceCSPIDriver::initIO(void *buffer, int sizeb) {
     rc = cspi_setenvparam(env_handle,&ep,ef);
     if (CSPI_OK != rc) {
       LiberaBrillianceCSPILERR_<<"Cannot set env:"<<rc;
-      deinitIO();
-      return rc;
+      //      deinitIO();
+      //      return rc;
     }
     rc = cspi_allochandle(CSPI_HANDLE_CON, env_handle, &con_handle);
     
@@ -541,8 +541,8 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
 		cmd_env.selector=CSPI_ENV_SWITCH;
 		rc = cspi_setenvparam(env_handle,(CSPI_ENVPARAMS*) &env, cmd_env.selector);
 		if (CSPI_OK != rc) {
-		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc;
-		  return rc;
+		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc<<" during DD";
+		  //		  return rc;
 		}
               LiberaBrillianceCSPILDBG_<<"Acquire Data on Demand";
               cfg.operation = liberaconfig::acquire;
@@ -558,8 +558,8 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
 		cmd_env.selector=CSPI_ENV_SWITCH;
 		rc = cspi_setenvparam(env_handle,(CSPI_ENVPARAMS*) &env, cmd_env.selector);
 		if (CSPI_OK != rc) {
-		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc;
-		  return rc;
+		  LiberaBrillianceCSPILERR_<<"Error setting env:"<<rc<<" during SA";
+		  //		  return rc;
 		}
                 LiberaBrillianceCSPILDBG_<<"Acquire Data on Streaming";
 		

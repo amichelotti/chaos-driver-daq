@@ -104,10 +104,10 @@ void SCDafneAccumulatorBPMSync::unitDefineActionAndDataset() throw(chaos::CExcep
         SCDafneAccumulatorBPMSyncLDBG_<<"dynamic adding attribute:"<<name<<" size:"<<(*i)->getSize()<<" dir:"<<(*i)->getDir()<<" type:"<<(*i)->getType();
         if((*i)->getType()!=chaos::DataType::TYPE_BYTEARRAY){
             addAttributeToDataSet(name,(*i)->getDesc(),(*i)->getType(),(*i)->getDir());
-        } else if((*i)->getBinaryType()!=chaos::DataType::SUB_TYPE_NONE){
-           SCDafneAccumulatorBPMSyncLDBG_<<"dynamic adding attribute:"<<name<<" size:"<<(*i)->getSize()<<" dir:"<<(*i)->getDir()<<" binary subtype:"<<(*i)->getBinaryType();
+        } else if((*i)->getBinaryType()[0]!=chaos::DataType::SUB_TYPE_NONE){
+           SCDafneAccumulatorBPMSyncLDBG_<<"dynamic adding attribute:"<<name<<" size:"<<(*i)->getSize()<<" dir:"<<(*i)->getDir()<<" binary subtype:"<<(*i)->getBinaryType()[0];
 
-            addBinaryAttributeAsSubtypeToDataSet(name,(*i)->getDesc(),(*i)->getBinaryType(),(*i)->getSize(),(*i)->getDir());
+            addBinaryAttributeAsSubtypeToDataSet(name,(*i)->getDesc(),(*i)->getBinaryType()[0],(*i)->getSize(),(*i)->getDir());
         }
     }
         /*

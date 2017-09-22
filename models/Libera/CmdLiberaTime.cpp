@@ -9,6 +9,8 @@
 #include "CmdLiberaTime.h"
 
 #include <boost/format.hpp>
+#include <chaos/common/data/cache/AbstractSharedDomainCache.h>
+using namespace chaos::common::data::cache;
 
 
 namespace c_data = chaos::common::data;

@@ -28,13 +28,20 @@ using namespace chaos::common::data;
 using namespace chaos::common::batch_command;
 using namespace chaos::cu::control_manager::slow_command;
 using namespace driver::daq::libera;
+#include <chaos/common/data/cache/AbstractSharedDomainCache.h>
+using namespace chaos::common::data::cache;
+
 CmdLiberaDefault::CmdLiberaDefault() {
-  CMDCUDBG_<< "Created command default:"<<driverAccessorsErogator;
   driver =NULL;
   mt= NULL;
   st=NULL;
+  calc_poly=true;
 }
-
+void CmdLiberaDefault::endHandler() {
+	CMDCUDBG_<<"Close Command:'"<<this->getAlias()<<"'";
+	setBusyFlag(false);
+	 getAttributeCache()->setOutputDomainAsChanged();
+}
 CmdLiberaDefault::~CmdLiberaDefault() {
     if(driver){
         delete driver;
@@ -52,6 +59,8 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
+    setBusyFlag(false);;
+    getAttributeCache()->setOutputDomainAsChanged();
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=driverAccessorsErogator->getAccessoInstanceByIndex(0);
@@ -66,11 +75,77 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	}
 	CMDCUDBG_<< "retrived BasicIODriver:"<<driver;
 
-	 int32_t *perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
-        *perr=0;
+        idd=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
+        isa=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
+        itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
+        imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
+        isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
+        
+
+        ioffset=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
+
+        config=getAttributeCache()->getRWPtr<CDataWrapper>(DOMAIN_INPUT, "config");
+        u[0]=1;
+        v[0]=1;
+        if(config){
+        	if(config->hasKey("coeff_u")&&config->isVector("coeff_u")){
+        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_u");
+        		for(int cnt=0;cnt<p->size();cnt++){
+        			if(cnt<6){
+        				u[cnt] = p->getDoubleElementAtIndex(cnt);
+        				CMDCUDBG_<< "COEFF u["<<cnt<<"]="<<u[cnt];
+
+        			}
+        		}
+
+        	}
+        	if(config->hasKey("calc_poly")){
+        	        			calc_poly=config->getBoolValue("calc_poly");
+        	}
+        	if(config->hasKey("coeff_v")&&config->isVector("coeff_v")){
+        	        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_v");
+        	        		for(int cnt=0;cnt<p->size();cnt++){
+        	        			if(cnt<6){
+        	        				v[cnt] = p->getDoubleElementAtIndex(cnt);
+        	        				CMDCUDBG_<< "v["<<cnt<<"]="<<v[cnt];
+
+        	        			}
+        	        		}
+        	        	}
+
+        } else {
+        	calc_poly=false;
+			for(int cnt=1;cnt<6;cnt++){
+				u[cnt]=v[cnt]=0;
+
+			}
+        }
+        odd=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
+               osa=getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
 	 mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
          st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
+         va = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
+         vb = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
+         vc = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC");
+         vd = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD");
+         x = getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X");
+         y = getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y");
+         q = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q");
+         sum = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM");
+         q1 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
+         q2 = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
+         pmode=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
+        mt=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
+         st=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
+        va_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA_ACQ");
+        vb_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
+        vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
+        vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
+        sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
 
+        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
+         acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
 	BC_NORMAL_RUNNING_PROPERTY
 
 }

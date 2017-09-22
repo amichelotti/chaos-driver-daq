@@ -10,7 +10,8 @@
 #include <driver/misc/core/CmdSync.h>
 #include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
 namespace driver {
-        
+#define MAX_BPM_CONTAINER 32
+
         namespace daq {
             namespace libera{
                 DEFINE_BATCH_COMMAND_CLASS(CmdAcquireDafneAccumulatorBPM,::driver::misc::CmdSync){
@@ -39,6 +40,7 @@ namespace driver {
       ::driver::misc::ChaosDatasetAttribute* dafne_status,*linac_mode;
       ::driver::misc::ChaosDatasetAttributeSinchronizer mode_sync;
       std::vector< ::driver::misc::ChaosDatasetAttribute* > rattrs;
+      double coeff_u[MAX_BPM_CONTAINER][6],coeff_v[MAX_BPM_CONTAINER][6];
       c_data::CDataWrapper* last_command;
       int tomode,recover;
 public:
