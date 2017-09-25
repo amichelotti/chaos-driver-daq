@@ -257,6 +257,7 @@ int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 		LiberaSoftERR<<"must be deinitialized to initialize";
 		return 0;
 	}
+	try{
 	mci::Init();
 	root = mci::Connect();
 	std::string board_name_stream=(char*)buffer;
@@ -277,7 +278,7 @@ int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 	RStream *rStream = dynamic_cast<RStream*> (signal_sa.get());
 
 	/* instantiate client for reading data from the signal */
-	try{
+
 	  dodclient =rSignal->CreateClient("mydodClient");
 
 
@@ -289,6 +290,9 @@ int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 	} catch (std::exception e){
 	  LiberaSoftERR<<"error creating client:"<<e.what();
 	  return -1;
+	} catch(...){
+		LiberaSoftERR<<"error uknown exception creating client";
+		return -2;
 	}
 	cfg.operation=liberaconfig::init;
 	LiberaSoftDBG<<" Init Done";
