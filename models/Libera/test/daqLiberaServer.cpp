@@ -49,10 +49,12 @@ int main(int argc, char *argv[])
 		// allocate the instance and inspector for driver
 
 #ifdef _LIBERACSPI_
+#warning "ADDING LIBERA CSPI DRIVER"
 		REGISTER_DRIVER(,LiberaBrillianceCSPIDriver);
 #endif
 
 #ifdef _LIBERAMCI_
+#warning "ADDING LIBERA MCI DRIVER"
 		REGISTER_DRIVER(,LiberaBrilliancePlusDriver);
 #endif
         REGISTER_DRIVER(,LiberaSoftDriver);
