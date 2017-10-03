@@ -13,8 +13,8 @@ ENDIF()
 
 SET(DAQ_LIBRARY ${PROJECT_NAME})
 ADD_EXECUTABLE(caenDAQ test/main.cpp)
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common chaos_driver_misc common_vme_caen common_vme vme common_debug ${FrameworkLib})
-TARGET_LINK_LIBRARIES(caenDAQ ${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme_caen common_vme  vme common_debug ${FrameworkLib})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common chaos_driver_misc_vme common_vme_caen common_vme vme common_debug ${FrameworkLib})
+TARGET_LINK_LIBRARIES(caenDAQ ${PROJECT_NAME} chaos_cutoolkit chaos_common chaos_driver_misc_vme common_vme_caen common_vme  vme common_debug ${FrameworkLib})
 
  INSTALL_TARGETS(/lib ${PROJECT_NAME})
  INSTALL_TARGETS(/bin caenDAQ)
