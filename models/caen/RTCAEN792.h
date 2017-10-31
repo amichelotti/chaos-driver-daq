@@ -21,13 +21,13 @@
 #define _RTCAEN792_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <common/vme/caen/CaenBase.h>
+#include <common/vme/caen/CaenDaqBase.h>
 
 #include "RTCAEN.h"
     namespace driver {
         namespace daq {
         namespace caen {
-	  class RTCAEN792 : public  RTCAEN< ::common::vme::caen::CaenBase>  {
+	  class RTCAEN792 : public  RTCAEN< ::common::vme::caen::CaenDaqBase>  {
 		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN792)
 	  public:
     /*!

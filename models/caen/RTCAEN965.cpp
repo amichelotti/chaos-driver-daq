@@ -43,7 +43,7 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN965)
 
 void RTCAEN965::unitDefineActionAndDataset() throw(chaos::CException) {
 
-	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenBase>::unitDefineActionAndDataset();
+	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase>::unitDefineActionAndDataset();
 
 
 	addAttributeToDataSet("IPED",
@@ -56,7 +56,7 @@ void RTCAEN965::unitDefineActionAndDataset() throw(chaos::CException) {
 void RTCAEN965::unitInit() throw(chaos::CException){
 	AttributeSharedCacheWrapper * cc=getAttributeCache();
 
-	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenBase >::unitInit();
+	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase >::unitInit();
 	 iped = (cc->getRWPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "IPED"));
 
 
