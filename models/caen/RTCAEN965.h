@@ -21,19 +21,19 @@
 #define _RTCAEN965_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <common/vme/caen/CaenBase.h>
+#include <common/vme/caen/CaenDaqBase.h>
 
 #include "RTCAEN.h"
     namespace driver {
         namespace daq {
         namespace caen {
-	  class RTCAEN965 : public RTCAEN< ::common::vme::caen::CaenBase> {
+	  class RTCAEN965 : public RTCAEN< ::common::vme::caen::CaenDaqBase> {
 		  PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTCAEN965)
 	  public:
     /*!
      Construct a new CU with full constructor
      */
-	    RTCAEN965(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers):RTCAEN< ::common::vme::caen::CaenBase>(_control_unit_id,
+	    RTCAEN965(const std::string& _control_unit_id, const std::string& _control_unit_param, const ControlUnitDriverList& _control_unit_drivers):RTCAEN< ::common::vme::caen::CaenDaqBase>(_control_unit_id,
 					_control_unit_param,
 					_control_unit_drivers) {}
 
