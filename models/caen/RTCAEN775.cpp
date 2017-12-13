@@ -41,27 +41,27 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN775)
 
 
 void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
-	::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitDefineActionAndDataset();
+    ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitDefineActionAndDataset();
 
-	addAttributeToDataSet("FSR",
-		                        "FULL SCALE REGISTER TLSB=8.9/N (ns)",
-		                        DataType::TYPE_INT32,
-		                        DataType::Input);
+    addAttributeToDataSet("FSR",
+                          "FULL SCALE REGISTER TLSB=8.9/N (ns)",
+                          DataType::TYPE_INT32,
+                          DataType::Input);
 
-	 addHandlerOnInputAttributeName<RTCAEN775, int32_t>(this,
-	                                                            &RTCAEN775::setFsr,
-	                                                            "FSR");
+    addHandlerOnInputAttributeName<RTCAEN775, int32_t>(this,
+                                                       &RTCAEN775::setFsr,
+                                                       "FSR");
 
 
 }
 void  RTCAEN775::unitInit() throw(chaos::CException){
-		AttributeSharedCacheWrapper * cc=getAttributeCache();
-     	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitInit();
-		//     	 fsr = (uint32_t*)(cc->getROPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "FSR"));
-		//     	 DPRINT("input FSR=0x%x",*fsr);
-		//     	 caen->setFSR(*fsr);
-		//     	 *fsr = caen->getFSR();
-     	DPRINT("read FSR=0x%x",*fsr);
+    AttributeSharedCacheWrapper * cc=getAttributeCache();
+    ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitInit();
+    fsr = (uint32_t*)(cc->getROPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "FSR"));
+    DPRINT("input FSR=0x%x",*fsr);
+    caen->setFSR(*fsr);
+    *fsr = caen->getFSR();
+    DPRINT("read FSR=0x%x",*fsr);
 
 
 }
