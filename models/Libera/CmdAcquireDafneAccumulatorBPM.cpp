@@ -174,8 +174,8 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 
 		x_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
 		y_acq[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
-		x_acq[cnt]->resize(samples_v*sizeof(double));
-		y_acq[cnt]->resize(samples_v*sizeof(double));
+//		x_acq[cnt]->resize(samples_v*sizeof(double));
+//		y_acq[cnt]->resize(samples_v*sizeof(double));
 		x[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
 		y[cnt]->setUpdateMode(driver::misc::ChaosDatasetAttribute::DONTUPDATE,0);
 		chaos::common::data::CDataWrapper config;
