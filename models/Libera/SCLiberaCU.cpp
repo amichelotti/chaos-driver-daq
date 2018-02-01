@@ -301,13 +301,13 @@ bool SCLiberaCU::sendAcquire(int32_t mode, bool enable,int32_t loops, int32_t sa
     cmd_pack->addInt32Value("loops", loops);
 
     //send command
-    
+
         submitBatchCommand("acquire",
                 cmd_pack.release(),
                 cmd_id,
                 0,
                 50,
-                SubmissionRuleType::SUBMIT_AND_KILL);
+                (enable==0)?SubmissionRuleType::SUBMIT_AND_KILL:SubmissionRuleType::SUBMIT_NORMAL);
    
     if (sync) {
         //! whait for the current command id to finish

@@ -45,7 +45,7 @@ using namespace chaos::cu::control_manager;
 
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdLiberaAcquire,"acquire","acquire command","72882f3e-36db-11e5-985f-334fcd6dff22")
 BATCH_COMMAND_ADD_INT32_PARAM("enable", "enable acquisition =1, disable =0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
-BATCH_COMMAND_ADD_INT32_PARAM("mode", "acquisition modes, =1 SlowAcquisition, =2 Data on Demand, add 0x100 for DD triggering,3=Post Mortem,4=ADC",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
+BATCH_COMMAND_ADD_INT32_PARAM("mode", "acquisition modes, =2 SlowAcquisition, =1 Data on Demand (buffer data), add 0x100 for DD triggering,3=Post Mortem,4=ADC",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
 BATCH_COMMAND_ADD_INT32_PARAM("samples", "in DataOnDemand number of samples",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, to break launch a acquire command with enable=0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 
