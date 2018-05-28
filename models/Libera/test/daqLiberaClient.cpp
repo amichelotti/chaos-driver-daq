@@ -80,7 +80,7 @@ void print_state(CUStateKey::ControlUnitState state) {
 }
 
 
-int main (int argc, char* argv[] ) {
+int main (int argc, const char* argv[] ) {
   int err = 0;
   int mode=0,offset=0,sched=0;
   bool triggered=false,decimated=false,timestamp=false;

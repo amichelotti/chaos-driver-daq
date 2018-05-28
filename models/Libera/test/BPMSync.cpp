@@ -34,7 +34,7 @@ using namespace chaos::ui;
 using namespace chaos::cu::driver_manager;
 
 
-int main(int argc, char *argv[])
+int main(int argc, const char *argv[])
 {
 	try {
 		// initialize the control unit toolkit
