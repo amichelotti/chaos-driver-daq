@@ -40,8 +40,12 @@ INSTALL_TARGETS(/bin BPMSync)
 
 
 INSTALL_TARGETS(/lib ${PROJECT_NAME})
-InstallHeaders(.)
-InstallHeaders(driver/cspi)
+FILE(GLOB files "*.h")
+INSTALL(FILES ${files} DESTINATION include/driver/daq/models/Libera)
+FILE(GLOB files "driver/cspi/*.h")
+INSTALL(FILES ${files} DESTINATION include/driver/daq/models/Libera/driver/cspi)
+
+
 #FILE(GLOB ss *.h)
 #INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera)
 
