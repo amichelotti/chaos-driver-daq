@@ -6,4 +6,7 @@ ADD_DEFINITIONS(-D_LIBERASOFT_)
 INCLUDE_DIRECTORIES(../../ ../cspi ../libera-driver-2-04-ebpp)	
 ADD_LIBRARY(${PROJECT_NAME} STATIC LiberaSoftDriver.cpp)
 SET(DRIVERS_LIB ${DRIVERS_LIB} ${PROJECT_NAME} PARENT_SCOPE)
+
+FILE(GLOB files "*.h")
+INSTALL(FILES ${files} DESTINATION include/driver/daq/models/Libera/driver/soft)
 INSTALL_TARGETS(/lib ${PROJECT_NAME}) 
