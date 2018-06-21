@@ -89,7 +89,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         v[0]=1;
         if(config){
         	if(config->hasKey("coeff_u")&&config->isVector("coeff_u")){
-        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_u");
+                ChaosSharedPtr<CMultiTypeDataArrayWrapper> p = config->getVectorValue("coeff_u");
         		for(int cnt=0;cnt<p->size();cnt++){
         			if(cnt<6){
         				u[cnt] = p->getDoubleElementAtIndex(cnt);
@@ -103,7 +103,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         	        			calc_poly=config->getBoolValue("calc_poly");
         	}
         	if(config->hasKey("coeff_v")&&config->isVector("coeff_v")){
-        	        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_v");
+                            ChaosSharedPtr<CMultiTypeDataArrayWrapper> p = config->getVectorValue("coeff_v");
         	        		for(int cnt=0;cnt<p->size();cnt++){
         	        			if(cnt<6){
         	        				v[cnt] = p->getDoubleElementAtIndex(cnt);

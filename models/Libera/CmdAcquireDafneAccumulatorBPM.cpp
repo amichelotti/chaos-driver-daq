@@ -198,7 +198,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 
 		}
 		if(config.hasKey("coeff_u")&&config.isVector("coeff_u")){
-			CMultiTypeDataArrayWrapper* p = config.getVectorValue("coeff_u");
+            ChaosSharedPtr<CMultiTypeDataArrayWrapper> p = config.getVectorValue("coeff_u");
 			for(int cntt=0;cntt<p->size();cntt++){
 				if(cntt<6){
 					coeff_u[cnt][cntt] = p->getDoubleElementAtIndex(cntt);
@@ -209,7 +209,7 @@ void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 		}
 
 		if(config.hasKey("coeff_v")&&config.isVector("coeff_v")){
-			CMultiTypeDataArrayWrapper* p = config.getVectorValue("coeff_v");
+            ChaosSharedPtr<CMultiTypeDataArrayWrapper> p = config.getVectorValue("coeff_v");
 			for(int cntt=0;cntt<p->size();cntt++){
 				if(cntt<6){
 					coeff_v[cnt][cntt] = p->getDoubleElementAtIndex(cntt);
