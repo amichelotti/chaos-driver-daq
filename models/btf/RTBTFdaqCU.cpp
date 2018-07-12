@@ -138,7 +138,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     loop=0;
 
     sis3800_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "scaleradd");
-    DPRINT("SIS 0x%x",sis3800_addr);
+    DPRINT("SIS 0x%p",sis3800_addr);
     caen965_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc965add");
 
     caen792_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc792add");
