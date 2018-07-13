@@ -21,23 +21,22 @@
 
 #include <stdio.h>
 
-#include <chaos/ui_toolkit/ChaosUIToolkit.h>
-#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
-#include <chaos/ui_toolkit/HighLevelApi/HLDataApi.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 #include <driver/misc/core/ChaosControllerGroup.h>
 #include <driver/misc/core/ChaosDatasetAttribute.h>
 #include <driver/misc/core/ChaosDatasetAttributeSinchronizer.h>
+#include <chaos_metadata_service_client/ChaosMetadataServiceClient.h>
 
 
 //#include <fstream>
 #include "LiberaData.h"
 using namespace chaos;
+using namespace std;
 using namespace chaos::common::data;
-using namespace chaos::ui;
 using namespace chaos::common::batch_command;
 using namespace driver::misc;
 using namespace driver::daq::libera;
+using namespace chaos::metadata_service_client;
 
 template <typename T>
 void print_header(int ts_enable,std::ofstream &fout){
@@ -93,26 +92,26 @@ int main (int argc, const char* argv[] ) {
   uint64_t old_acquisition=0;
  
   try{
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("acquire", po::value<int>(&mode)->default_value(0), "acquire [0=OFF,1=DD,2=SA,3=ADC_SP,4=ADC_CW]");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("triggered", po::value<bool>(&triggered)->default_value(false), "trigger on/off");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("samples", po::value<int>(&samples)->default_value(1), "acquires samples");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("offset", po::value<int>(&offset)->default_value(0), "in DD ofset of acquisition");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("ofile", po::value<std::string>(&ofile)->default_value("libera.out"), "output on file");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("loops", po::value<int>(&loops)->default_value(1), "acquires loops <0 for continuous acquisition, SA is continuos");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("acquire", po::value<int>(&mode)->default_value(0), "acquire [0=OFF,1=DD,2=SA,3=ADC_SP,4=ADC_CW]");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("triggered", po::value<bool>(&triggered)->default_value(false), "trigger on/off");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("samples", po::value<int>(&samples)->default_value(1), "acquires samples");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("offset", po::value<int>(&offset)->default_value(0), "in DD ofset of acquisition");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("ofile", po::value<std::string>(&ofile)->default_value("libera.out"), "output on file");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("loops", po::value<int>(&loops)->default_value(1), "acquires loops <0 for continuous acquisition, SA is continuos");
 
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("decimated", po::value<bool>(&decimated)->default_value(false), "decimated data on/off");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("timestamp", po::value<bool>(&timestamp)->default_value(false), "dump timestamp");
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("max_acquire_time", po::value<int>(&max_acquire_time)->default_value(0), "max acquire time in seconds 0=continuos ");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("decimated", po::value<bool>(&decimated)->default_value(false), "decimated data on/off");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("timestamp", po::value<bool>(&timestamp)->default_value(false), "dump timestamp");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("max_acquire_time", po::value<int>(&max_acquire_time)->default_value(0), "max acquire time in seconds 0=continuos ");
 
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(100000), "acquire time");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("sched", po::value<int>(&sched)->default_value(100000), "acquire time");
 
-    ChaosUIToolkit::getInstance()->getGlobalConfigurationInstance()->addOption("device,d", po::value<std::vector<std::string> >(&device_name), "libera device name");
+    ChaosMetadataServiceClient::getInstance()->getGlobalConfigurationInstance()->addOption("device,d", po::value<std::vector<std::string> >(&device_name), "libera device name");
 
 
 
 
       //init UIToolkit client
-    ChaosUIToolkit::getInstance()->init(argc, argv);
+    ChaosMetadataServiceClient::getInstance()->init(argc, argv);
 
     if(device_name.empty()){
         std::cerr<<"## device name is required"<<std::endl;

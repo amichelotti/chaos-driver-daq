@@ -29,7 +29,6 @@
 
 using namespace chaos;
 using namespace chaos::cu;
-using namespace chaos::ui;
 
 using namespace chaos::cu::driver_manager;
 
