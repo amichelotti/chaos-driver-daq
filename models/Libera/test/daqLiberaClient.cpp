@@ -146,7 +146,7 @@ int main (int argc, const char* argv[] ) {
     }
     sleep(5);
     int rett;
-     if(rett=group.init(1)){
+     if((rett=group.init(1))){
          LERR_<<" error forcing init:"<<rett;
          return -4;
      }
@@ -155,7 +155,7 @@ int main (int argc, const char* argv[] ) {
         LERR_<<" ## cannot set schedule at:"<<sched;
         return -2;
     }
-    if(rett=group.start(1)){
+    if((rett=group.start(1))){
         LERR_<<" error forcing start:"<<rett;
         return -5;
     }
