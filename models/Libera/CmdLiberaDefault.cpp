@@ -39,7 +39,6 @@ CmdLiberaDefault::CmdLiberaDefault() {
 }
 void CmdLiberaDefault::endHandler() {
 	CMDCUDBG_<<"Close Command:'"<<this->getAlias()<<"'";
-	setBusyFlag(false);
 	 getAttributeCache()->setOutputDomainAsChanged();
 }
 CmdLiberaDefault::~CmdLiberaDefault() {
@@ -59,7 +58,6 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
-    setBusyFlag(false);;
     getAttributeCache()->setOutputDomainAsChanged();
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);

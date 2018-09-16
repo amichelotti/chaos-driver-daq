@@ -78,7 +78,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
 		getAttributeCache()->setOutputDomainAsChanged();
 		CMDCUERR_<<"Cannot stop acquire";
-	    setBusyFlag(false);
 
 		BC_FAULT_RUNNING_PROPERTY;
 		return;
@@ -96,7 +95,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 			*odd=0;
 			*osa=0;
 			getAttributeCache()->setInputDomainAsChanged();
-		    setBusyFlag(false);
 
 			BC_END_RUNNING_PROPERTY;
 			return;
@@ -256,7 +254,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	*itrigger=(tmode&LIBERA_IOP_MODE_TRIGGERED)?true:false;
 	getAttributeCache()->setInputDomainAsChanged();
 	samples=*isamples;
-    setBusyFlag(true);
 
 	BC_NORMAL_RUNNING_PROPERTY;
 	usleep(wait_for_us);

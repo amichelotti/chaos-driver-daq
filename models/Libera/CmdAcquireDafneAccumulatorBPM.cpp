@@ -46,14 +46,12 @@ uint8_t CmdAcquireDafneAccumulatorBPM::implementedHandler(){
 }
 void  CmdAcquireDafneAccumulatorBPM::setHandler(c_data::CDataWrapper *data){
 	::driver::misc::CmdSync::setHandler(data);
-    setBusyFlag(false);
 
 	tomode=0;
 	int32_t samples_v;
 	int cnt;
 	recover=RECOVER_PERIOD;
 	last_command=data;
-	setBusyFlag(true);
 	if(data->hasKey("enable")) {
 		if(data->getInt32Value("enable")==0){
 			tomode = 0;
