@@ -30,7 +30,8 @@ using namespace chaos::cu::control_manager::slow_command;
 using namespace driver::daq::libera;
 #include <chaos/common/data/cache/AbstractSharedDomainCache.h>
 using namespace chaos::common::data::cache;
-
+BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdLiberaDefault,"default","defaultcommand","72883f3e-36db-11e5-985f-334fcd6dff22")
+BATCH_COMMAND_CLOSE_DESCRIPTION()
 CmdLiberaDefault::CmdLiberaDefault() {
   driver =NULL;
   mt= NULL;

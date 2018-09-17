@@ -77,10 +77,11 @@ SCLiberaCU::~SCLiberaCU() {
 void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
   SCCULDBG<<"defining commands";
 	//install all command
-	installCommand<CmdLiberaDefault>("default");
+    installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaDefault), true,true);
 	//installCommand<CmdLiberaAcquire>("acquire");
-	installCommand<CmdLiberaEnv>("env");
-	installCommand<CmdLiberaTime>("time");
+    installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaEnv));
+    installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaTime));
+
 	installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaAcquire));
 
 	//set it has default
@@ -267,7 +268,7 @@ void SCLiberaCU::unitInit() throw(CException) {
 // Abstract method for the start of the control unit
 void SCLiberaCU::unitStart() throw(CException) {
         metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Starting");
-	setSA("SA", true, 0);
+	//setSA("SA", true, 0);
 	
 }
 
