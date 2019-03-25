@@ -81,6 +81,8 @@ int event_callback(CSPI_EVENT *p)
 LiberaBrillianceCSPIDriver::LiberaBrillianceCSPIDriver() {
     int rc;
     cfg.operation =liberaconfig::deinit;
+    LiberaBrillianceCSPILDBG_<<"Created Operation:"<<cfg.operation;
+
 /*
     if((rc=initIO(0,0))!=0){
         throw chaos::CException(rc,"Initializing","LiberaBrillianceCSPIDriver::LiberaBrillianceCSPIDriver");    
@@ -421,6 +423,8 @@ int LiberaBrillianceCSPIDriver::initIO(void *q, int sizeb) {
 }
 
 int LiberaBrillianceCSPIDriver::deinitIO() {
+     LiberaBrillianceCSPILDBG_<<"Deinit";
+
     if(cfg.operation == liberaconfig::deinit){
           LiberaBrillianceCSPILERR_<<"Already de-initializad";
     }
