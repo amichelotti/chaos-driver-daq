@@ -26,8 +26,8 @@
 #include "LiberaData.h"
 
 #define CMDCU_ CUINFO
-#define CMDCUDBG_ CUDBG
-#define CMDCUERR_ CUERR
+#define CMDCUDBG_ CUDBG <<__PRETTY_FUNCTION__<<":"
+#define CMDCUERR_ CUERR << "##" << __PRETTY_FUNCTION__<<":"
 
 
 namespace c_data = chaos::common::data;

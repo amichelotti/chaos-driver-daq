@@ -71,7 +71,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 
-	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+	/*if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
 
 		setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
 		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,"stop acquire command failed" );
@@ -81,7 +81,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
 		BC_FAULT_RUNNING_PROPERTY;
 		return;
-	}
+	}*/
 	//requested mode
 	if(data->hasKey("enable")) {
 		if(data->getInt32Value("enable")==0){
