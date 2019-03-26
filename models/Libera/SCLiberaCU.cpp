@@ -77,6 +77,7 @@ SCLiberaCU::~SCLiberaCU() {
 void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
   SCCULDBG<<"defining commands";
 	//install all command
+
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaDefault), true,true);
 	//installCommand<CmdLiberaAcquire>("acquire");
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaEnv));

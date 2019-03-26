@@ -78,9 +78,7 @@ int event_callback(CSPI_EVENT *p)
 //GET_PLUGIN_CLASS_DEFINITION
 //we need to define the driver with alias version and a class that implement it
 //default constructor definition
-//LiberaBrillianceCSPIDriver::LiberaBrillianceCSPIDriver() {
-
-DEFAULT_CU_DRIVER_PLUGIN_CONSTRUCTOR(LiberaBrillianceCSPIDriver){
+LiberaBrillianceCSPIDriver::LiberaBrillianceCSPIDriver() {
     int rc;
     cfg.operation =liberaconfig::deinit;
     LiberaBrillianceCSPILDBG_<<"Created Operation:"<<cfg.operation;
