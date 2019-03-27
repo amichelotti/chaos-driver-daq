@@ -389,10 +389,10 @@ int LiberaBrillianceCSPIDriver::assign_time(const char*time ){
 
 int LiberaBrillianceCSPIDriver::initIO(void *q, int sizeb) {
     size_t ef = CSPI_ENV_TRIGMODE;
-    if(cfg.operation!=liberaconfig::deinit){
+   /* if(cfg.operation==liberaconfig::deinit){
        LiberaBrillianceCSPILERR_<<"not in deinit state:"<<cfg.operation;
        return 0;
-    }
+    }*/
 
     cfg.atom_count=1;
     cfg.datasize=0;
