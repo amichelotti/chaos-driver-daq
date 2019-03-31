@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 project(chaos_driver_libera)
+
 SET(DAQ_src LiberaData.cpp  CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  DafneAccumulatorBPMSync.cpp ChaosControllerLibera.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp)
 ADD_DEFINITIONS(-DEBPP)
 SET(BasicDAQClient_src test/DAQClient.cpp)
@@ -30,8 +31,8 @@ SET(DAQ_LIBRARY ${PROJECT_NAME} ${DRIVERS_LIB})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial chaos_driver_misc common_misc_wavegenerators ${FrameworkLib})
 
 TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_driver_misc chaos_cutoolkit chaos_common  common_serial chaos_driver_misc ${FrameworkLib})
- TARGET_LINK_LIBRARIES(daqLiberaClient chaos_uitoolkit chaos_driver_misc chaos_common chaos_driver_misc ${DAQ_LIBRARY} ${FrameworkLib})
-TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME} chaos_driver_misc  chaos_uitoolkit  chaos_cutoolkit chaos_common ${FrameworkLib})
+ TARGET_LINK_LIBRARIES(daqLiberaClient chaos_driver_misc chaos_common chaos_driver_misc chaos_metadata_service_client ${DAQ_LIBRARY} ${FrameworkLib} )
+TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME} chaos_driver_misc chaos_cutoolkit chaos_common ${FrameworkLib})
 
 
 INSTALL_TARGETS(/bin daqLiberaServer)
@@ -40,8 +41,12 @@ INSTALL_TARGETS(/bin BPMSync)
 
 
 INSTALL_TARGETS(/lib ${PROJECT_NAME})
-InstallHeaders(.)
-InstallHeaders(driver/cspi)
+FILE(GLOB files "*.h")
+INSTALL(FILES ${files} DESTINATION include/driver/daq/models/Libera)
+FILE(GLOB files "driver/cspi/*.h")
+INSTALL(FILES ${files} DESTINATION include/driver/daq/models/Libera/driver/cspi)
+
+
 #FILE(GLOB ss *.h)
 #INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/Libera)
 

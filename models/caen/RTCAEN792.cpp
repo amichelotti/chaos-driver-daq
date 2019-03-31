@@ -21,7 +21,6 @@
 #include "RTCAEN792.h"
 #include <stdlib.h>
 #include <boost/algorithm/string.hpp>
-#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/cu_toolkit/command_manager/CommandManager.h>
 #include <common/debug/core/debug.h>
 
@@ -45,14 +44,14 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN792)
 RTCAEN792::RTCAEN792(const string& _control_unit_id,
                         const string& _control_unit_param,
                         const ControlUnitDriverList& _control_unit_drivers):
-RTCAEN< ::common::vme::caen::CaenBase>(_control_unit_id,
+RTCAEN< ::common::vme::caen::CaenDaqBase>(_control_unit_id,
                         _control_unit_param,
                         _control_unit_drivers) {
 
 
 }
 void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
-	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenBase>::unitDefineActionAndDataset();
+	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase>::unitDefineActionAndDataset();
 
 
 		addAttributeToDataSet("IPED",
@@ -65,7 +64,7 @@ void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
  void RTCAEN792::unitInit() throw(chaos::CException){
 	 AttributeSharedCacheWrapper * cc=getAttributeCache();
 
-	 	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenBase >::unitInit();
+	 	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase >::unitInit();
 	 	 iped = (cc->getRWPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "IPED"));
  }
  

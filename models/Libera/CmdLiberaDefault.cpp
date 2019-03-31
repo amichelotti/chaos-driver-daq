@@ -31,6 +31,10 @@ using namespace driver::daq::libera;
 #include <chaos/common/data/cache/AbstractSharedDomainCache.h>
 using namespace chaos::common::data::cache;
 
+
+BATCH_COMMAND_OPEN_DESCRIPTION(driver::daq::libera::,
+CmdLiberaDefault,"default command","72883f3e-36db-11e5-985f-33ffd6dff22")
+BATCH_COMMAND_CLOSE_DESCRIPTION()
 CmdLiberaDefault::CmdLiberaDefault() {
   driver =NULL;
   mt= NULL;
@@ -39,7 +43,6 @@ CmdLiberaDefault::CmdLiberaDefault() {
 }
 void CmdLiberaDefault::endHandler() {
 	CMDCUDBG_<<"Close Command:'"<<this->getAlias()<<"'";
-	setBusyFlag(false);
 	 getAttributeCache()->setOutputDomainAsChanged();
 }
 CmdLiberaDefault::~CmdLiberaDefault() {
@@ -59,7 +62,6 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
-    setBusyFlag(false);;
     getAttributeCache()->setOutputDomainAsChanged();
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
@@ -89,7 +91,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         v[0]=1;
         if(config){
         	if(config->hasKey("coeff_u")&&config->isVector("coeff_u")){
-        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_u");
+                ChaosSharedPtr<CMultiTypeDataArrayWrapper> p = config->getVectorValue("coeff_u");
         		for(int cnt=0;cnt<p->size();cnt++){
         			if(cnt<6){
         				u[cnt] = p->getDoubleElementAtIndex(cnt);
@@ -103,7 +105,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         	        			calc_poly=config->getBoolValue("calc_poly");
         	}
         	if(config->hasKey("coeff_v")&&config->isVector("coeff_v")){
-        	        		CMultiTypeDataArrayWrapper* p = config->getVectorValue("coeff_v");
+                            ChaosSharedPtr<CMultiTypeDataArrayWrapper> p = config->getVectorValue("coeff_v");
         	        		for(int cnt=0;cnt<p->size();cnt++){
         	        			if(cnt<6){
         	        				v[cnt] = p->getDoubleElementAtIndex(cnt);
@@ -157,12 +159,36 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
  */
 void CmdLiberaDefault::acquireHandler() {
         libera_ts_t ts;
-	CMDCUDBG_ << "Default Acquiring libera status";
+        int ret;
+	//CMDCUDBG_ << "Default Acquiring libera status";
 	char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
-	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)==0){
-            CMDCUDBG_<<"STATUS:"<<status;
-        }
 
+    libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
+
+		if((ret=driver->read((void*)&pnt,0,sizeof(libera_sa_t)))>=0){
+			bpmpos mm;
+
+			*va = pnt.Va;
+			*vb = pnt.Vb;
+			*vc = pnt.Vc;
+			*vd = pnt.Vd;
+			mm=bpm_voltage_to_mm(u,v,pnt.Va,pnt.Vb,pnt.Vc,pnt.Vd);
+			*x  = mm.x;
+			*y  = mm.y;
+			*q  = pnt.Q;
+			*sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
+			*q1 = pnt.Cx;
+			*q2 = pnt.Cy;
+			(*acquire_loops)++;
+			x_acq[0] = mm.x;
+			y_acq[0] = mm.y;
+			CMDCUDBG_ << "SA read:"<<pnt;
+
+		} 
+	/*if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+            CMDCUDERR_<<" Cannot retrive STATUS";
+    } 
+    */
 	/*        
 		  if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 

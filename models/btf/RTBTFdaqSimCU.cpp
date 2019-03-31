@@ -124,12 +124,12 @@ void RTBTFdaqSimCU::unitInit() throw(CException) {
         loop=0;
         
        sis3800_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "scaleradd");
-       DPRINT("SIS 0x%x",sis3800_addr);
+       DPRINT("SIS 0x%p",sis3800_addr);
        caen965_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc965add");
-              DPRINT("QDC965 0x%x",caen965_addr);
+              DPRINT("QDC965 0x%p",caen965_addr);
 
        caen792_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc792add");
-              DPRINT("QDC792 0x%x",caen792_addr);
+              DPRINT("QDC792 0x%p",caen792_addr);
 
         //caen513_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"caen513add");
           //    DPRINT("CAEN513 0x%x",caen513_addr);

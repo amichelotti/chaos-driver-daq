@@ -45,7 +45,7 @@ using namespace chaos::cu::control_manager;
 
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdLiberaAcquire,"acquire","acquire command","72882f3e-36db-11e5-985f-334fcd6dff22")
 BATCH_COMMAND_ADD_INT32_PARAM("enable", "enable acquisition =1, disable =0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
-BATCH_COMMAND_ADD_INT32_PARAM("mode", "acquisition modes, =1 SlowAcquisition, =2 Data on Demand, add 0x100 for DD triggering,3=Post Mortem,4=ADC",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
+BATCH_COMMAND_ADD_INT32_PARAM("mode", "acquisition modes, =2 SlowAcquisition, =1 Data on Demand (buffer data), add 0x100 for DD triggering,3=Post Mortem,4=ADC",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
 BATCH_COMMAND_ADD_INT32_PARAM("samples", "in DataOnDemand number of samples",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, to break launch a acquire command with enable=0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 
@@ -64,25 +64,24 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	loop=-1;
 	CmdLiberaDefault::setHandler(data);
 
-	clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
-	setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
+    //clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
+    //setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
 
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 
-	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+	/*if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
 
 		setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
 		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,"stop acquire command failed" );
 
 		getAttributeCache()->setOutputDomainAsChanged();
 		CMDCUERR_<<"Cannot stop acquire";
-	    setBusyFlag(false);
 
 		BC_FAULT_RUNNING_PROPERTY;
 		return;
-	}
+	}*/
 	//requested mode
 	if(data->hasKey("enable")) {
 		if(data->getInt32Value("enable")==0){
@@ -96,7 +95,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 			*odd=0;
 			*osa=0;
 			getAttributeCache()->setInputDomainAsChanged();
-		    setBusyFlag(false);
 
 			BC_END_RUNNING_PROPERTY;
 			return;
@@ -256,7 +254,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	*itrigger=(tmode&LIBERA_IOP_MODE_TRIGGERED)?true:false;
 	getAttributeCache()->setInputDomainAsChanged();
 	samples=*isamples;
-    setBusyFlag(true);
 
 	BC_NORMAL_RUNNING_PROPERTY;
 	usleep(wait_for_us);
