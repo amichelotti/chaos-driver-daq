@@ -30,7 +30,7 @@ namespace driver {
 	namespace daq {
             namespace libera{
 
-		class CmdLiberaTime : public CmdLiberaDefault {
+		DEFINE_BATCH_COMMAND_CLASS( CmdLiberaTime , CmdLiberaDefault) {
 			
 
 		protected:

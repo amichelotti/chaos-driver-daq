@@ -21,7 +21,6 @@
 #include "SCDafneAccumulatorBPMSync.h"
 //#include "SCDafneAccumulatorBPMSyncDriver.h"
 #include <boost/algorithm/string.hpp>
-#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/cu_toolkit/command_manager/CommandManager.h>
 #include <driver/daq/models/Libera/ChaosControllerLibera.h>
 #include "CmdDefaultDafneAccumulatorBPM.h"

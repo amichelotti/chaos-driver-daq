@@ -226,8 +226,9 @@ int LiberaSoftDriver::initIO(void *buffer, int sizeb) {
 int LiberaSoftDriver::deinitIO() {
     if(cfg.operation == liberaconfig::deinit){
           LiberaSoftERR<<"Already de-initializad";
+          return 0;
     }
-    wave.reset();
+    //wave.reset();
     return 0;
 }
 

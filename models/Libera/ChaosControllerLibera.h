@@ -9,9 +9,7 @@
 #define	ChaosControllerLibera_H
 #include <map>
 #include <string>
-#include <chaos/ui_toolkit/ChaosUIToolkit.h>
 #include <boost/shared_ptr.hpp>
-#include <chaos/ui_toolkit/HighLevelApi/DeviceController.h>
 #include <driver/misc/core/ChaosController.h>
 
 

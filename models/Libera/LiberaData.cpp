@@ -35,7 +35,8 @@ std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj){
 	os << *p++ << std::endl;
 
 	os << std::setw(tab) << "Fans [rpm]" << ": ";
-	os << *p++ << " " << *p++ << std::endl;
+	os << *p++ ;
+	os << " " << *p++ << std::endl;
 
 	os << std::setw(tab) << "Voltages [mV]" << ": ";
 

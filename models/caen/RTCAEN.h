@@ -23,7 +23,6 @@
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
 #include <driver/misc/models/vme/RTVme.h>
 #include <boost/algorithm/string.hpp>
-#include <chaos/ui_toolkit/LowLevelApi/LLRpcApi.h>
 #include <chaos/cu_toolkit/command_manager/CommandManager.h>
 #include <common/debug/core/debug.h>
 #include <common/vme/caen/CaenDaqBase.h>

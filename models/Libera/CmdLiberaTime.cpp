@@ -15,7 +15,10 @@ using namespace chaos::common::data::cache;
 
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
+BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdLiberaTime,"time","setting time","73882f3e-36db-11e5-985f-334fcd6dff22")
+BATCH_COMMAND_ADD_STRING_PARAM("time", "string time",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_MANDATORY)
 
+BATCH_COMMAND_CLOSE_DESCRIPTION()
 // return the implemented handler
 uint8_t driver::daq::libera::CmdLiberaTime::implementedHandler() {
     return chaos_batch::HandlerType::HT_Set  ;

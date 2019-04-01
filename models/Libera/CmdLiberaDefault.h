@@ -26,8 +26,8 @@
 #include "LiberaData.h"
 
 #define CMDCU_ CUINFO
-#define CMDCUDBG_ CUDBG
-#define CMDCUERR_ CUERR
+#define CMDCUDBG_ CUDBG <<__PRETTY_FUNCTION__<<":"
+#define CMDCUERR_ CUERR << "##" << __PRETTY_FUNCTION__<<":"
 
 
 namespace c_data = chaos::common::data;
@@ -38,7 +38,7 @@ namespace ccc_slow_command = chaos::cu::control_manager::slow_command;
 namespace driver {
 	namespace daq {
             namespace libera {
-		class CmdLiberaDefault : public ccc_slow_command::SlowCommand {
+				DEFINE_BATCH_COMMAND_CLASS(CmdLiberaDefault, ccc_slow_command::SlowCommand){
                    
                 protected:
                      const uint32_t	*i_command_timeout;
