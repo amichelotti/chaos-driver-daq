@@ -41,10 +41,7 @@ CmdLiberaDefault::CmdLiberaDefault() {
   st=NULL;
   calc_poly=true;
 }
-void CmdLiberaDefault::endHandler() {
-	CMDCUDBG_<<"Close Command:'"<<this->getAlias()<<"'";
-	 getAttributeCache()->setOutputDomainAsChanged();
-}
+
 CmdLiberaDefault::~CmdLiberaDefault() {
     if(driver){
         delete driver;

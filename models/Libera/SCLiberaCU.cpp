@@ -77,7 +77,6 @@ SCLiberaCU::~SCLiberaCU() {
 void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
   SCCULDBG<<"defining commands";
 	//install all command
-
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaDefault), true,true);
 	//installCommand<CmdLiberaAcquire>("acquire");
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaEnv));
@@ -86,8 +85,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 	installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaAcquire));
 
 	//set it has default
-	setDefaultCommand("default");
-	SCCULDBG<<"defining dataset";
+//	setDefaultCommand("default");
+	//SCCULDBG<<"defining dataset";
         
         addAttributeToDataSet("timeout",
 						  "Time out triggering",
