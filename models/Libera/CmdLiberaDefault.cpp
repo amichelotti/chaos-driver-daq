@@ -79,7 +79,11 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
         imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
         isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
-        
+        *idd=false;
+		*isa=false;
+		*itrigger=false;
+		*imode=0;
+		*isamples=0;
 
         ioffset=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
 
@@ -145,6 +149,21 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
         y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
+		*pmode=0;
+		*odd=false;
+		*osa=false;
+	getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("SUM_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
+	getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
+	getAttributeCache()->setInputDomainAsChanged();
+    getAttributeCache()->setOutputDomainAsChanged();
+
 	BC_NORMAL_RUNNING_PROPERTY
 
 }
@@ -182,10 +201,10 @@ void CmdLiberaDefault::acquireHandler() {
 			CMDCUDBG_ << "SA read:"<<pnt;
 
 		} 
-	/*if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
-            CMDCUDERR_<<" Cannot retrive STATUS";
+	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+            CMDCUERR_<<" Cannot retrive STATUS";
     } 
-    */
+    
 	/*        
 		  if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 

@@ -1,6 +1,9 @@
 log-on-file=yes
-log-file=/root/libera-cu.log
-#log-level=debug
+log-file=/mnt/chaos/log/libera10-cu.log
+log-level=debug
+metadata-server=10.10.5.12:5000
+unit-server-alias=LIBERA10
 log-max-size=5
-metadata-server=192.168.150.31:5000
-unit-server-alias=LIBERA
+event-disable=1
+time-calibration-ntp-server=193.206.84.121
+time-calibration=1
