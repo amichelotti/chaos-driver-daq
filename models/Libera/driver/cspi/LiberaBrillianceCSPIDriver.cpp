@@ -707,7 +707,7 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void *data, int sizeb)
         SET_ENV(PM, pm.mode);
         SET_ENV(SR, sr.enable);
         SET_ENV(SP, sp.threshold);
-        rc = cspi_setenvparam(env_handle, (CSPI_ENVPARAMS *)&env, cmd_env->selector);
+        rc = cspi_setenvparam(env_handle, (CSPI_ENVPARAMS *)&ep, cmd_env->selector);
 
         if (CSPI_OK != rc)
         {
