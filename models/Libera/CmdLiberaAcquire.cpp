@@ -159,12 +159,11 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
 			getAttributeCache()->setOutputAttributeNewSize("X_ACQ", tsamples*sizeof(double));
 			getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", tsamples*sizeof(double));
-			CmdLiberaDefault::setHandler(data); // re-assign pointers
 
 			if( (ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
 				BC_FAULT_RUNNING_PROPERTY;
-
-				CMDCUERR_<<"Error performing IO_MODE_DD: "<<ret;
+				setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelHigh);
+				metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("cannot set samples acquire mode %1% samples %2%",%tmode %tsamples));
 				return;
 			}
 			*isamples=tsamples;
@@ -176,7 +175,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 			// getAttributeCache()->setOutputAttributeNewSize("SA", tsamples*sizeof(libera_sa_t));
 			if((ret=driver->iop(LIBERA_IOP_CMD_SET_SAMPLES,(void*)&tsamples,0))!=0){
 				BC_FAULT_RUNNING_PROPERTY;
-				CMDCUERR_<<"Error performing IO_MODE_SA: "<<ret;
+				setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelHigh);
+				metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("cannot set samples acquire mode %1% samples %2%",%tmode %tsamples));
 				return;
 
 			}
@@ -207,8 +207,8 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 
 		getAttributeCache()->setOutputDomainAsChanged();
 		BC_END_RUNNING_PROPERTY
-		CMDCUERR_<<"Unsupported mode";
-
+		setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelHigh);
+		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Unsupported acquire mode %1% samples %2%",%tmode %tsamples));
 		//throw chaos::CException(1, "Unsupported mode", __FUNCTION__);
 
 	}
@@ -221,9 +221,11 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	*imode=tmode;
 	if((ret=driver->iop(LIBERA_IOP_CMD_ACQUIRE,(void*)&tmode,0))!=0){
 		BC_FAULT_RUNNING_PROPERTY;
+		setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelHigh);
+
 		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("cannot start acquire mode %1% samples %2%",%tmode %tsamples));
 
-		CMDCUERR_<<"cannot start acquire command, mode "<<tmode<<" samples:"<<tsamples<< " ret:"<<ret;
+		//CMDCUERR_<<"cannot start acquire command, mode "<<tmode<<" samples:"<<tsamples<< " ret:"<<ret;
 		//throw chaos::CException(ret, "Cannot start acquire", __FUNCTION__);
 		return;
 
