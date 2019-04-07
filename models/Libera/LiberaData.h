@@ -8,6 +8,10 @@
 #ifndef LIBERADATA_H
 #define	LIBERADATA_H
 #include <stdint.h>
+
+#define TRIGGER_TIMEOUT 60 
+#define TRIGGER_TIMEOUT_ERROR -100
+
 #define LIBERA_IOP_MODE_DD 0x1 // data acquire on demand
 #define LIBERA_IOP_MODE_SA 0x2 // streaming data acquire
 #define LIBERA_IOP_MODE_ADC 0x4 // ADC data acquire

@@ -68,7 +68,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
     //setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
 
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelClear);
-	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 
 	/*if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
@@ -265,6 +264,8 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 	boost::posix_time::ptime curr;
 	int ret;
 	libera_ts_t ts;
+	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+	setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 	if(acquire_duration !=0){
 		curr= boost::posix_time::microsec_clock::local_time();
@@ -340,10 +341,13 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			(*acquire_loops)++;
 
 		} else {
-			metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("DD Acquire mode %1% samples %2%",%*imode %*isamples ));
+			if(ret==TRIGGER_TIMEOUT_ERROR){
+				setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
+			}else { 
+				metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("DD Acquire mode %1% samples %2%",%*imode %*isamples ));
 
-			setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
-
+				setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
+			}
 		}
 	} else if((*imode)&LIBERA_IOP_MODE_SA){
 		libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");

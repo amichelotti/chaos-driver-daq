@@ -253,7 +253,7 @@ int LiberaBrillianceCSPIDriver::wait_trigger()
     {
 
         gettimeofday(&now, 0);
-        timeout.tv_sec = now.tv_sec + 30;
+        timeout.tv_sec = now.tv_sec + TRIGGER_TIMEOUT;
         timeout.tv_nsec = now.tv_usec * 1000;
         LiberaBrillianceCSPILDBG_ << " waiting Trigger";
         pthread_mutex_lock(&eventm);
@@ -266,7 +266,7 @@ int LiberaBrillianceCSPIDriver::wait_trigger()
     if (ETIMEDOUT == rc)
     {
         LiberaBrillianceCSPILERR_ << "trigger timeout:" << rc;
-        return rc;
+        return TRIGGER_TIMEOUT_ERROR;
     }
     return 0;
 }
@@ -284,7 +284,7 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount)
             {
                 LiberaBrillianceCSPILERR_ << "Error waiting trigger:" << rc;
 
-                return -rc;
+                return rc;
             }
         }
         boost::mutex::scoped_lock lock(io_mux);
@@ -542,16 +542,15 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void *data, int sizeb)
         LiberaBrillianceCSPILDBG_ << "IOP Acquire driver mode:" << driver_mode;
         if (driver_mode & LIBERA_IOP_MODE_TRIGGERED)
         {
-            cfg.mask |= cfg.want_trigger;
+            cfg.mask |= liberaconfig::want_trigger;
             LiberaBrillianceCSPILDBG_ << "Enable Trigger";
-            ep.trig_mode = CSPI_TRIGMODE_SET;
             ep.trig_mode = CSPI_TRIGMODE_SET;
             cspi_setenvparam(env_handle, &ep, CSPI_ENV_TRIGMODE);
                 
         }
         else
         {
-            cfg.mask &= ~cfg.want_trigger;
+            cfg.mask &= ~liberaconfig::want_trigger;
             LiberaBrillianceCSPILDBG_ << "Disable Trigger";
             ep.trig_mode = 0;
             cspi_setenvparam(env_handle, &ep, CSPI_ENV_TRIGMODE);

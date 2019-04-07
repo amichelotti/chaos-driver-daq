@@ -232,6 +232,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
             "Notify mode is not reached");
         addStateVariable(StateVariableTypeAlarmDEV,"env_not_reached",
             "Notify env is not reached");
+        addStateVariable(StateVariableTypeAlarmDEV,"trigger_timeout",
+            "Notify trigger timeout");
 
         addStateVariable(StateVariableTypeAlarmDEV,"acquisition_error",
             "Notify an error");	
