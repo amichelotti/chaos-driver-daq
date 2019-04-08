@@ -65,11 +65,15 @@ int LiberaBrillianceCSPIDriver::read_libera(liberaData_t *data,int size){
 static volatile size_t _event_id = 0;
 static pthread_cond_t eventc = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t eventm = PTHREAD_MUTEX_INITIALIZER;
-
+static int not_handled_events=0;
 int event_callback(CSPI_EVENT *p)
 {
     _event_id = p->hdr.id;
-    LiberaBrillianceCSPILDBG_ << "Trigger Event arised:" << _event_id;
+    if((not_handled_events%20)==0){
+        LiberaBrillianceCSPILDBG_ << "Trigger Event arised:" << _event_id <<" not handled:"<<not_handled_events;
+    }
+    not_handled_events++;
+
     pthread_cond_signal(&eventc);
 
     return 0;
@@ -259,7 +263,7 @@ int LiberaBrillianceCSPIDriver::wait_trigger()
         pthread_mutex_lock(&eventm);
         rc = pthread_cond_timedwait(&eventc, &eventm, &timeout);
         pthread_mutex_unlock(&eventm);
-
+        not_handled_events=0;
         LiberaBrillianceCSPILDBG_ << " exit wait stat:" << rc;
     } while ((0 == rc) && (CSPI_EVENT_TRIGGET != _event_id));
 
