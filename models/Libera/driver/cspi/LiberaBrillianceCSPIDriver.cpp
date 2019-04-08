@@ -670,7 +670,7 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void *data, int sizeb)
         break;
     case LIBERA_IOP_CMD_SETENV:
     {
-        cfg.operation = liberaconfig::setenv;
+      //  cfg.operation = liberaconfig::setenv;
         libera_env_t *cmd_env = (libera_env_t *)data;
 
         SET_ENV(KX, Kx);
@@ -724,7 +724,6 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void *data, int sizeb)
     {
         char *pdata = (char *)data;
         CSPI_BITMASK mask = ~(0LL);
-        cfg.operation = liberaconfig::listenv;
         LiberaBrillianceCSPILDBG_ << "GET ENV";
         CSPI_ENVPARAMS env;
         rc = cspi_getenvparam(env_handle, (CSPI_ENVPARAMS *)&env, mask);
@@ -746,7 +745,7 @@ int LiberaBrillianceCSPIDriver::iop(int operation, void *data, int sizeb)
         CSPI_SETTIMESTAMP ts;
         CSPI_BITMASK mask = 0LL;
 
-        cfg.operation = liberaconfig::settime;
+      //  cfg.operation = liberaconfig::settime;
         char *t = (char *)data;
         LiberaBrillianceCSPILDBG_ << "set time to:" << t;
 
