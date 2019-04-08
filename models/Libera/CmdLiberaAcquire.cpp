@@ -63,10 +63,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	wait_for_us=0;
 	loop=-1;
 	CmdLiberaDefault::setHandler(data);
-	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
-		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
-
-    }
+	
     //clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
     //setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
 

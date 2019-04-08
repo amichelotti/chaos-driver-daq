@@ -169,7 +169,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
 	getAttributeCache()->setInputDomainAsChanged();
     getAttributeCache()->setOutputDomainAsChanged();
-
+	sleep(1);
 	BC_NORMAL_RUNNING_PROPERTY
 
 }
