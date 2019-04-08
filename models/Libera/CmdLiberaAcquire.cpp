@@ -292,7 +292,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			CMDCUDBG_<<"MT:"<<*mt<<" ST:"<<*st <<" TV_sec:"<<ts.st.tv_sec<<" TV_NSEC:"<<ts.st.tv_nsec;
 
 		}
-		libera_dd_t q[*isamples];//=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
+		libera_dd_t pnt[*isamples];//=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
 		/*  if(pnt==NULL){
             CMDCUERR_<<"cannot retrieve dataset \"DD\"";
 		 *pmode=0;
