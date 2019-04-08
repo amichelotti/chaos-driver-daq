@@ -50,6 +50,7 @@ namespace driver {
                     
                     int32_t *pmode,*imode,*isamples,*ioffset;
                     bool*idd,*isa,*itrigger,*odd,*osa;
+										char*status;
                     c_data::CDataWrapper* config;
                     bool calc_poly;
                     double u[6],v[6];

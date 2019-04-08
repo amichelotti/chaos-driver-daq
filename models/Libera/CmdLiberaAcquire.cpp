@@ -63,7 +63,10 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	wait_for_us=0;
 	loop=-1;
 	CmdLiberaDefault::setHandler(data);
+	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
 
+    }
     //clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
     //setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
 
@@ -253,9 +256,13 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	*isa=*osa;
 
 	*itrigger=(tmode&LIBERA_IOP_MODE_TRIGGERED)?true:false;
+	setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 	getAttributeCache()->setInputDomainAsChanged();
 	samples=*isamples;
-
+	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+            CMDCUERR_<<" Cannot retrive STATUS";
+    } 
 	BC_NORMAL_RUNNING_PROPERTY;
 	usleep(wait_for_us);
 }
@@ -264,8 +271,6 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 	boost::posix_time::ptime curr;
 	int ret;
 	libera_ts_t ts;
-	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
-	setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 	if(acquire_duration !=0){
 		curr= boost::posix_time::microsec_clock::local_time();
@@ -339,8 +344,13 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			}
 
 			(*acquire_loops)++;
+			setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+			setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
 		} else {
+			if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+            CMDCUERR_<<" Cannot retrive STATUS";
+    		} 
 			if(ret==TRIGGER_TIMEOUT_ERROR){
 				setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
 			}else { 

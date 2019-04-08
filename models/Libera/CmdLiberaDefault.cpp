@@ -59,11 +59,12 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
+	int ret;
     getAttributeCache()->setOutputDomainAsChanged();
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=driverAccessorsErogator->getAccessoInstanceByIndex(0);
-  	CMDCUDBG_<< "Created accessor:"<<accessor;
+  //	CMDCUDBG_<< "Created accessor:"<<accessor;
 	if(accessor==NULL){
 		throw chaos::CException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
 	}
@@ -72,7 +73,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	if(driver==NULL){
 		throw chaos::CException(-2, "Cannot allocate driver resources", __FUNCTION__);
 	}
-	CMDCUDBG_<< "retrived BasicIODriver:"<<driver;
+	
 
         idd=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
         isa=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
@@ -145,6 +146,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
         vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
         sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
+		status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
 
         x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
         y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
@@ -152,6 +154,10 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 		*pmode=0;
 		*odd=false;
 		*osa=false;
+	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
+
+    }
 	getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", 0);
@@ -177,7 +183,6 @@ void CmdLiberaDefault::acquireHandler() {
         libera_ts_t ts;
         int ret;
 	//CMDCUDBG_ << "Default Acquiring libera status";
-	char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
 
     libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
