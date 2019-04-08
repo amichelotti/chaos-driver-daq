@@ -68,7 +68,10 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
     //setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)100000);
 
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"mode_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
 
+    }
 
 	/*if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
 
@@ -257,9 +260,9 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 	getAttributeCache()->setInputDomainAsChanged();
 	samples=*isamples;
-	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+	/*if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
             CMDCUERR_<<" Cannot retrive STATUS";
-    } 
+    } */
 	BC_NORMAL_RUNNING_PROPERTY;
 	usleep(wait_for_us);
 }
