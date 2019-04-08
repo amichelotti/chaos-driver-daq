@@ -154,6 +154,8 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 		*pmode=0;
 		*odd=false;
 		*osa=false;
+		*va=*vb=*vc=*vd=*x=*y=*sum=*q1=*q2=0;
+
 	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
 		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
 

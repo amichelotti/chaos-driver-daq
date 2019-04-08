@@ -243,7 +243,6 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	}
 	*pmode=tmode;
 	*acquire_loops=0;
-	getAttributeCache()->setOutputDomainAsChanged();
 	metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,CHAOS_FORMAT("start acquire mode %1% samples %2%",%*pmode %*isamples ));
 
 	boost::posix_time::ptime start_test = boost::posix_time::microsec_clock::local_time();
@@ -263,6 +262,24 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	/*if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
             CMDCUERR_<<" Cannot retrive STATUS";
     } */
+	va_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA_ACQ");
+    vb_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
+    vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
+    vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
+    sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
+	x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+    y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
+	for(int cnt=0;cnt<samples;cnt++){
+		va_acq[cnt]=0;
+		vb_acq[cnt]=0;
+		vc_acq[cnt]=0;
+		vd_acq[cnt]=0;
+		sum_acq[cnt]=0;
+		x_acq[cnt]=0;
+		y_acq[cnt]=0;
+	}
+	getAttributeCache()->setOutputDomainAsChanged();
+
 	BC_NORMAL_RUNNING_PROPERTY;
 	usleep(wait_for_us);
 }
