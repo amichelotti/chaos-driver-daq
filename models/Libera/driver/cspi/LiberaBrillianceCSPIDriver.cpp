@@ -278,6 +278,7 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount)
 {
     int rc;
     // Allways seek(), not just the first time.
+    LiberaBrillianceCSPILDBG_ <<" op:"<<cfg.operation<<" data size:"<<cfg.datasize<<" mask:"<<cfg.mask;
     if ((cfg.operation == liberaconfig::acquire) && (cfg.datasize > 0))
     {
         size_t nread = 0; //initialize variable to 0

@@ -283,7 +283,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 
 	if((*imode)&LIBERA_IOP_MODE_DD){
 		CMDCUDBG_ << "Acquiring DD";
-		if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
+		/*if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 			if(mt)
 				*mt = ts.mt;
 			if(st)
@@ -291,7 +291,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 
 			CMDCUDBG_<<"MT:"<<*mt<<" ST:"<<*st <<" TV_sec:"<<ts.st.tv_sec<<" TV_NSEC:"<<ts.st.tv_nsec;
 
-		}
+		}*/
 		libera_dd_t pnt[*isamples];//=(libera_dd_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "DD");
 		/*  if(pnt==NULL){
             CMDCUERR_<<"cannot retrieve dataset \"DD\"";
@@ -322,6 +322,8 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			*sum  = pnt[0].Sum;
 			*q1 = 0;
 			*q2 = 0;
+			setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+			setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 			CMDCUDBG_ << "DD read [ret="<<std::dec<<ret<<"]:"<<pnt[0];
 			for(int cnt=0;cnt<samples;cnt++){
 				va_acq[cnt]=pnt[cnt].Va;
@@ -341,8 +343,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			}
 
 			(*acquire_loops)++;
-			setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
-			setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+		
 
 		} else {
 			if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
@@ -435,7 +436,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 	}
 
 
-	CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
+//	CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
 	getAttributeCache()->setOutputDomainAsChanged();
 
 
