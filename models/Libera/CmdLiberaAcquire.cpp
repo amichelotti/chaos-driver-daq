@@ -436,7 +436,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 	}
 
 
-//	CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
+	CMDCUDBG_ << "End Acquiring loop:"<<*acquire_loops;
 	getAttributeCache()->setOutputDomainAsChanged();
 
 

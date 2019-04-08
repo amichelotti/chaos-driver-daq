@@ -292,7 +292,7 @@ int LiberaBrillianceCSPIDriver::read(void *buffer, int addr, int bcount)
                 return rc;
             }
         }
-        boost::mutex::scoped_lock lock(io_mux);
+      //  boost::mutex::scoped_lock lock(io_mux);
 
         if (cfg.mode == CSPI_MODE_SA)
         {
@@ -508,7 +508,7 @@ int LiberaBrillianceCSPIDriver::deinitIO()
 int LiberaBrillianceCSPIDriver::iop(int operation, void *data, int sizeb)
 {
     int rc;
-    boost::mutex::scoped_lock lock(io_mux);
+  //  boost::mutex::scoped_lock lock(io_mux);
 
 #define SET_ENV(cpimask, param)                                                                                                        \
     if (cmd_env->selector & CSPI_ENV_##cpimask)                                                                                        \
