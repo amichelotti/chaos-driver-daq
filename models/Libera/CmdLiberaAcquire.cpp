@@ -346,9 +346,9 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 		
 
 		} else {
-			if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+		/*	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
             CMDCUERR_<<" Cannot retrive STATUS";
-    		} 
+    		} */
 			if(ret==TRIGGER_TIMEOUT_ERROR){
 				setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
 			}else { 
