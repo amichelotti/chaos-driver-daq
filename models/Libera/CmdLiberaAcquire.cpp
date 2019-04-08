@@ -259,6 +259,11 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	*isa=*osa;
 
 	*itrigger=(tmode&LIBERA_IOP_MODE_TRIGGERED)?true:false;
+	if(*itrigger){
+		// if triggered free running
+		 clearFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY);
+    	setFeatures(chaos_batch::features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1);
+	}
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 	setStateVariableSeverity(StateVariableTypeAlarmDEV,"acquire_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 	getAttributeCache()->setInputDomainAsChanged();
