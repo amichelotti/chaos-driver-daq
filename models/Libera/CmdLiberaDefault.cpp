@@ -186,7 +186,7 @@ void CmdLiberaDefault::acquireHandler() {
         int ret;
 	//CMDCUDBG_ << "Default Acquiring libera status";
 
-    libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
+    /*libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
 		if((ret=driver->read((void*)&pnt,0,sizeof(libera_sa_t)))>=0){
 			bpmpos mm;
@@ -207,7 +207,7 @@ void CmdLiberaDefault::acquireHandler() {
 			y_acq[0] = mm.y;
 			CMDCUDBG_ << "SA read:"<<pnt;
 
-		} 
+		} */
 	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
             CMDCUERR_<<" Cannot retrive STATUS";
     } 
