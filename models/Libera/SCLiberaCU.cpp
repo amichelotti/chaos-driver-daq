@@ -180,6 +180,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("SUM","SUM",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q1","Q1",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q2","Q2",DataType::TYPE_INT32,chaos::DataType::Output);
+        addAttributeToDataSet("MSI","Maximum Sum Index",DataType::TYPE_INT32,chaos::DataType::Output);
 
         
 	
