@@ -1,5 +1,6 @@
 #!/bin/bash
-lista="libera13 libera12 libera10 libera02 libera03 libera05 libera06 libera07 libera08 libera09 libera01"
+#lista="libera13 libera12 libera10 libera02 libera03 libera05 libera06 libera07 libera08 libera09 libera01 libera04"
+lista="libera05 libera06 libera10  libera02 libera08 libera13 libera12  libera03 libera07  libera09 libera01"
 
 for i in $lista;do
 echo "* connecting to $i"

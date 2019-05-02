@@ -127,8 +127,8 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
         getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", 0);
         getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", 0);
         getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", 0);
-        getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
-        getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
+      //  getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
+       // getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
         
          getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
          getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
@@ -214,8 +214,8 @@ void driver::daq::libera::CmdBTFdaqAcquire::setHandler(c_data::CDataWrapper *dat
         vb_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
         vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
         vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
-        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
-        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
+       // x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+       // y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
          if(mode&LIBERA_IOP_MODE_PERMLOOP){
              loops=-1;
@@ -295,8 +295,8 @@ void driver::daq::libera::CmdBTFdaqAcquire::acquireHandler() {
                 vc_acq[cnt]=pnt[cnt].Vc;
                 vd_acq[cnt]=pnt[cnt].Vd;
 		//                mm=bpm_voltage_to_mm(type,pnt[cnt].Va,pnt[cnt].Vb,pnt[cnt].Vc,pnt[cnt].Vd);
-                x_acq[cnt]=pnt[cnt].X;
-		y_acq[cnt]=pnt[cnt].Y;
+                //x_acq[cnt]=pnt[cnt].X;
+		        //y_acq[cnt]=pnt[cnt].Y;
             }
 
              (*acquire_loops)++;

@@ -201,8 +201,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addBinaryAttributeAsSubtypeToDataSet("VC_ACQ","VC ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("VD_ACQ","VD ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
 
-        addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
-        addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+        //addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+        //addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
     	addBinaryAttributeAsSubtypeToDataSet("SUM_ACQ","SUM ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
 
      /*

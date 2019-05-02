@@ -147,14 +147,16 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
         sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
 		status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
+		msi=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MSI");
 
-        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
-        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
+        //x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+        //y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
 		*pmode=0;
 		*odd=false;
 		*osa=false;
 		*va=*vb=*vc=*vd=*x=*y=*sum=*q1=*q2=0;
+	*msi=0;
 
 	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
 		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
@@ -164,8 +166,9 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", 0);
-	getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
-	getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
+	//getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
+	//getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
+	
 	getAttributeCache()->setOutputAttributeNewSize("SUM_ACQ", 0);
 	getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
 	getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
