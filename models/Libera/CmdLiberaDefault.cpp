@@ -211,6 +211,7 @@ void CmdLiberaDefault::acquireHandler() {
 			CMDCUDBG_ << "SA read:"<<pnt;
 
 		} */
+	*status=0;	
 	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
             CMDCUERR_<<" Cannot retrive STATUS";
     } 
