@@ -1,5 +1,6 @@
 #!/bin/bash
-lista="libera05 libera06 libera10 libera04 libera02 libera08 libera13 libera12  libera03 libera07  libera09 libera01"
+lista="libera05 libera06 libera10 libera02 libera08 libera13 libera12  libera03 libera07  libera09 libera01"
+# libera04 
 for i in $lista;do
     echo "* stopping $i"
     ssh root@$i /etc/init.d/chaos-us.sh stop    
