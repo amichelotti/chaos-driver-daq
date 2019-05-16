@@ -86,7 +86,7 @@ std::stringstream& operator<<(std::stringstream& os, const CSPI_ENVPARAMS& obj){
 	os << std::setw(tab) << "Interlock" << ": ";
 	const int *q = p + ILK_PARAMCOUNT - 1;
 
-	std::copy(p, q, std::ostream_iterator<int>(std::cout," "));
+//	std::copy(p, q, std::ostream_iterator<int>(std::cout," "));
 	os << *q << std::endl;
 	p += ILK_PARAMCOUNT;
 

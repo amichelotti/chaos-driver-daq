@@ -77,7 +77,6 @@ SCLiberaCU::~SCLiberaCU() {
 void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
   SCCULDBG<<"defining commands";
 	//install all command
-
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaDefault), true,true);
 	//installCommand<CmdLiberaAcquire>("acquire");
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaEnv));
@@ -86,8 +85,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 	installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaAcquire));
 
 	//set it has default
-	setDefaultCommand("default");
-	SCCULDBG<<"defining dataset";
+//	setDefaultCommand("default");
+	//SCCULDBG<<"defining dataset";
         
         addAttributeToDataSet("timeout",
 						  "Time out triggering",
@@ -181,6 +180,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("SUM","SUM",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q1","Q1",DataType::TYPE_INT32,chaos::DataType::Output);
         addAttributeToDataSet("Q2","Q2",DataType::TYPE_INT32,chaos::DataType::Output);
+        addAttributeToDataSet("MSI","Maximum Sum Index",DataType::TYPE_INT32,chaos::DataType::Output);
 
         
 	
@@ -202,8 +202,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addBinaryAttributeAsSubtypeToDataSet("VC_ACQ","VC ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("VD_ACQ","VD ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
 
-        addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
-        addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+        //addBinaryAttributeAsSubtypeToDataSet("X_ACQ","X ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
+        //addBinaryAttributeAsSubtypeToDataSet("Y_ACQ","Y ACQUIRED",chaos::DataType::SUB_TYPE_DOUBLE,1,chaos::DataType::Output);
     	addBinaryAttributeAsSubtypeToDataSet("SUM_ACQ","SUM ACQUIRED",chaos::DataType::SUB_TYPE_INT32,1,chaos::DataType::Output);
 
      /*
@@ -231,6 +231,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 
         addStateVariable(StateVariableTypeAlarmDEV,"mode_not_reached",
             "Notify mode is not reached");
+        addStateVariable(StateVariableTypeAlarmDEV,"env_not_reached",
+            "Notify env is not reached");
+        addStateVariable(StateVariableTypeAlarmDEV,"trigger_timeout",
+            "Notify trigger timeout");
 
         addStateVariable(StateVariableTypeAlarmDEV,"acquisition_error",
             "Notify an error");	

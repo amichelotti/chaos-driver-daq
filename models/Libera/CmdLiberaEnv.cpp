@@ -11,7 +11,7 @@
 #include <boost/format.hpp>
 #include <chaos/common/data/cache/AbstractSharedDomainCache.h>
 using namespace chaos::common::data::cache;
-
+using namespace chaos::cu::control_manager;
 namespace c_data = chaos::common::data;
 namespace chaos_batch = chaos::common::batch_command;
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdLiberaEnv,"env","env command","72872f3e-36db-11e5-985f-334fcd6dff22")
@@ -61,10 +61,11 @@ void driver::daq::libera::CmdLiberaEnv::acquireHandler() {
 
 }
 void driver::daq::libera::CmdLiberaEnv::setHandler(c_data::CDataWrapper *data) {
-	int32_t *perr;
         int ret;
         
         CmdLiberaDefault::setHandler(data);
+        setStateVariableSeverity(StateVariableTypeAlarmDEV,"env_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelClear);\
+
 //        setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 
         
@@ -72,23 +73,22 @@ void driver::daq::libera::CmdLiberaEnv::setHandler(c_data::CDataWrapper *data) {
 CMDCUDBG_<<"checking environment "<< # param; \
         if(data->hasKey(# param )) {\
             libera_env_t env;\
+            std::stringstream ss;\
             env.value = data->getInt32Value(# param);\
             env.selector=CSPI_ENV_## param;\
-            CMDCUDBG_<<"Setting env \""<< # param <<"\" ("<<std::hex<<env.selector<<std::dec<<")="<<env.value ;\
+            ss<<"Setting env \""<< # param <<"\" ("<<std::hex<<env.selector<<std::dec<<")="<<env.value ;\
+            CMDCUDBG_<<ss.str();\
             if((ret=driver->iop(LIBERA_IOP_CMD_SETENV,&env,sizeof(libera_env_t)))!=0){\
-                *perr|=LIBERA_ERROR_SETTING_ENV;\
                 getAttributeCache()->setOutputDomainAsChanged();\
-                BC_END_RUNNING_PROPERTY;\
-                throw chaos::CException(ret, "Cannot set environment", __FUNCTION__);\
-            }\
-            CMDCUDBG_<<"Sucessfully applied \""<< # param <<"\" ("<<std::hex<<env.selector<<std::dec<<")="<<env.value ;\
-	}
+                BC_FAULT_RUNNING_PROPERTY;\
+		        setStateVariableSeverity(StateVariableTypeAlarmDEV,"env_not_reached", chaos::common::alarm::MultiSeverityAlarmLevelHigh);\
+                metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,"Cannot set env:"+ss.str() );\
+                return;\
+            } else {metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,ss.str() );}}
         
-        perr=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "error");
-        *perr=0;
+       
        
          if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
-            *perr|=LIBERA_ERROR_STOP_ACQUIRE;
             getAttributeCache()->setOutputDomainAsChanged();
 
             BC_END_RUNNING_PROPERTY;
@@ -131,4 +131,6 @@ CMDCUDBG_<<"checking environment "<< # param; \
             getAttributeCache()->setOutputDomainAsChanged();
         }
         BC_END_RUNNING_PROPERTY;
+        
+        
 }

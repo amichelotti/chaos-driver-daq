@@ -42,7 +42,6 @@ public:
     uint8_t implementedHandler();
     void acquireHandler();
     void  setHandler(c_data::CDataWrapper *data);
-    void endHandler();
 
 
 private:

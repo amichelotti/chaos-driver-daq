@@ -46,10 +46,12 @@ namespace driver {
                       uint64_t     *st; // system time
                     int32_t* va,*vb,*vc,*vd,*q,*sum,*q1,*q2;
                     int32_t* va_acq,*vb_acq,*vc_acq,*vd_acq,*sum_acq;
-                    double *x_acq,*y_acq,*x,*y;
+                    double *x,*y;
+										int32_t* msi;
                     
                     int32_t *pmode,*imode,*isamples,*ioffset;
                     bool*idd,*isa,*itrigger,*odd,*osa;
+										char*status;
                     c_data::CDataWrapper* config;
                     bool calc_poly;
                     double u[6],v[6];
@@ -68,7 +70,6 @@ namespace driver {
 			 \return the mask for the runnign state
 			 */
 			void acquireHandler();
-			void endHandler();
 		public:
 			CmdLiberaDefault();
 			~CmdLiberaDefault();
