@@ -293,15 +293,15 @@ void CmdAcquireDafneAccumulatorBPM::acquireHandler() {
 				int32_t *vvb_acq=(int32_t*) *vb_acq[cnt];
 				int32_t *vvc_acq=(int32_t*) *vc_acq[cnt];
 				int32_t *vvd_acq=(int32_t*) *vd_acq[cnt];
-				double *vx_acq=(double*) *x_acq[cnt];
-				double *vy_acq=(double*) *y_acq[cnt];
-				for(cntt=0;cntt<samples_v;cntt++){
+				//double *vx_acq=(double*) *x_acq[cnt];
+				//double *vy_acq=(double*) *y_acq[cnt];
+				/*for(cntt=0;cntt<samples_v;cntt++){
 					mm=bpm_voltage_to_mm(coeff_u[cnt],coeff_v[cnt],vva_acq[cntt],vvb_acq[cntt],vvc_acq[cntt],vvd_acq[cntt]);
 					dx=mm.x;
 					dy=mm.y;
 					vx_acq[cntt]=dx;
 					vy_acq[cntt]=dy;
-				}
+				}*/
 
 			}
 

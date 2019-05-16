@@ -41,10 +41,7 @@ CmdLiberaDefault::CmdLiberaDefault() {
   st=NULL;
   calc_poly=true;
 }
-void CmdLiberaDefault::endHandler() {
-	CMDCUDBG_<<"Close Command:'"<<this->getAlias()<<"'";
-	 getAttributeCache()->setOutputDomainAsChanged();
-}
+
 CmdLiberaDefault::~CmdLiberaDefault() {
     if(driver){
         delete driver;
@@ -62,11 +59,12 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 
     // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
+	int ret;
     getAttributeCache()->setOutputDomainAsChanged();
 
 	setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 	chaos::cu::driver_manager::driver::DriverAccessor * accessor=driverAccessorsErogator->getAccessoInstanceByIndex(0);
-  	CMDCUDBG_<< "Created accessor:"<<accessor;
+  //	CMDCUDBG_<< "Created accessor:"<<accessor;
 	if(accessor==NULL){
 		throw chaos::CException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
 	}
@@ -75,14 +73,18 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
 	if(driver==NULL){
 		throw chaos::CException(-2, "Cannot allocate driver resources", __FUNCTION__);
 	}
-	CMDCUDBG_<< "retrived BasicIODriver:"<<driver;
+	
 
         idd=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
         isa=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
         itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
         imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
         isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
-        
+        *idd=false;
+		*isa=false;
+		*itrigger=false;
+		*imode=0;
+		*isamples=0;
 
         ioffset=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
 
@@ -144,10 +146,35 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
         vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
         vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
         sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
+		status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
+		msi=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MSI");
 
-        x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
-        y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
+        //x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
+        //y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
          acquire_loops = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ACQUISITION");
+		*pmode=0;
+		*odd=false;
+		*osa=false;
+		*va=*vb=*vc=*vd=*x=*y=*sum=*q1=*q2=0;
+	*msi=0;
+
+	if((ret=driver->iop(LIBERA_IOP_CMD_STOP,0,0))!=0){
+		metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelError,CHAOS_FORMAT("Error STOPPING ACQUIRE Acquire mode %1% samples %2%",%*imode %*isamples ));
+
+    }
+	getAttributeCache()->setOutputAttributeNewSize("VA_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("VB_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("VC_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("VD_ACQ", 0);
+	//getAttributeCache()->setOutputAttributeNewSize("X_ACQ", 0);
+	//getAttributeCache()->setOutputAttributeNewSize("Y_ACQ", 0);
+	
+	getAttributeCache()->setOutputAttributeNewSize("SUM_ACQ", 0);
+	getAttributeCache()->setOutputAttributeNewSize("ADC_CW", 0);
+	getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
+	getAttributeCache()->setInputDomainAsChanged();
+    getAttributeCache()->setOutputDomainAsChanged();
+	sleep(1);
 	BC_NORMAL_RUNNING_PROPERTY
 
 }
@@ -161,9 +188,8 @@ void CmdLiberaDefault::acquireHandler() {
         libera_ts_t ts;
         int ret;
 	//CMDCUDBG_ << "Default Acquiring libera status";
-	char * status= getAttributeCache()->getRWPtr<char>(DOMAIN_OUTPUT, "STATUS");
 
-    libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
+    /*libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
 		if((ret=driver->read((void*)&pnt,0,sizeof(libera_sa_t)))>=0){
 			bpmpos mm;
@@ -184,11 +210,12 @@ void CmdLiberaDefault::acquireHandler() {
 			y_acq[0] = mm.y;
 			CMDCUDBG_ << "SA read:"<<pnt;
 
-		} 
-	/*if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
-            CMDCUDERR_<<" Cannot retrive STATUS";
+		} */
+	*status=0;	
+	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+            CMDCUERR_<<" Cannot retrive STATUS";
     } 
-    */
+    
 	/*        
 		  if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 
