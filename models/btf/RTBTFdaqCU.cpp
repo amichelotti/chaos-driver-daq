@@ -35,7 +35,7 @@ using namespace ::driver::daq::btf;
 namespace chaos_batch = chaos::common::batch_command;
 
 #define ENABLE_VETO 0x0
-#define DISABLE_VETO 0xffff
+#define DISABLE_VETO 0x1
 
 #define CLOSEDEV(_x) \
     _x ## _close(_x ## _handle);
@@ -217,21 +217,17 @@ void RTBTFdaqCU::unitInit() throw(CException) {
 
     triggers=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER");
 
-    /*
-     * OPENDEV(caen513);
-    sleep(1);
-    caen513_reset(caen513_handle);
-     * */
+    
     //  caen513_init(caen513_handle,V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
     //
-    //caen513_init(caen513_handle,1); //use board defaults
-    /*
+    caen513_init(caen513_handle,1); //use board defaults
+    
   for(cnt=8;cnt<16;cnt++)
     caen513_setChannelMode(caen513_handle,cnt, V513_CHANMODE_NEG|V513_CHANMODE_IGLITCHED|V513_CHANMODE_INPUT); // 15 trigger in
-  *
-  for(cnt=0;cnt<16;cnt++)
+  
+  for(cnt=0;cnt<8;cnt++)
     caen513_setChannelMode(caen513_handle,cnt, V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
-  */
+  
 
 
 
@@ -239,6 +235,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     caen965_init(caen965_handle,0,1);
     caen792_init(caen792_handle,0,1);
     sis3800_init(sis3800_handle);
+    caen513_reset(caen513_handle);
 
     //resetTM(caen513_handle);
     // caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
@@ -262,6 +259,8 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     int ret,cnt;
     uint64_t cycle0,cycle1;
     counter_old=counter;
+    caen513_set(caen513_handle,((counter&0xF)<<1) |ENABLE_VETO); // SW veto ON
+
     if(sis3800_handle){
        /* for(cnt=0;cnt<32;cnt++){
             counters[cnt]=sis3800_readCounter(sis3800_handle,cnt);
@@ -278,7 +277,6 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     }
     if(caen965_handle){
         ret = caen965_acquire_channels_poll(caen965_handle,qdclow,qdchi,0,16,&cycle0,0);
-    //caen513_set(caen513_handle,ENABLE_VETO); // SW veto ON
     }
     //    dump_channels(out,low,cycle0,ret);
     // dump_channels(out,hi,cycle0,ret);
@@ -311,7 +309,7 @@ void RTBTFdaqCU::unitRun() throw(CException) {
 
     //    caen513_reset(caen513_handle);
     //    caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
-    //caen513_set(caen513_handle,DISABLE_VETO); // SW veto OF
+    caen513_set(caen513_handle,((counter&0xF)<<1) |DISABLE_VETO); // SW veto OF
 }
 
 // Abstract method for the stop of the control unit
