@@ -34,7 +34,7 @@ namespace driver {
 			PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTBTFdaqCU);
 
 		protected:
-                    
+                    vmewrap_vme_handle_t vme;
                     const uint32_t *sis3800_addr,*caen965_addr,*caen792_addr,*caen513_addr;
                     caen965_handle_t caen965_handle;
                     caen792_handle_t caen792_handle;
