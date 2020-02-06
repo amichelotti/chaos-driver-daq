@@ -73,6 +73,9 @@ RTBTFdaqCU::RTBTFdaqCU(const string& _control_unit_id,
    caen792_handle=NULL;
    sis3800_handle=NULL;
    caen513_handle=NULL;
+   caen792_chans=16;
+   caen965_chans=16;
+
    CDataWrapper params;
    std::string vme_param,vme_driver;
    params.setSerializedJsonData(_control_unit_param.c_str());
@@ -92,26 +95,32 @@ RTBTFdaqCU::RTBTFdaqCU(const string& _control_unit_id,
     if(vme==NULL){
         throw chaos::CException(-1,"error initializing driver:"+vmep->getJSONString(),_control_unit_id);
     }
-    if(params.hasKey("qdc")){
-        chaos::common::data::CDWUniquePtr p=params.getCSDataValue("qdc");
+    if(params.hasKey("caen965")){
+        chaos::common::data::CDWUniquePtr p=params.getCSDataValue("caen965");
         if(!p->hasKey("address")){
             throw chaos::CException(-1,"missing 'address' key :"+p->getJSONString(),_control_unit_id);
+        }
+        if(p->hasKey("channels")){
+               caen965_chans=p->getInt32Value("channels");
         }
         unsigned add=strtoul(p->getStringValue("address").c_str(),0,0);
         caen965_handle=caen965_open(vme,add);
         if(!caen965_handle){
-            throw chaos::CException(-1,"cannot initialize qdc",_control_unit_id);
+            throw chaos::CException(-1,"cannot initialize caen965",_control_unit_id);
         }
     }
-    if(params.hasKey("tdc")){
-        chaos::common::data::CDWUniquePtr p=params.getCSDataValue("tdc");
+    if(params.hasKey("caen792")){
+        chaos::common::data::CDWUniquePtr p=params.getCSDataValue("caen792");
         if(!p->hasKey("address")){
             throw chaos::CException(-1,"missing 'address' key :"+p->getJSONString(),_control_unit_id);
+        }
+         if(p->hasKey("channels")){
+               caen792_chans=p->getInt32Value("channels");
         }
         unsigned add=strtoul(p->getStringValue("address").c_str(),0,0);
         caen792_handle=caen792_open(vme,add);
         if(!caen792_handle){
-            throw chaos::CException(-1,"cannot initialize tdc",_control_unit_id);
+            throw chaos::CException(-1,"cannot initialize caen792",_control_unit_id);
         }
     }
 
@@ -173,11 +182,16 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
                           DataType::Output);
 
     if(caen965_handle){
-        addBinaryAttributeAsSubtypeToDataSet("QDC965HI","Vector of 16 Channels High Resolution",chaos::DataType::SUB_TYPE_INT32,16*sizeof(int32_t),chaos::DataType::Output);
-        addBinaryAttributeAsSubtypeToDataSet("QDC965LO","Vector of 16 Channels Low Resolution",chaos::DataType::SUB_TYPE_INT32,16*sizeof(int32_t),chaos::DataType::Output);
+        if(caen965_chans==16){
+            addBinaryAttributeAsSubtypeToDataSet("QDC965HI","Vector of Channels High Resolution",chaos::DataType::SUB_TYPE_INT32,caen965_chans*sizeof(int32_t),chaos::DataType::Output);
+            addBinaryAttributeAsSubtypeToDataSet("QDC965LO","Vector of Channels Low Resolution",chaos::DataType::SUB_TYPE_INT32,caen965_chans*sizeof(int32_t),chaos::DataType::Output);
+        } else if(caen965_chans==32){
+            addBinaryAttributeAsSubtypeToDataSet("QDC965","Vector of Channels Low Resolution",chaos::DataType::SUB_TYPE_INT32,caen965_chans*sizeof(int32_t),chaos::DataType::Output);
+        }
+
     }
     if(caen792_handle){
-        addBinaryAttributeAsSubtypeToDataSet("QDC792","Vector of 32 Channels ",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
+        addBinaryAttributeAsSubtypeToDataSet("QDC792","Vector of Channels ",chaos::DataType::SUB_TYPE_INT32,caen792_chans*sizeof(int32_t),chaos::DataType::Output);
     }
     if(sis3800_handle){
         addBinaryAttributeAsSubtypeToDataSet("SCALER","Vector of 32 Counters ",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
@@ -199,10 +213,16 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     loop=0;
 
     if(caen965_handle){
+        if(caen965_chans==16){
+             qdchi=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965HI");
+            qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965LO");
+        } else {
+            qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965");
+            qdchi=&qdclow[16];
 
-        qdchi=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965HI");
 
-        qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965LO");
+        }
+       
     }
     if(caen792_handle){
         qdc792=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC792");
@@ -281,7 +301,7 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     //    dump_channels(out,low,cycle0,ret);
     // dump_channels(out,hi,cycle0,ret);
     if(caen792_handle){
-        ret = caen792_acquire_channels_poll(caen792_handle,qdc792,0,16,&cycle1,0);
+        ret = caen792_acquire_channels_poll(caen792_handle,qdc792,0,caen792_chans,&cycle1,0);
     }
     //    dump_channels(out,ch,cycle1,ret);
     //counter_middle=sis3800_readCounter(sis3800_handle,30);
