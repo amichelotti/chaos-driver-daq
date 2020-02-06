@@ -28,6 +28,7 @@ using namespace chaos::common::data;
 using namespace chaos::common::data::cache;
 
 using namespace chaos::common::batch_command;
+using namespace chaos::cu::control_manager;
 
 using namespace chaos::cu::control_manager::slow_command;
 using namespace chaos::cu::driver_manager::driver;
@@ -75,7 +76,8 @@ RTBTFdaqCU::RTBTFdaqCU(const string& _control_unit_id,
    caen513_handle=NULL;
    caen792_chans=16;
    caen965_chans=16;
-
+    last_eval=0;
+    counter_trigger=counter_etrigger=0;
    CDataWrapper params;
    std::string vme_param,vme_driver;
    params.setSerializedJsonData(_control_unit_param.c_str());
@@ -181,6 +183,15 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
                           DataType::TYPE_INT64,
                           DataType::Output);
 
+    addAttributeToDataSet("TRIGGER_FREQ",
+                          "Evaluated Trigger Freq",
+                          DataType::TYPE_DOUBLE,
+                          DataType::Output);
+    addAttributeToDataSet("TRIGGER_EFREQ",
+                          "Evaluated effective trigger",
+                          DataType::TYPE_DOUBLE,
+                          DataType::Output);
+
     if(caen965_handle){
         if(caen965_chans==16){
             addBinaryAttributeAsSubtypeToDataSet("QDC965HI","Vector of Channels High Resolution",chaos::DataType::SUB_TYPE_INT32,caen965_chans*sizeof(int32_t),chaos::DataType::Output);
@@ -196,7 +207,9 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
     if(sis3800_handle){
         addBinaryAttributeAsSubtypeToDataSet("SCALER","Vector of 32 Counters ",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
     }
-
+addStateVariable(StateVariableTypeAlarmCU, "missing_trigger",
+                   "No trigger received", 5000);
+  
 }
 
 void RTBTFdaqCU::unitDefineCustomAttribute() {
@@ -241,13 +254,14 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     //  caen513_init(caen513_handle,V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
     //
     caen513_init(caen513_handle,1); //use board defaults
-    
-  for(cnt=8;cnt<16;cnt++)
+        caen513_reset(caen513_handle);
+
+  for(cnt=8;cnt<16;cnt++){
     caen513_setChannelMode(caen513_handle,cnt, V513_CHANMODE_NEG|V513_CHANMODE_IGLITCHED|V513_CHANMODE_INPUT); // 15 trigger in
-  
-  for(cnt=0;cnt<8;cnt++)
+  }
+  for(cnt=0;cnt<8;cnt++){
     caen513_setChannelMode(caen513_handle,cnt, V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
-  
+  }
 
 
 
@@ -255,7 +269,6 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     caen965_init(caen965_handle,0,1);
     caen792_init(caen792_handle,0,1);
     sis3800_init(sis3800_handle);
-    caen513_reset(caen513_handle);
 
     //resetTM(caen513_handle);
     // caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
@@ -272,13 +285,35 @@ void RTBTFdaqCU::unitStart() throw(CException) {
     tot_lost=0;
     if(sis3800_handle)
         sis3800_clear(sis3800_handle);
-
+    caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
+last_eval=chaos::common::utility::TimingUtil::getTimeStamp();
 }
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitRun() throw(CException) {
     int ret,cnt;
     uint64_t cycle0,cycle1;
     counter_old=counter;
+    uint32_t pio;
+    uint64_t now=chaos::common::utility::TimingUtil::getTimeStamp();
+
+    if(((pio=caen513_get(caen513_handle))&0x8000)==0){
+
+      if((now-last_eval)>10000){
+          setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger",
+                           chaos::common::alarm::MultiSeverityAlarmLevelWarning);
+  
+	
+      } else if((now-last_eval)>60000){
+           setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger",
+                           chaos::common::alarm::MultiSeverityAlarmLevelHigh);
+  
+
+      }
+      return;
+    }
+     setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger",
+                           chaos::common::alarm::MultiSeverityAlarmLevelClear);
+  
     caen513_set(caen513_handle,((counter&0xF)<<1) |ENABLE_VETO); // SW veto ON
 
     if(sis3800_handle){
@@ -286,7 +321,8 @@ void RTBTFdaqCU::unitRun() throw(CException) {
             counters[cnt]=sis3800_readCounter(sis3800_handle,cnt);
         }*/
         sis3800_readCounter(sis3800_handle,counters,32);
-        counter=counters[30];
+        counter=counters[31];
+        counter_middle=counters[24];
     }
     DPRINT("start acquisition SW:%10llu HW %10u",loop,counter);
     if(loop==0){
@@ -305,7 +341,13 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     }
     //    dump_channels(out,ch,cycle1,ret);
     //counter_middle=sis3800_readCounter(sis3800_handle,30);
-    
+    if((now-last_eval)>2000){
+        getAttributeCache()->setOutputAttributeValue("TRIGGER_FREQ",(double)1000.0*(counter-counter_trigger)/(now-last_eval));
+        getAttributeCache()->setOutputAttributeValue("TRIGGER_EFREQ",(double)1000.0*(counter_middle-counter_etrigger)/(now-last_eval));
+        counter_etrigger=counter_middle;
+        counter_trigger=counter;
+        last_eval=now;
+    }
     *acquisition=loop;
     *trigger_lost=tot_lost;
     *triggers=*triggers+ (counter_middle-counter);
