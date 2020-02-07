@@ -271,7 +271,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     sis3800_init(sis3800_handle);
 
     //resetTM(caen513_handle);
-    // caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
+     caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
 
 
 
@@ -301,12 +301,16 @@ void RTBTFdaqCU::unitRun() throw(CException) {
       if((now-last_eval)>10000){
           setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger",
                            chaos::common::alarm::MultiSeverityAlarmLevelWarning);
-  
-	
+        usleep(10000);
+        caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
+
+	    getAttributeCache()->setOutputDomainAsChanged();
+
       } else if((now-last_eval)>60000){
            setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger",
                            chaos::common::alarm::MultiSeverityAlarmLevelHigh);
-  
+        usleep(10000);
+        getAttributeCache()->setOutputDomainAsChanged();
 
       }
       return;
