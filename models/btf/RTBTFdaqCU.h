@@ -39,7 +39,9 @@ namespace driver {
                     caen965_handle_t caen965_handle;
                     caen792_handle_t caen792_handle;
 					uint64_t last_eval;
-					uint32_t counter_trigger,counter_etrigger;
+					bool veto_enable;
+					bool pio_latch;
+					uint32_t counter_trigger,counter_etrigger,timeout_ms;
 					int caen792_chans;
 					int caen965_chans;
 
