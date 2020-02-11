@@ -38,7 +38,7 @@ namespace driver {
                     const uint32_t *sis3800_addr,*caen965_addr,*caen792_addr,*caen513_addr;
                     caen965_handle_t caen965_handle;
                     caen792_handle_t caen792_handle;
-					uint64_t last_eval;
+					uint64_t last_eval,last_eval_trigger;
 					bool veto_enable;
 					bool pio_latch;
 					uint32_t counter_trigger,counter_etrigger,timeout_ms;

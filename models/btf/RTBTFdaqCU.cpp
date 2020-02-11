@@ -78,7 +78,7 @@ RTBTFdaqCU::RTBTFdaqCU(const string &_control_unit_id,
   timeout_ms = 0;
   caen792_chans = 16;
   caen965_chans = 16;
-  last_eval = 0;
+  last_eval = last_eval_trigger=0;
   veto_enable = true;
   pio_latch = true;
   counter_trigger = counter_etrigger = 0;
@@ -88,6 +88,17 @@ RTBTFdaqCU::RTBTFdaqCU(const string &_control_unit_id,
   if (!params.hasKey("vme")) {
     throw chaos::CException(-1, "missing 'vme' key", _control_unit_id);
   }
+  if (params.hasKey("timeout")) {
+    timeout_ms = params.getInt32Value("timeout");
+
+  }
+if (params.hasKey("veto")) {
+    veto_enable = params.getBoolValue("veto");
+  }
+
+  if (params.hasKey("pio_latch")) {
+    pio_latch = params.getBoolValue("pio_latch");
+  }
   chaos::common::data::CDWUniquePtr vmep = params.getCSDataValue("vme");
   if (!vmep->hasKey("driver")) {
     throw chaos::CException(-1, "missing 'driver' in 'vme'", _control_unit_id);
@@ -95,17 +106,8 @@ RTBTFdaqCU::RTBTFdaqCU(const string &_control_unit_id,
     vme_driver = vmep->getStringValue("driver");
   }
 
-  if (vmep->hasKey("timeout")) {
-    timeout_ms = vmep->getInt32Value("timeout");
-  }
-
-  if (vmep->hasKey("veto")) {
-    veto_enable = vmep->getBoolValue("veto");
-  }
-
-  if (vmep->hasKey("pio_latch")) {
-    pio_latch = vmep->getBoolValue("pio_latch");
-  }
+  
+  
   if (vmep->hasKey("params")) {
     vme_param = vmep->getStringValue("params");
   }
@@ -184,7 +186,7 @@ RTBTFdaqCU::~RTBTFdaqCU() {}
  */
 void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
 
-  SCCULDBG << "defining dataset";
+  SCCULDBG << "defining dataset timeout ms:"<<timeout_ms<<" latch:"<<pio_latch<<" veto:"<<veto_enable;
 
   addAttributeToDataSet("ACQUISITION", "Acquisition number",
                         DataType::TYPE_INT64, DataType::Output);
@@ -308,6 +310,7 @@ void RTBTFdaqCU::unitStart() throw(CException) {
   caen513_clear(caen513_handle);
   caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
   last_eval = chaos::common::utility::TimingUtil::getTimeStamp();
+  last_eval_trigger=last_eval;
 }
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitRun() throw(CException) {
@@ -321,21 +324,21 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     if (((pio = caen513_get(caen513_handle)) & 0x8000) == 0) {
       caen513_clear(caen513_handle);
 
-      if ((now - last_eval) > 10000) {
+      if ((now - last_eval_trigger) > 10000) {
         setStateVariableSeverity(
             StateVariableTypeAlarmCU, "missing_trigger",
             chaos::common::alarm::MultiSeverityAlarmLevelWarning);
         usleep(10000);
         caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
 
-      } else if ((now - last_eval) > 60000) {
+      } else if ((now - last_eval_trigger) > 60000) {
         setStateVariableSeverity(
             StateVariableTypeAlarmCU, "missing_trigger",
             chaos::common::alarm::MultiSeverityAlarmLevelHigh);
         usleep(10000);
       }
       getAttributeCache()->setOutputDomainAsChanged();
-
+      last_eval_trigger=now;
       return;
 
       caen513_clear(caen513_handle);
@@ -347,7 +350,6 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     caen513_set(caen513_handle,
                 ((counter & 0xF) << 1) | ENABLE_VETO); // SW veto ON
   }
-  last_eval = now;
   if (sis3800_handle) {
     /* for(cnt=0;cnt<32;cnt++){
          counters[cnt]=sis3800_readCounter(sis3800_handle,cnt);
