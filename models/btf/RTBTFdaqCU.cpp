@@ -280,7 +280,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
   //
   caen513_init(caen513_handle, 1); // use board defaults
   caen513_reset(caen513_handle);
-
+  
   for (cnt = 8; cnt < 16; cnt++) {
     caen513_setChannelMode(caen513_handle, cnt,
                            V513_CHANMODE_NEG | V513_CHANMODE_IGLITCHED |
@@ -290,13 +290,27 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     caen513_setChannelMode(caen513_handle, cnt,
                            V513_CHANMODE_NEG | V513_CHANMODE_OUTPUT);
   }
-
+  
   caen965_init(caen965_handle, 0, 1);
   caen792_init(caen792_handle, 0, 1);
   sis3800_init(sis3800_handle);
 
   // resetTM(caen513_handle);
-  caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+  if(veto_enable){
+    caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+  } else {
+    caen513_set(caen513_handle, 0x7); // SW veto OFF
+
+  }
+   
+   /*   caen513_set(caen513_handle, 0); // SW veto OFF
+
+      caen513_set(caen513_handle, 0x7); // SW veto OFF
+      caen513_set(caen513_handle, 0x0); // SW veto OFF
+
+      caen513_set(caen513_handle, 0x7); // SW veto OFF
+*/
+
 }
 
 // Abstract method for the start of the control unit
@@ -308,7 +322,9 @@ void RTBTFdaqCU::unitStart() throw(CException) {
   if (sis3800_handle)
     sis3800_clear(sis3800_handle);
   caen513_clear(caen513_handle);
-  caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+  if(veto_enable){
+    caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+  }
   last_eval = chaos::common::utility::TimingUtil::getTimeStamp();
   last_eval_trigger=last_eval;
 }
@@ -329,7 +345,9 @@ void RTBTFdaqCU::unitRun() throw(CException) {
             StateVariableTypeAlarmCU, "missing_trigger",
             chaos::common::alarm::MultiSeverityAlarmLevelWarning);
         usleep(10000);
-        caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+        if(veto_enable){
+         caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+        }
 
       } else if ((now - last_eval_trigger) > 60000) {
         setStateVariableSeverity(
