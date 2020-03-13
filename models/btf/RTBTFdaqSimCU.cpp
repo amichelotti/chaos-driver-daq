@@ -124,37 +124,27 @@ void RTBTFdaqSimCU::unitInit() throw(CException) {
         loop=0;
         
        sis3800_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT, "scaleradd");
-       DPRINT("SIS 0x%p",sis3800_addr);
        caen965_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc965add");
-              DPRINT("QDC965 0x%p",caen965_addr);
 
        caen792_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"qdc792add");
-              DPRINT("QDC792 0x%p",caen792_addr);
 
         //caen513_addr=getAttributeCache()->getROPtr<uint32_t>(DOMAIN_INPUT,"caen513add");
           //    DPRINT("CAEN513 0x%x",caen513_addr);
        //getAttributeCache()->setOutputAttributeNewSize("QDC965HI",16*sizeof(int32_t));
        
         qdchi=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965HI");
-                      DPRINT("QDC965HI 0x%x",qdchi);
 
         qdclow=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC965LO");
-                      DPRINT("QDC965LOW 0x%x",qdclow);
 
         qdc792=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC792");
-                      DPRINT("QDC792 0x%x",qdc792);
 
         counters=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"SCALER");
-                      DPRINT("COUNTERS 0x%x",counters);
 
         trigger_lost=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER LOST");
-                              DPRINT("TRIGGER LOST 0x%x",trigger_lost);
 
          acquisition=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"ACQUISITION");
-                                       DPRINT("ACQUISITION 0x%x",acquisition);
 
         triggers=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER");
-                                               DPRINT("TRIGGERS 0x%x",triggers);
 
        if((sis3800_addr  == NULL) || (caen965_addr==NULL) || (caen792_addr==NULL)){
            throw chaos::CException(-2, "BAD VME START ADDRESS", __PRETTY_FUNCTION__);
@@ -188,7 +178,7 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
     }
     counter=loop;
     
-    DPRINT("start acquisition SW:%10llu HW %10u",loop,counter);
+    DPRINT("start acquisition SW:%10lu HW %10u",loop,counter);
 
     if(counter>counter_old){
       tot_lost+=(counter-counter_old)-1;
@@ -206,7 +196,7 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
       discard=(counter_middle-counter-1);
       
       if(discard){
-          DERR("acquisition SW %llu HW:%llu discarded, lost %d trigger(s)",loop,counter,discard);
+          DERR("acquisition SW %u HW:%lu discarded, lost %d trigger(s)",loop,counter,discard);
       } else {
           getAttributeCache()->setOutputDomainAsChanged();
 
@@ -223,7 +213,7 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
 
 // Abstract method for the stop of the control unit
 void RTBTFdaqSimCU::unitStop() throw(CException) {
-        DPRINT("ACQUISITION STOP SW %llu HW %u",loop,counter);
+        DPRINT("ACQUISITION STOP SW %lu HW %u",loop,counter);
 
 	
 }

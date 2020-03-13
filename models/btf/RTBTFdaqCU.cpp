@@ -376,7 +376,7 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     counter = counters[31];
     counter_middle = counters[24];
   }
-  DPRINT("start acquisition SW:%10llu HW %10u", loop, counter);
+  DPRINT("start acquisition SW:%10lu HW %10u", loop, counter);
   if (loop == 0) {
     loop = counter;
   }
@@ -467,7 +467,7 @@ trigger(s)",loop,counter,discard); } else {
 
 // Abstract method for the stop of the control unit
 void RTBTFdaqCU::unitStop() throw(CException) {
-  DPRINT("ACQUISITION STOP SW %llu HW %u", loop, counter);
+  DPRINT("ACQUISITION STOP SW %lu HW %u", loop, counter);
 }
 
 // Abstract method for the deinit of the control unit
