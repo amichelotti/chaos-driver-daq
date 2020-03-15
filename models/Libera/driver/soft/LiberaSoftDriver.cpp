@@ -431,7 +431,7 @@ if(cmd_env->selector & CSPI_ENV_## cpimask ){\
             myenv.health.fan[0]=(int)wave->generate();
             
             ss<<myenv;
-            LiberaSoftDBG<<"GET ENV size:"<<std::min((uint32_t)sizeb,(uint32_t)ss.str().size())<<" val:"<<ss.str();
+//            LiberaSoftDBG<<"GET ENV size:"<<std::min((uint32_t)sizeb,(uint32_t)ss.str().size())<<" val:"<<ss.str();
 
             strncpy(pdata,ss.str().c_str(),std::min((uint32_t)sizeb,(uint32_t)ss.str().size()));
             break;
