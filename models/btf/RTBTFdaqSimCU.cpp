@@ -196,7 +196,7 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
       discard=(counter_middle-counter-1);
       
       if(discard){
-          DERR("acquisition SW %u HW:%lu discarded, lost %d trigger(s)",loop,counter,discard);
+          DERR("acquisition SW %lu HW:%u discarded, lost %d trigger(s)",loop,counter,discard);
       } else {
           getAttributeCache()->setOutputDomainAsChanged();
 
