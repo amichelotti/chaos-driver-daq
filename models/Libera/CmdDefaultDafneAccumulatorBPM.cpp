@@ -12,6 +12,8 @@ using namespace ::driver::misc;
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdDefaultDafneAccumulatorBPM,"default","devault command","62882f3e-36db-11e5-985f-334fcd6dff22")
 
 BATCH_COMMAND_CLOSE_DESCRIPTION()
+#define CTRLDBG_ DBG_LOG(CmdDefaultDafneAccumulatorBPM) 
+#define CTRLERR_ ERR_LOG(CmdDefaultDafneAccumulatorBPM)
 
 CmdDefaultDafneAccumulatorBPM::CmdDefaultDafneAccumulatorBPM() {
     

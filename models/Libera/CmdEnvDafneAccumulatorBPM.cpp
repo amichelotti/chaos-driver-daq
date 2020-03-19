@@ -12,6 +12,8 @@ using namespace ::driver::misc;
 BATCH_COMMAND_OPEN_DESCRIPTION_ALIAS(driver::daq::libera::,CmdEnvDafneAccumulatorBPM,"env","env command","62882f3e-37db-11e5-985f-334fcd6dff22")
 
 BATCH_COMMAND_CLOSE_DESCRIPTION()
+#define CTRLDBG_ DBG_LOG(CmdEnvDafneAccumulatorBPM) 
+#define CTRLERR_ ERR_LOG(CmdEnvDafneAccumulatorBPM)
 
 CmdEnvDafneAccumulatorBPM::CmdEnvDafneAccumulatorBPM() {
     
