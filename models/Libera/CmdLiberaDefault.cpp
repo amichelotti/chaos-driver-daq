@@ -212,7 +212,8 @@ void CmdLiberaDefault::acquireHandler() {
 
 		} */
 	*status=0;	
-	if(driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING)!=0){
+	 ret=driver->iop(LIBERA_IOP_CMD_GETENV,status,MAX_STRING);
+	if(ret!=0 && (ret !=DRV_BYPASS_DEFAULT_CODE)){
             CMDCUERR_<<" Cannot retrive STATUS";
     } 
     
