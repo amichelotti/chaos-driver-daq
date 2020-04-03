@@ -21,6 +21,8 @@ BATCH_COMMAND_ADD_INT32_PARAM("samples", "in DataOnDemand number of samples",cha
 BATCH_COMMAND_ADD_INT32_PARAM("loops", "acquisition loops, -1 means continuos, to break launch a acquire command with enable=0",chaos::common::batch_command::BatchCommandAndParameterDescriptionkey::BC_PARAMETER_FLAG_OPTIONAL)
 
 BATCH_COMMAND_CLOSE_DESCRIPTION()
+#define CTRLDBG_ DBG_LOG(CmdAcquireDafneAccumulatorBPM) 
+#define CTRLERR_ ERR_LOG(CmdAcquireDafneAccumulatorBPM)
 
 CmdAcquireDafneAccumulatorBPM::CmdAcquireDafneAccumulatorBPM() {
 	dafne_status = new ChaosDatasetAttribute("DAFNE/STATUS/dafne_status");
