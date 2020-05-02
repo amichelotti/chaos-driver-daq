@@ -31,7 +31,10 @@ or visit http://www.gnu.org
 extern "C" {
 #endif
 
+#ifdef __linux__
 #include <linux/ioctl.h>
+#endif
+
 #ifndef __KERNEL__
 #include <time.h>
 #include <limits.h>
