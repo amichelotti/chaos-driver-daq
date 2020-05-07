@@ -15,8 +15,14 @@ TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme_ca
 ADD_EXECUTABLE(daqbtfCU test/main.cpp)
 TARGET_LINK_LIBRARIES(daqbtfCU ${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme_caen common_vme_sis common_vme chaos_driver_misc common_debug ${FrameworkLib})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_vme_caen common_vme_sis common_vme ${FrameworkLib})
- INSTALL_TARGETS(/lib ${PROJECT_NAME})
- INSTALL_TARGETS(/bin daqbtfCU)
+ #INSTALL_TARGETS(/lib ${PROJECT_NAME})
+ INSTALL(TARGETS ${PROJECT_NAME}
+        DESTINATION "lib"
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+ #INSTALL_TARGETS(/bin daqbtfCU)
+ INSTALL(TARGETS daqbtfCU}
+        DESTINATION "bin"
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
  FILE(GLOB ss *.h)
  INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/btf)
