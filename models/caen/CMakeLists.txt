@@ -16,8 +16,14 @@ ADD_EXECUTABLE(caenDAQ test/main.cpp)
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common chaos_driver_misc_vme common_vme_caen common_vme common_debug ${FrameworkLib})
 TARGET_LINK_LIBRARIES(caenDAQ ${PROJECT_NAME} chaos_cutoolkit chaos_common chaos_driver_misc_vme common_vme_caen common_vme common_debug ${FrameworkLib})
 
- INSTALL_TARGETS(/lib ${PROJECT_NAME})
- INSTALL_TARGETS(/bin caenDAQ)
+ #INSTALL_TARGETS(/lib ${PROJECT_NAME})
+ INSTALL(TARGETS ${PROJECT_NAME}
+        DESTINATION "lib"
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+ #INSTALL_TARGETS(/bin caenDAQ)
+ INSTALL(TARGETS caenDAQ
+        DESTINATION "lib"
+        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
  FILE(GLOB ss *.h)
  INSTALL(FILES ${ss} DESTINATION include/driver/daq/models/caen)
