@@ -127,11 +127,6 @@ void RTBPMLibera::unitDeinit() throw(chaos::CException) {
 
 }
 
-//! pre imput attribute change
-void RTBPMLibera::unitInputAttributePreChangeHandler() throw(chaos::CException) {
-
-}
-
 //! attribute changed handler
 void RTBPMLibera::unitInputAttributeChangedHandler() throw(chaos::CException) {
 
