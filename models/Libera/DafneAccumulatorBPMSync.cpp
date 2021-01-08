@@ -218,11 +218,6 @@ void DafneAccumulatorBPMSync::unitDeinit() throw(chaos::CException) {
 group->deinit(1);
 }
 
-//! pre imput attribute change
-void DafneAccumulatorBPMSync::unitInputAttributePreChangeHandler() throw(chaos::CException) {
-
-}
-
 //! attribute changed handler
 void DafneAccumulatorBPMSync::unitInputAttributeChangedHandler() throw(chaos::CException) {
 
