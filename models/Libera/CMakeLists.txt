@@ -13,7 +13,7 @@ ADD_DEFINITIONS(${DRIVERS_FLAGS})
 INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ . ../ ../../ driver/mci/include/omniORB4)
 LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/driver/mci/lib)
 ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
-ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp)
+ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp )
 ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
 
 IF(BUILD_FORCE_STATIC)
@@ -21,7 +21,9 @@ IF(BUILD_FORCE_STATIC)
    ADD_LIBRARY(${PROJECT_NAME} STATIC ${DAQ_src} )
 
    #set_target_properties(BPMSync PROPERTIES LINK_FLAGS "-static -Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
-   set_target_properties(daqLiberaServer PROPERTIES LINK_FLAGS "-Wl,--whole-archive -lchaos_common -Wl,--no-whole-archive")
+   set_target_properties(daqLiberaServer PROPERTIES LINK_FLAGS "-u ZMQDirectIOServerObjectFactoryInstancer -u ZMQDirectIOClientObjectFactoryInstancer -u DefaultCommandDispatcherObjectFactoryInstancer -u ZMQClientObjectFactoryInstancer -u ZMQServerObjectFactoryInstancer -u SQLiteEntityDBObjectFactoryInstancer -u SharedCommandDispatcherObjectFactoryInstancer -u IODirectIOPSMsgDriverObjectFactoryInstancer")
+#  
+#   set_target_properties(daqLiberaServer PROPERTIES LINK_FLAGS "-Wl,-lchaos_common -Wl,--no-whole-archive")
 ELSE()
   ADD_LIBRARY(${PROJECT_NAME} SHARED ${DAQ_src})	
 	 
