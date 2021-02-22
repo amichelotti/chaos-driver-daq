@@ -117,6 +117,18 @@ if (params.hasKey("veto")) {
         -1, "error initializing driver:" + vmep->getJSONString(),
         _control_unit_id);
   }
+  if (params.hasKey("pio")) {
+    chaos::common::data::CDWUniquePtr p = params.getCSDataValue("pio");
+    if (!p->hasKey("address")) {
+      throw chaos::CException(
+          -1, "missing 'address' key :" + p->getJSONString(), _control_unit_id);
+    }
+    unsigned add = strtoul(p->getStringValue("address").c_str(), 0, 0);
+    caen513_handle = caen513_open(vme, add);
+    if (!caen513_handle) {
+      throw chaos::CException(-1, "cannot initialize pio", _control_unit_id);
+    }
+  }
   if (params.hasKey("caen965")) {
     chaos::common::data::CDWUniquePtr p = params.getCSDataValue("caen965");
     if (!p->hasKey("address")) {
@@ -162,18 +174,7 @@ if (params.hasKey("veto")) {
       throw chaos::CException(-1, "cannot initialize sis", _control_unit_id);
     }
   }
-  if (params.hasKey("pio")) {
-    chaos::common::data::CDWUniquePtr p = params.getCSDataValue("pio");
-    if (!p->hasKey("address")) {
-      throw chaos::CException(
-          -1, "missing 'address' key :" + p->getJSONString(), _control_unit_id);
-    }
-    unsigned add = strtoul(p->getStringValue("address").c_str(), 0, 0);
-    caen513_handle = caen513_open(vme, add);
-    if (!caen513_handle) {
-      throw chaos::CException(-1, "cannot initialize pio", _control_unit_id);
-    }
-  }
+  
 }
 
 /*
@@ -278,8 +279,9 @@ void RTBTFdaqCU::unitInit() throw(CException) {
 
   //  caen513_init(caen513_handle,V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
   //
-  caen513_init(caen513_handle, 1); // use board defaults
-  caen513_reset(caen513_handle);
+  if(caen513_handle){
+    caen513_init(caen513_handle, 1); // use board defaults
+    caen513_reset(caen513_handle);
   
   for (cnt = 8; cnt < 16; cnt++) {
     caen513_setChannelMode(caen513_handle, cnt,
@@ -290,18 +292,19 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     caen513_setChannelMode(caen513_handle, cnt,
                            V513_CHANMODE_NEG | V513_CHANMODE_OUTPUT);
   }
-  
-  caen965_init(caen965_handle, 0, 1);
-  caen792_init(caen792_handle, 0, 1);
-  sis3800_init(sis3800_handle);
-
-  // resetTM(caen513_handle);
-  if(veto_enable){
+   if(veto_enable){
     caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
   } else {
     caen513_set(caen513_handle, 0x7); // SW veto OFF
 
   }
+  }
+  caen965_init(caen965_handle, 0, 1);
+  caen792_init(caen792_handle, 0, 1);
+  sis3800_init(sis3800_handle);
+
+  // resetTM(caen513_handle);
+ 
    
    /*   caen513_set(caen513_handle, 0); // SW veto OFF
 
@@ -321,9 +324,11 @@ void RTBTFdaqCU::unitStart() throw(CException) {
   tot_lost = 0;
   if (sis3800_handle)
     sis3800_clear(sis3800_handle);
-  caen513_clear(caen513_handle);
-  if(veto_enable){
-    caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+  if(caen513_handle){
+    caen513_clear(caen513_handle);
+    if(veto_enable){
+      caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+    }
   }
   last_eval = chaos::common::utility::TimingUtil::getTimeStamp();
   last_eval_trigger=last_eval;
@@ -336,7 +341,7 @@ void RTBTFdaqCU::unitRun() throw(CException) {
   uint32_t pio;
   bool timeout_arose=false;
   uint64_t now = chaos::common::utility::TimingUtil::getTimeStamp();
-  if (pio_latch) {
+  if (caen513_handle&& pio_latch) {
     if (((pio = caen513_get(caen513_handle)) & 0x8000) == 0) {
       caen513_clear(caen513_handle);
 
@@ -364,7 +369,7 @@ void RTBTFdaqCU::unitRun() throw(CException) {
   }
   setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger",
                            chaos::common::alarm::MultiSeverityAlarmLevelClear);
-  if (veto_enable) {
+  if (caen513_handle&& veto_enable) {
     caen513_set(caen513_handle,
                 ((counter & 0xF) << 1) | ENABLE_VETO); // SW veto ON
   }
@@ -459,7 +464,7 @@ trigger(s)",loop,counter,discard); } else {
 
   //    caen513_reset(caen513_handle);
   //    caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
-  if (veto_enable) {
+  if (caen513_handle&&veto_enable) {
     caen513_set(caen513_handle,
                 ((counter & 0xF) << 1) | DISABLE_VETO); // SW veto OF
   }
