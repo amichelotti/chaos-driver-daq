@@ -47,7 +47,7 @@ namespace driver {
 
                     sis3800_handle_t sis3800_handle;
                     caen513_handle_t caen513_handle;
-                    uint32_t counter,counter_old,counter_middle; 
+                    uint32_t counter,counter_old,counter_all; 
                     uint64_t tot_lost,loop;
                     uint32_t*qdchi,*qdclow,*qdc792,*counters;
                     uint64_t* trigger_lost,*acquisition,*triggers;

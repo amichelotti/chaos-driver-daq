@@ -188,12 +188,12 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
     
     *acquisition=loop;
     *trigger_lost=tot_lost;
-    *triggers=*triggers+ (counter_middle-counter);
+    *triggers=*triggers+ (counter_all-counter);
     
-    if(counter_middle>counter){
+    if(counter_all>counter){
       int discard;
 
-      discard=(counter_middle-counter-1);
+      discard=(counter_all-counter-1);
       
       if(discard){
           DERR("acquisition SW %lu HW:%u discarded, lost %d trigger(s)",loop,counter,discard);
