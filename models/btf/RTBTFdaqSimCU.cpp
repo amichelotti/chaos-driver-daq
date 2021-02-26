@@ -92,10 +92,7 @@ void RTBTFdaqSimCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  "Acquisition number",
 						  DataType::TYPE_INT64,
 						  DataType::Output);
-        addAttributeToDataSet("TRIGGER",
-						  "Number of triggers",
-						  DataType::TYPE_INT64,
-						  DataType::Output);
+       
         addAttributeToDataSet("TRIGGER LOST",
 						  "Number of lost trigger",
 						  DataType::TYPE_INT64,
@@ -105,7 +102,7 @@ void RTBTFdaqSimCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addBinaryAttributeAsSubtypeToDataSet("QDC965HI","Vector of 16 Channels High Resolution",chaos::DataType::SUB_TYPE_INT32,16*sizeof(int32_t),chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("QDC965LO","Vector of 16 Channels Low Resolution",chaos::DataType::SUB_TYPE_INT32,16*sizeof(int32_t),chaos::DataType::Output);
         addBinaryAttributeAsSubtypeToDataSet("QDC792","Vector of 32 Channels ",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
-        addBinaryAttributeAsSubtypeToDataSet("SCALER","Vector of 32 Counters ",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
+     //   addBinaryAttributeAsSubtypeToDataSet("SCALER","Vector of 32 Counters ",chaos::DataType::SUB_TYPE_INT32,32*sizeof(int32_t),chaos::DataType::Output);
        
 	
 }
@@ -138,20 +135,19 @@ void RTBTFdaqSimCU::unitInit() throw(CException) {
 
         qdc792=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"QDC792");
 
-        counters=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"SCALER");
+     //   counters=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT,"SCALER");
 
         trigger_lost=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER LOST");
 
          acquisition=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"ACQUISITION");
 
-        triggers=getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT,"TRIGGER");
 
        if((sis3800_addr  == NULL) || (caen965_addr==NULL) || (caen792_addr==NULL)){
            throw chaos::CException(-2, "BAD VME START ADDRESS", __PRETTY_FUNCTION__);
        }
        
-        if((qdchi  == NULL) || (qdclow==NULL) || (qdc792==NULL) ||(counters==NULL)){
-            DPRINT("qdchi 0x%x qdclo 0x%x qdc792 0x%x counters 0x%x",qdchi,qdclow,qdc792,counters);
+        if((qdchi  == NULL) || (qdclow==NULL) || (qdc792==NULL) /*||(counters==NULL)*/){
+    //        DPRINT("qdchi 0x%x qdclo 0x%x qdc792 0x%x counters 0x%x",qdchi,qdclow,qdc792,counters);
        //    throw chaos::CException(-3, "BAD DATASET", __PRETTY_FUNCTION__);
        }
        
@@ -173,9 +169,9 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
     int ret,cnt;
     uint64_t cycle0,cycle1;
     counter_old=counter;
-    for(cnt=0;cnt<32;cnt++){
+   /* for(cnt=0;cnt<32;cnt++){
         counters[cnt]=0;
-    }
+    }*/
     counter=loop;
     
     DPRINT("start acquisition SW:%10lu HW %10u",loop,counter);
@@ -188,12 +184,11 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
     
     *acquisition=loop;
     *trigger_lost=tot_lost;
-    *triggers=*triggers+ (counter_middle-counter);
     
-    if(counter_middle>counter){
+    if(counter_all>counter){
       int discard;
 
-      discard=(counter_middle-counter-1);
+      discard=(counter_all-counter-1);
       
       if(discard){
           DERR("acquisition SW %lu HW:%u discarded, lost %d trigger(s)",loop,counter,discard);
