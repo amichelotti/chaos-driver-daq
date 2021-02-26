@@ -35,7 +35,7 @@ using namespace chaos::cu::driver_manager::driver;
 using namespace ::driver::daq::btf;
 namespace chaos_batch = chaos::common::batch_command;
 
-#define ENABLE_VETO 0x1
+#define ENABLE_VETO 0x3 // first two
 #define DISABLE_VETO 0x0
 #define COUNTER_ALL_TRIGGER 30
 #define COUNTER_VALID_TRIGGER 31
@@ -326,6 +326,10 @@ void RTBTFdaqCU::unitInit() throw(CException)
 
     for (cnt = 8; cnt < 16; cnt++)
     {
+
+      // configured as input glitched (clock is the input pin)
+      // negative (flip flop ) latch 1 on the falling edge
+      // transparent  
       caen513_setChannelMode(caen513_handle, cnt,
                              V513_CHANMODE_NEG | V513_CHANMODE_IGLITCHED |
                                  V513_CHANMODE_INPUT); // 15 trigger in
@@ -335,14 +339,8 @@ void RTBTFdaqCU::unitInit() throw(CException)
       caen513_setChannelMode(caen513_handle, cnt,
                              V513_CHANMODE_NEG | V513_CHANMODE_OUTPUT);
     }
-    if (veto_enable)
-    {
-      caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
-    }
-    else
-    {
-      caen513_set(caen513_handle, 0x7); // SW veto OFF
-    }
+    caen513_set(caen513_handle, DISABLE_VETO); // SW veto OFF
+
   }
   caen965_init(caen965_handle, 0, 1);
   caen792_init(caen792_handle, 0, 1);
@@ -393,7 +391,8 @@ void RTBTFdaqCU::unitRun() throw(CException)
   {
     if (((pio = caen513_get(caen513_handle)) & 0x8000) == 0)
     {
-      caen513_clear(caen513_handle);
+      // if zero no need to clear
+    //  caen513_clear(caen513_handle);
 
       if ((now - last_eval_trigger) > 10000)
       {
@@ -424,13 +423,12 @@ void RTBTFdaqCU::unitRun() throw(CException)
   if (caen513_handle && veto_enable)
   {
     caen513_set(caen513_handle,
-                ((counter & 0xF) << 1) | ENABLE_VETO); // SW veto ON
+                ((counter & 0xF) << 2) | ENABLE_VETO); // SW veto ON
+
   }
   if (sis3800_handle)
   {
-    /* for(cnt=0;cnt<32;cnt++){
-         counters[cnt]=sis3800_readCounter(sis3800_handle,cnt);
-     }*/
+    
     sis3800_readCounter(sis3800_handle, counters, 32);
     counter = counters[COUNTER_VALID_TRIGGER];
     counter_all = counters[COUNTER_ALL_TRIGGER];
@@ -509,30 +507,16 @@ void RTBTFdaqCU::unitRun() throw(CException)
     *acquisition = loop;
     *trigger_lost = tot_lost;
     *triggers = *triggers + (counter_all - counter);
-    /*
-   if(counter_all>counter){
-       int discard;
-
-       discard=(counter_all-counter-1);
-
-       if(discard){
-           DERR("acquisition SW %llu HW:%llu discarded, lost %d
-trigger(s)",loop,counter,discard); } else {
-//////            getAttributeCache()->setOutputDomainAsChanged();
-
-       }
-
-   }*/
     loop++;
   }
   getAttributeCache()->setOutputDomainAsChanged();
 
-  //    caen513_reset(caen513_handle);
-  //    caen513_set(caen513_handle,DISABLE_VETO); // SW veto OFF
   if (caen513_handle && veto_enable)
   {
+    caen513_clear(caen513_handle); //clear inputs
+
     caen513_set(caen513_handle,
-                ((counter & 0xF) << 1) | DISABLE_VETO); // SW veto OF
+                ((counter & 0xF) << 2) | DISABLE_VETO); // SW veto OF
   }
 }
 
