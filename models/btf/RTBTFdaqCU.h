@@ -26,7 +26,7 @@
 #include <common/vme/sis/sis3800_drv.h>
 #include <common/vme/caen/caen513_drv.h>
 
-
+#define PERIODIC_TASK 2000
 namespace driver {
 	namespace daq {
             namespace btf {
@@ -38,12 +38,13 @@ namespace driver {
                     const uint32_t *sis3800_addr,*caen965_addr,*caen792_addr,*caen513_addr;
                     caen965_handle_t caen965_handle;
                     caen792_handle_t caen792_handle;
-					uint64_t last_eval,last_eval_trigger;
+					uint64_t last_eval,last_eval_trigger,periodic_task;
 					bool veto_enable;
 					bool pio_latch;
 					uint32_t counter_trigger,counter_etrigger,timeout_ms;
 					int caen792_chans;
 					int caen965_chans;
+					double*freq,*efreq;
 
                     sis3800_handle_t sis3800_handle;
                     caen513_handle_t caen513_handle;
