@@ -37,7 +37,7 @@ namespace chaos_batch = chaos::common::batch_command;
 
 #define ENABLE_VETO 0x3  // first two
 #define DISABLE_VETO 0x0
-#define COUNTER_ALL_TRIGGER 24
+#define COUNTER_ALL_TRIGGER 30
 #define COUNTER_VALID_TRIGGER 31
 #define CLOSEDEV(_x) _x##_close(_x##_handle);
 
@@ -184,9 +184,10 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
   SCCULDBG << "defining dataset timeout ms:" << timeout_ms << " latch:" << pio_latch << " veto:" << veto_enable;
 
   addAttributeToDataSet("ACQUISITION", "Acquisition number", DataType::TYPE_INT64, DataType::Output);
-  addAttributeToDataSet("TRIGGER", "Number of triggers", DataType::TYPE_INT64, DataType::Output);
-  addAttributeToDataSet("TRIGGER LOST", "Number of lost trigger", DataType::TYPE_INT64, DataType::Output);
+  addAttributeToDataSet("TRIGGERS", "Triggers", DataType::TYPE_INT32, DataType::Output);
+  addAttributeToDataSet("TRIGGERS_VALID", "Triggers after veto", DataType::TYPE_INT32, DataType::Output);
 
+  addAttributeToDataSet("TRIGGER LOST", "Number of lost trigger", DataType::TYPE_INT64, DataType::Output);
   addAttributeToDataSet("TRIGGER_FREQ", "Evaluated Trigger Freq", DataType::TYPE_DOUBLE, DataType::Output);
   addAttributeToDataSet("TRIGGER_EFREQ", "Evaluated effective trigger", DataType::TYPE_DOUBLE, DataType::Output);
 
@@ -205,10 +206,10 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
     addBinaryAttributeAsSubtypeToDataSet(
         "QDC792", "Vector of Channels ", chaos::DataType::SUB_TYPE_INT32, caen792_chans * sizeof(int32_t), chaos::DataType::Output);
   }
-  if (sis3800_handle) {
+ /* if (sis3800_handle) {
     addBinaryAttributeAsSubtypeToDataSet(
         "SCALER", "Vector of 32 Counters ", chaos::DataType::SUB_TYPE_INT32, 32 * sizeof(int32_t), chaos::DataType::Output);
-  }
+  }*/
   if (pio_latch) {
     addStateVariable(StateVariableTypeAlarmCU, "missing_pio_trigger", "No PIO trigger received", 5000);
   }
@@ -243,19 +244,20 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     qdc792 = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC792");
   }
 
-  if (sis3800_handle) {
+ /* if (sis3800_handle) {
     counters = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "SCALER");
-  }
+  }*/
   trigger_lost =
       getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "TRIGGER LOST");
 
   acquisition =
       getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQUISITION");
 
-  triggers = getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "TRIGGER");
 
 	freq= getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "TRIGGER_FREQ");
   efreq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "TRIGGER_EFREQ");
+	triggers_valid=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "TRIGGERS_VALID");
+  triggers=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "TRIGGERS");
 
   //  caen513_init(caen513_handle,V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
   //
@@ -307,11 +309,14 @@ void RTBTFdaqCU::unitStart() throw(CException) {
   last_eval         = chaos::common::utility::TimingUtil::getTimeStamp();
   last_eval_trigger = last_eval;
   if (sis3800_handle) {
-    sis3800_readCounter(sis3800_handle, counters, 32);
-    counter     = counters[COUNTER_VALID_TRIGGER];
-    counter_all = counters[COUNTER_ALL_TRIGGER];
+ //   sis3800_readCounter(sis3800_handle, counters, 32);
+    counter     = sis3800_readCounter(sis3800_handle,COUNTER_VALID_TRIGGER);
+    counter_all = sis3800_readCounter(sis3800_handle,COUNTER_ALL_TRIGGER);
   }
   periodic_task = chaos::common::utility::TimingUtil::getTimeStamp();
+  loop = counter_all;
+  *trigger_lost=counter_all - loop;
+
 }
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitRun() throw(CException) {
@@ -322,13 +327,14 @@ void RTBTFdaqCU::unitRun() throw(CException) {
   bool     timeout_arose = false;
   uint64_t now           = chaos::common::utility::TimingUtil::getTimeStamp();
   if((periodic_task-now) > PERIODIC_TASK){
-    if (sis3800_handle) {
+   /* if (sis3800_handle) {
       sis3800_readCounter(sis3800_handle, counters, 32);
       counter     = counters[COUNTER_VALID_TRIGGER];
       counter_all = counters[COUNTER_ALL_TRIGGER];
-    }
+    }*/
     *freq=(double)1000.0 * (counter - counter_trigger) / (now - periodic_task);
     *efreq=(double)1000.0 * (counter_all - counter_etrigger) / (now - periodic_task);
+    *trigger_lost=counter_all - loop;
     setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger", chaos::common::alarm::MultiSeverityAlarmLevelClear);
     counter_etrigger = counter_all;
     counter_trigger  = counter;
@@ -341,9 +347,11 @@ void RTBTFdaqCU::unitRun() throw(CException) {
       // if zero no need to clear
       //  caen513_clear(caen513_handle);
       if (sis3800_handle) {
-        sis3800_readCounter(sis3800_handle, counters, 32);
-        counter     = counters[COUNTER_VALID_TRIGGER];
-        counter_all = counters[COUNTER_ALL_TRIGGER];
+      //  sis3800_readCounter(sis3800_handle, counters, 32);
+      //  counter     = counters[COUNTER_VALID_TRIGGER];
+      //  counter_all = counters[COUNTER_ALL_TRIGGER];
+      counter     = sis3800_readCounter(sis3800_handle,COUNTER_VALID_TRIGGER);
+      counter_all = sis3800_readCounter(sis3800_handle,COUNTER_ALL_TRIGGER);
       }
       if ((now - last_eval_trigger) > 60000) {
         setStateVariableSeverity(
@@ -373,14 +381,10 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     caen513_set(caen513_handle,
                 ((counter & 0xF) << 2) | ENABLE_VETO);  // SW veto ON
   }
-
+  counter     = sis3800_readCounter(sis3800_handle,COUNTER_VALID_TRIGGER);
+  counter_all = sis3800_readCounter(sis3800_handle,COUNTER_ALL_TRIGGER);
   DPRINT("start acquisition SW:%10lu HW %10u", loop, counter);
-  if (loop == 0) {
-    loop = counter;
-  }
-  if (counter > counter_old) {
-    tot_lost += (counter - counter_old) - 1;
-  }
+ 
   if (caen965_handle) {
     ret = caen965_acquire_channels_poll(caen965_handle, qdclow, qdchi, 0, 16, &cycle0, timeout_ms);
     if (timeout_ms > 0) {
@@ -410,10 +414,9 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     }
   }
   
-  *acquisition  = loop;
-  *trigger_lost = tot_lost;
-  *triggers     = *triggers + (counter_all - counter);
-  loop++;
+  *acquisition  = ++loop;
+  *triggers=counter_all;
+  *triggers_valid=counter;
 
   getAttributeCache()->setOutputDomainAsChanged();
 
