@@ -342,8 +342,13 @@ void RTBTFdaqCU::unitRun() throw(CException) {
     getAttributeCache()->setOutputDomainAsChanged();
     periodic_task=now;
   }
+  
   if (caen513_handle && pio_latch) {
-    if (((pio = caen513_get(caen513_handle)) & 0x8000) == 0) {
+
+    caen513_set(caen513_handle,
+                ((counter & 0xF) << 2) | DISABLE_VETO);  // SW veto OF
+  
+    while (((pio = caen513_get(caen513_handle)) & 0x8000) == 0) {
       // if zero no need to clear
       //  caen513_clear(caen513_handle);
       if (sis3800_handle) {
@@ -372,8 +377,9 @@ void RTBTFdaqCU::unitRun() throw(CException) {
 
       last_eval_trigger = now;
       //caen513_clear(caen513_handle);
-      return;
-    }
+      
+    
+    } 
   } 
   if (caen513_handle && veto_enable) {
     caen513_clear(caen513_handle);  //clear inputs
@@ -420,11 +426,7 @@ void RTBTFdaqCU::unitRun() throw(CException) {
 
   getAttributeCache()->setOutputDomainAsChanged();
 
-  if (caen513_handle && veto_enable) {
 
-    caen513_set(caen513_handle,
-                ((counter & 0xF) << 2) | DISABLE_VETO);  // SW veto OF
-  }
 }
 
 // Abstract method for the stop of the control unit
