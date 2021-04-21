@@ -12,9 +12,9 @@ ADD_DEFINITIONS(${DRIVERS_FLAGS})
 
 INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft driver/libera-driver-2-04-ebpp/ . ../ ../../ driver/mci/include/omniORB4)
 LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/driver/mci/lib)
-ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
+# ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp )
-ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
+# ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
 
 IF(BUILD_FORCE_STATIC)
 
@@ -30,11 +30,11 @@ ELSE()
 ENDIF()
 
 SET(DAQ_LIBRARY ${PROJECT_NAME} ${DRIVERS_LIB})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial chaos_driver_misc common_misc_wavegenerators ${FrameworkLib})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial common_misc_wavegenerators ${FrameworkLib})
 
-TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY} chaos_driver_misc chaos_cutoolkit chaos_common  common_serial chaos_driver_misc ${FrameworkLib})
- TARGET_LINK_LIBRARIES(daqLiberaClient chaos_driver_misc chaos_common chaos_driver_misc chaos_metadata_service_client ${DAQ_LIBRARY} ${FrameworkLib} )
-TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME} chaos_driver_misc chaos_cutoolkit chaos_common ${FrameworkLib})
+TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY}  chaos_cutoolkit chaos_common  common_serial chaos_driver_misc ${FrameworkLib})
+# TARGET_LINK_LIBRARIES(daqLiberaClient chaos_driver_misc chaos_common chaos_driver_misc chaos_metadata_service_client ${DAQ_LIBRARY} ${FrameworkLib} )
+# TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME} chaos_driver_misc chaos_cutoolkit chaos_common ${FrameworkLib})
 
 
 #INSTALL_TARGETS(/bin daqLiberaServer)
@@ -42,13 +42,13 @@ INSTALL(TARGETS daqLiberaServer
         DESTINATION "bin"
         PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
  #INSTALL_TARGETS(/bin daqLiberaClient)
- INSTALL(TARGETS daqLiberaClient
-        DESTINATION "bin"
-        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-#INSTALL_TARGETS(/bin BPMSync) 
-INSTALL(TARGETS BPMSync
-        DESTINATION "bin"
-        PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+#  INSTALL(TARGETS daqLiberaClient
+#         DESTINATION "bin"
+#         PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+# #INSTALL_TARGETS(/bin BPMSync) 
+# INSTALL(TARGETS BPMSync
+#         DESTINATION "bin"
+#         PERMISSIONS OWNER_WRITE OWNER_READ OWNER_EXECUTE GROUP_READ GROUP_WRITE GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 #INSTALL_TARGETS(/lib ${PROJECT_NAME})
 INSTALL(TARGETS ${PROJECT_NAME}
