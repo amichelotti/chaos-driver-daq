@@ -21,7 +21,7 @@
 #define _RTCAEN_h
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include <driver/misc/models/vme/RTVme.h>
+#include <common/vme/core/RTVme.h>
 #include <boost/algorithm/string.hpp>
 #include <chaos/cu_toolkit/command_manager/CommandManager.h>
 #include <common/debug/core/debug.h>
