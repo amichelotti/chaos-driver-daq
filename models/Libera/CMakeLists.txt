@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 project(chaos_driver_libera)
-
-SET(DAQ_src LiberaData.cpp  CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp  DafneAccumulatorBPMSync.cpp ChaosControllerLibera.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp)
+## dependency on chaoscontroller
+# DafneAccumulatorBPMSync.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp  ChaosControllerLibera.cpp)
+SET(DAQ_src LiberaData.cpp  CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp    )
 ADD_DEFINITIONS(-DEBPP)
 SET(BasicDAQClient_src test/DAQClient.cpp)
 ADD_SUBDIRECTORY(driver/cspi)
@@ -14,6 +15,9 @@ INCLUDE_DIRECTORIES( driver/cspi driver/mci driver/mci/include driver/soft drive
 LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/driver/mci/lib)
 # ADD_EXECUTABLE(BPMSync test/BPMSync.cpp)
 ADD_EXECUTABLE(daqLiberaServer test/daqLiberaServer.cpp )
+
+
+
 # ADD_EXECUTABLE(daqLiberaClient test/daqLiberaClient.cpp ChaosControllerLibera.cpp)
 
 IF(BUILD_FORCE_STATIC)
