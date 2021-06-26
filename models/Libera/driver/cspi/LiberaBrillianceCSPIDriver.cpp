@@ -270,7 +270,7 @@ int LiberaBrillianceCSPIDriver::wait_trigger()
     if (ETIMEDOUT == rc)
     {
         LiberaBrillianceCSPILERR_ << "trigger timeout:" << rc;
-        return TRIGGER_TIMEOUT_ERROR;
+        return chaos::ErrorCode::EC_GENERIC_TIMEOUT;
     }
     return 0;
 }
