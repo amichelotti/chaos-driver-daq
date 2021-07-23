@@ -73,13 +73,15 @@ RTBTFdaqCU::RTBTFdaqCU(const string&                _control_unit_id,
   // tdc:{"channels":16,"address":"0xaaaa0000"}
   // pio:{"channels":16,"address":"0xaaaa0000"}
   // sis:{"channels":16,"address":"0xaaaa0000"}
-  caen965_handle = NULL;
-  caen792_handle = NULL;
-  sis3800_handle = NULL;
-  caen513_handle = NULL;
-  timeout_ms     = 0;
-  caen792_chans  = 16;
-  caen965_chans  = 16;
+  caen965_handle   = NULL;
+  caen792_handle   = NULL;
+  sis3800_handle   = NULL;
+  caen513_handle   = NULL;
+  out_channels_965 = false;
+  out_channels_792 = false;
+  timeout_ms       = 0;
+  caen792_chans    = 16;
+  caen965_chans    = 16;
   last_eval = last_eval_trigger = 0;
   veto_enable                   = true;
   pio_latch                     = true;
@@ -136,6 +138,13 @@ RTBTFdaqCU::RTBTFdaqCU(const string&                _control_unit_id,
     if (p->hasKey("channels")) {
       caen965_chans = p->getInt32Value("channels");
     }
+    if (p->hasKey("outchannels") && p->isVector("outchannels")) {
+      CMultiTypeDataArrayWrapperSPtr arr = p->getVectorValue("outchannels");
+      for (int cnt = 0; cnt < arr->size(); cnt++) {
+        output_channels["caen965"].push_back(arr->getInt32ElementAtIndex(cnt));
+        out_channels_965 = true;
+      }
+    }
     unsigned add   = strtoul(p->getStringValue("address").c_str(), 0, 0);
     caen965_handle = caen965_open(vme, add);
     if (!caen965_handle) {
@@ -150,6 +159,13 @@ RTBTFdaqCU::RTBTFdaqCU(const string&                _control_unit_id,
     }
     if (p->hasKey("channels")) {
       caen792_chans = p->getInt32Value("channels");
+    }
+    if (p->hasKey("outchannels") && p->isVector("outchannels")) {
+      CMultiTypeDataArrayWrapperSPtr arr = p->getVectorValue("outchannels");
+      for (int cnt = 0; cnt < arr->size(); cnt++) {
+        output_channels["caen792"].push_back(arr->getInt32ElementAtIndex(cnt));
+        out_channels_792 = true;
+      }
     }
     unsigned add   = strtoul(p->getStringValue("address").c_str(), 0, 0);
     caen792_handle = caen792_open(vme, add);
@@ -187,26 +203,47 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
   addAttributeToDataSet("TRIGGERS", "Triggers", DataType::TYPE_INT32, DataType::Output);
   addAttributeToDataSet("TRIGGERS_VALID", "Triggers after veto", DataType::TYPE_INT32, DataType::Output);
 
-  addAttributeToDataSet("TRIGGER LOST", "Number of lost trigger", DataType::TYPE_INT64, DataType::Output);
+  addAttributeToDataSet("TRIGGER_LOST", "Number of lost trigger", DataType::TYPE_INT64, DataType::Output);
   addAttributeToDataSet("TRIGGER_FREQ", "Evaluated Trigger Freq", DataType::TYPE_DOUBLE, DataType::Output);
   addAttributeToDataSet("TRIGGER_EFREQ", "Evaluated effective trigger", DataType::TYPE_DOUBLE, DataType::Output);
 
   if (caen965_handle) {
-    if (caen965_chans == 16) {
-      addBinaryAttributeAsSubtypeToDataSet(
-          "QDC965HI", "Vector of Channels High Resolution", chaos::DataType::SUB_TYPE_INT32, caen965_chans * sizeof(int32_t), chaos::DataType::Output);
-      addBinaryAttributeAsSubtypeToDataSet(
-          "QDC965LO", "Vector of Channels Low Resolution", chaos::DataType::SUB_TYPE_INT32, caen965_chans * sizeof(int32_t), chaos::DataType::Output);
-    } else if (caen965_chans == 32) {
-      addBinaryAttributeAsSubtypeToDataSet(
-          "QDC965", "Vector of Channels Low Resolution", chaos::DataType::SUB_TYPE_INT32, caen965_chans * sizeof(int32_t), chaos::DataType::Output);
+    if (out_channels_965) {
+      std::vector<int> arr = output_channels["caen965"];
+      for (int cnt = 0; cnt < arr.size(); cnt++) {
+        std::stringstream ss;
+        ss << "QDC" << arr[cnt];
+        addAttributeToDataSet(ss.str(), "Channel " + ss.str(), DataType::TYPE_INT32, DataType::Output);
+        SCCULDBG<<"CHANNEL "<<ss.str();
+        }
+    } else {
+      if (caen965_chans == 16) {
+        addBinaryAttributeAsSubtypeToDataSet(
+            "QDC965HI", "Vector of Channels High Resolution", chaos::DataType::SUB_TYPE_INT32, caen965_chans * sizeof(int32_t), chaos::DataType::Output);
+        addBinaryAttributeAsSubtypeToDataSet(
+            "QDC965LO", "Vector of Channels Low Resolution", chaos::DataType::SUB_TYPE_INT32, caen965_chans * sizeof(int32_t), chaos::DataType::Output);
+      } else if (caen965_chans == 32) {
+        addBinaryAttributeAsSubtypeToDataSet(
+            "QDC965", "Vector of Channels Low Resolution", chaos::DataType::SUB_TYPE_INT32, caen965_chans * sizeof(int32_t), chaos::DataType::Output);
+      }
     }
   }
   if (caen792_handle) {
-    addBinaryAttributeAsSubtypeToDataSet(
-        "QDC792", "Vector of Channels ", chaos::DataType::SUB_TYPE_INT32, caen792_chans * sizeof(int32_t), chaos::DataType::Output);
+    if (out_channels_965) {
+      std::vector<int> arr = output_channels["caen792"];
+      for (int cnt = 0; cnt < arr.size(); cnt++) {
+        std::stringstream ss;
+        ss << "TDC" << arr[cnt];
+        addAttributeToDataSet(ss.str(), "Channel " + ss.str(), DataType::TYPE_INT32, DataType::Output);
+        SCCULDBG<<"CHANNEL "<<ss.str();
+
+      }
+    } else {
+      addBinaryAttributeAsSubtypeToDataSet(
+          "QDC792", "Vector of Channels ", chaos::DataType::SUB_TYPE_INT32, caen792_chans * sizeof(int32_t), chaos::DataType::Output);
+    }
   }
- /* if (sis3800_handle) {
+  /* if (sis3800_handle) {
     addBinaryAttributeAsSubtypeToDataSet(
         "SCALER", "Vector of 32 Counters ", chaos::DataType::SUB_TYPE_INT32, 32 * sizeof(int32_t), chaos::DataType::Output);
   }*/
@@ -230,21 +267,32 @@ void RTBTFdaqCU::unitInit() throw(CException) {
   loop                  = 0;
 
   if (caen965_handle) {
-    if (caen965_chans == 16) {
-      qdchi =
-          getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC965HI");
-      qdclow =
-          getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC965LO");
+    if (out_channels_965) {
+      uint32_t* arr = (uint32_t*)malloc(sizeof(int32_t) * 32);
+      qdclow        = arr;
+      qdchi         = arr + 16;
     } else {
-      qdclow = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC965");
-      qdchi  = &qdclow[16];
+      if (caen965_chans == 16) {
+        qdchi =
+            getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC965HI");
+        qdclow =
+            getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC965LO");
+      } else {
+        qdclow = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC965");
+        qdchi  = &qdclow[16];
+      }
     }
   }
   if (caen792_handle) {
-    qdc792 = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC792");
+    if (out_channels_792) {
+      uint32_t* arr = (uint32_t*)malloc(sizeof(int32_t) * 32);
+      qdc792        = arr;
+    } else {
+      qdc792 = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "QDC792");
+    }
   }
 
- /* if (sis3800_handle) {
+  /* if (sis3800_handle) {
     counters = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "SCALER");
   }*/
   trigger_lost =
@@ -253,11 +301,10 @@ void RTBTFdaqCU::unitInit() throw(CException) {
   acquisition =
       getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQUISITION");
 
-
-	freq= getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "TRIGGER_FREQ");
-  efreq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "TRIGGER_EFREQ");
-	triggers_valid=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "TRIGGERS_VALID");
-  triggers=getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "TRIGGERS");
+  freq           = getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "TRIGGER_FREQ");
+  efreq          = getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "TRIGGER_EFREQ");
+  triggers_valid = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "TRIGGERS_VALID");
+  triggers       = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "TRIGGERS");
 
   //  caen513_init(caen513_handle,V513_CHANMODE_NEG|V513_CHANMODE_OUTPUT);
   //
@@ -277,8 +324,12 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     }
     caen513_set(caen513_handle, DISABLE_VETO);  // SW veto OFF
   }
-  caen965_init(caen965_handle, 0, 1);
-  caen792_init(caen792_handle, 0, 1);
+  if (caen965_handle) {
+    caen965_init(caen965_handle, 0, 1);
+  }
+  if (caen792_handle) {
+    caen792_init(caen792_handle, 0, 1);
+  }
   sis3800_init(sis3800_handle);
 
   // resetTM(caen513_handle);
@@ -302,21 +353,22 @@ void RTBTFdaqCU::unitStart() throw(CException) {
     sis3800_clear(sis3800_handle);
   if (caen513_handle) {
     caen513_clear(caen513_handle);
-    if (veto_enable) {
+    caen513_set(caen513_handle, DISABLE_VETO);  // SW veto OFFtot_lost
+
+    /*(if (veto_enable) {
       caen513_set(caen513_handle, DISABLE_VETO);  // SW veto OFFtot_lost
-    }
+    }*/
   }
   last_eval         = chaos::common::utility::TimingUtil::getTimeStamp();
   last_eval_trigger = last_eval;
   if (sis3800_handle) {
- //   sis3800_readCounter(sis3800_handle, counters, 32);
-    counter     = sis3800_readCounter(sis3800_handle,COUNTER_VALID_TRIGGER);
-    counter_all = sis3800_readCounter(sis3800_handle,COUNTER_ALL_TRIGGER);
+    //   sis3800_readCounter(sis3800_handle, counters, 32);
+    counter     = sis3800_readCounter(sis3800_handle, COUNTER_VALID_TRIGGER);
+    counter_all = sis3800_readCounter(sis3800_handle, COUNTER_ALL_TRIGGER);
   }
   periodic_task = chaos::common::utility::TimingUtil::getTimeStamp();
-  loop = counter_all;
-  *trigger_lost=counter_all - loop;
-
+  loop          = counter_all;
+  *trigger_lost = counter_all - loop;
 }
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitRun() throw(CException) {
@@ -326,37 +378,36 @@ void RTBTFdaqCU::unitRun() throw(CException) {
   uint32_t pio;
   bool     timeout_arose = false;
   uint64_t now           = chaos::common::utility::TimingUtil::getTimeStamp();
-  if((periodic_task-now) > PERIODIC_TASK){
-   /* if (sis3800_handle) {
+  if ((periodic_task - now) > PERIODIC_TASK) {
+    /* if (sis3800_handle) {
       sis3800_readCounter(sis3800_handle, counters, 32);
       counter     = counters[COUNTER_VALID_TRIGGER];
       counter_all = counters[COUNTER_ALL_TRIGGER];
     }*/
-    *freq=(double)1000.0 * (counter - counter_trigger) / (now - periodic_task);
-    *efreq=(double)1000.0 * (counter_all - counter_etrigger) / (now - periodic_task);
-    *trigger_lost=counter_all - loop;
+    *freq         = (double)1000.0 * (counter - counter_trigger) / (now - periodic_task);
+    *efreq        = (double)1000.0 * (counter_all - counter_etrigger) / (now - periodic_task);
+    *trigger_lost = counter_all - loop;
     setStateVariableSeverity(StateVariableTypeAlarmCU, "missing_trigger", chaos::common::alarm::MultiSeverityAlarmLevelClear);
     counter_etrigger = counter_all;
     counter_trigger  = counter;
-      
-    getAttributeCache()->setOutputDomainAsChanged();
-    periodic_task=now;
-  }
-  
-  if (caen513_handle && pio_latch) {
 
+    getAttributeCache()->setOutputDomainAsChanged();
+    periodic_task = now;
+  }
+
+  if (caen513_handle && pio_latch) {
     caen513_set(caen513_handle,
                 ((counter & 0xF) << 2) | DISABLE_VETO);  // SW veto OF
-  
-    while (((pio = caen513_get(caen513_handle)) & 0x8000) == 0) {
+
+    while (veto_enable&&(((pio = caen513_get(caen513_handle)) & 0x8000) == 0)) {
       // if zero no need to clear
       //  caen513_clear(caen513_handle);
       if (sis3800_handle) {
-      //  sis3800_readCounter(sis3800_handle, counters, 32);
-      //  counter     = counters[COUNTER_VALID_TRIGGER];
-      //  counter_all = counters[COUNTER_ALL_TRIGGER];
-      counter     = sis3800_readCounter(sis3800_handle,COUNTER_VALID_TRIGGER);
-      counter_all = sis3800_readCounter(sis3800_handle,COUNTER_ALL_TRIGGER);
+        //  sis3800_readCounter(sis3800_handle, counters, 32);
+        //  counter     = counters[COUNTER_VALID_TRIGGER];
+        //  counter_all = counters[COUNTER_ALL_TRIGGER];
+        counter     = sis3800_readCounter(sis3800_handle, COUNTER_VALID_TRIGGER);
+        counter_all = sis3800_readCounter(sis3800_handle, COUNTER_ALL_TRIGGER);
       }
       if ((now - last_eval_trigger) > 60000) {
         setStateVariableSeverity(
@@ -377,20 +428,18 @@ void RTBTFdaqCU::unitRun() throw(CException) {
 
       last_eval_trigger = now;
       //caen513_clear(caen513_handle);
-      
-    
-    } 
-  } 
+    }
+  }
   if (caen513_handle && veto_enable) {
     caen513_clear(caen513_handle);  //clear inputs
 
     caen513_set(caen513_handle,
                 ((counter & 0xF) << 2) | ENABLE_VETO);  // SW veto ON
   }
-  counter     = sis3800_readCounter(sis3800_handle,COUNTER_VALID_TRIGGER);
-  counter_all = sis3800_readCounter(sis3800_handle,COUNTER_ALL_TRIGGER);
+  counter     = sis3800_readCounter(sis3800_handle, COUNTER_VALID_TRIGGER);
+  counter_all = sis3800_readCounter(sis3800_handle, COUNTER_ALL_TRIGGER);
   DPRINT("start acquisition SW:%10lu HW %10u", loop, counter);
- 
+
   if (caen965_handle) {
     ret = caen965_acquire_channels_poll(caen965_handle, qdclow, qdchi, 0, 16, &cycle0, timeout_ms);
     if (timeout_ms > 0) {
@@ -401,6 +450,14 @@ void RTBTFdaqCU::unitRun() throw(CException) {
       } else {
         setStateVariableSeverity(
             StateVariableTypeAlarmCU, "965_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+      }
+    }
+    if (out_channels_965) {
+      std::vector<int> arr = output_channels["caen965"];
+      for (int cnt = 0; cnt < arr.size(); cnt++) {
+        std::stringstream ss;
+        ss << "QDC" << arr[cnt];
+        getAttributeCache()->setOutputAttributeValue(ss.str(), qdclow[cnt]);
       }
     }
   }
@@ -418,15 +475,21 @@ void RTBTFdaqCU::unitRun() throw(CException) {
             StateVariableTypeAlarmCU, "792_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
       }
     }
+    if (out_channels_792) {
+      std::vector<int> arr = output_channels["caen792"];
+      for (int cnt = 0; cnt < arr.size(); cnt++) {
+        std::stringstream ss;
+        ss << "TDC" << arr[cnt];
+        getAttributeCache()->setOutputAttributeValue(ss.str(), qdc792[cnt]);
+      }
+    }
   }
-  
-  *acquisition  = ++loop;
-  *triggers=counter_all;
-  *triggers_valid=counter;
+
+  *acquisition    = ++loop;
+  *triggers       = counter_all;
+  *triggers_valid = counter;
 
   getAttributeCache()->setOutputDomainAsChanged();
-
-
 }
 
 // Abstract method for the stop of the control unit
@@ -447,5 +510,11 @@ void RTBTFdaqCU::unitDeinit() throw(CException) {
   }
   if (sis3800_handle) {
     sis3800_close(sis3800_handle);
+  }
+  if (out_channels_965) {
+    free(qdclow);
+  }
+  if (out_channels_792) {
+    free(qdc792);
   }
 }

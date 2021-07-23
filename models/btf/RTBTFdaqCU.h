@@ -52,6 +52,8 @@ namespace driver {
                     uint64_t tot_lost,loop;
                     uint32_t*qdchi,*qdclow,*qdc792;
                     uint64_t* trigger_lost,*acquisition;
+					std::map<std::string,std::vector<int> > output_channels;
+					bool out_channels_965,out_channels_792;
                     
 			/*
 			 Define the Control Unit Dataset and Actions
