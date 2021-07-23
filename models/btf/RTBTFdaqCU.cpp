@@ -296,7 +296,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
     counters = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "SCALER");
   }*/
   trigger_lost =
-      getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "TRIGGER LOST");
+      getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "TRIGGER_LOST");
 
   acquisition =
       getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ACQUISITION");
