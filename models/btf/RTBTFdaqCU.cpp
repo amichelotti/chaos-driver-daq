@@ -345,7 +345,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
 
 // Abstract method for the start of the control unit
 void RTBTFdaqCU::unitStart() throw(CException) {
-  setDefaultScheduleDelay(0);
+  
   loop        = 0;
   counter_old = counter = 0;
   tot_lost              = 0;
