@@ -203,7 +203,7 @@ void RTBTFdaqSimCU::unitDefineActionAndDataset() throw(chaos::CException) {
       }
     }
   
-    if (out_channels_965) {
+    if (out_channels_792) {
       std::vector<int> arr = output_channels["caen792"];
       for (int cnt = 0; cnt < arr.size(); cnt++) {
         std::stringstream ss;
@@ -317,7 +317,7 @@ void RTBTFdaqSimCU::unitRun() throw(CException) {
  
   counter++;
   counter_all++;
-  for(int c=0;c<16;c++){
+  for(int c=0;c<caen965_chans;c++){
     qdclow[c]=qdchi[c]=(rand()%4095);
   }
 

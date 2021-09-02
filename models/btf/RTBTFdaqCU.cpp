@@ -229,7 +229,7 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
     }
   }
   if (caen792_handle) {
-    if (out_channels_965) {
+    if (out_channels_792) {
       std::vector<int> arr = output_channels["caen792"];
       for (int cnt = 0; cnt < arr.size(); cnt++) {
         std::stringstream ss;
