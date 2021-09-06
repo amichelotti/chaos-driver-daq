@@ -1,7 +1,7 @@
 /*
  *	RTBTFdaqSimCU.h
  *	!CHAOS
- *	Created by Andrea Michelotti 1/2/2016
+ *	Created by Andrea Michelotti 8/1/2016
  *
  *    	Copyright 2013 INFN, National Institute of Nuclear Physics
  *
@@ -21,17 +21,33 @@
 #define __RTBTFdaqSimCU__
 
 #include <chaos/cu_toolkit/control_manager/RTAbstractControlUnit.h>
-#include "RTBTFdaqCU.h"
-#define REFRESH_RATE 20000 //20 ms
+#include <common/vme/caen/caen965_drv.h>
+#include <common/vme/caen/caen792_drv.h>
+#include <common/vme/sis/sis3800_drv.h>
+#include <common/vme/caen/caen513_drv.h>
 
+#define PERIODIC_TASK 2000
 namespace driver {
 	namespace daq {
             namespace btf {
-		class RTBTFdaqSimCU : public RTBTFdaqCU {
+		class RTBTFdaqSimCU : public chaos::cu::control_manager::RTAbstractControlUnit {
 			PUBLISHABLE_CONTROL_UNIT_INTERFACE(RTBTFdaqSimCU);
 
 		protected:
-
+					uint64_t last_eval,last_eval_trigger,periodic_task;
+					bool veto_enable;
+					bool pio_latch;
+					uint32_t counter_trigger,counter_etrigger,timeout_ms;
+					int caen792_chans;
+					int caen965_chans;
+					double*freq,*efreq;
+					uint32_t* triggers_valid,*triggers;
+                    uint32_t counter,counter_old,counter_all; 
+                    uint64_t tot_lost,loop;
+                    uint32_t*qdchi,*qdclow,*qdc792;
+                    uint64_t* trigger_lost,*acquisition;
+					std::map<std::string,std::vector<int> > output_channels;
+					bool out_channels_965,out_channels_792;
                     
 			/*
 			 Define the Control Unit Dataset and Actions
