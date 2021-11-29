@@ -26,7 +26,7 @@ limitations under the License.
 #define LiberaBrillianceCSPILDBG_ LDBG_ << "[LiberaBrillianceCSPI " << __PRETTY_FUNCTION__ << "]"
 #define LiberaBrillianceCSPILERR_ LERR_ << "[LiberaBrillianceCSPI " << __PRETTY_FUNCTION__ << "]"
 using namespace chaos::cu::driver_manager::driver;
-static boost::mutex io_mux;
+static ChaosMutex io_mux;
 OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaBrillianceCSPIDriver, 1.0.0, LiberaBrillianceCSPIDriver)
 REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(LiberaBrillianceCSPIDriver, http_address / dnsname
                                                : port)

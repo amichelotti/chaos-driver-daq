@@ -39,7 +39,7 @@ const std::string cPowerLevelNode    = "boards.raf3.conditioning.tuning.agc.powe
 #define LiberaSoftDBG		LDBG_ << "[LiberaBrilliancePlusDriver "<<__PRETTY_FUNCTION__<<" ]"
 #define LiberaSoftERR		LERR_ << "[LiberaBrilliancePlusDriver "<<__PRETTY_FUNCTION__<<" ]"
 using namespace chaos::cu::driver_manager::driver;
-static boost::mutex io_mux;
+static ChaosMutex io_mux;
 OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaBrilliancePlusDriver, 1.0.0, LiberaBrilliancePlusDriver)
 REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(LiberaBrilliancePlusDriver, http_address / dnsname : port)
 CLOSE_CU_DRIVER_PLUGIN_CLASS_DEFINITION
@@ -92,7 +92,7 @@ int LiberaBrilliancePlusDriver::read(void *buffer, int addr, int bcount) {
 				return -rc;
 			}
 		}
-		boost::mutex::scoped_lock lock(io_mux);
+		ChaosLockGuard lock(io_mux);
 
 		if(cfg.mode ==CSPI_MODE_SA){
 			RStream::MetaBufferPtr buf;
@@ -337,7 +337,7 @@ int LiberaBrilliancePlusDriver::deinitIO() {
 int LiberaBrilliancePlusDriver::iop(int operation, void*data, int sizeb) {
 	int rc;
 	CSPI_ENVPARAMS ep;
-	boost::mutex::scoped_lock lock(io_mux);
+	ChaosLockGuard lock(io_mux);
 
 #define SET_ENV(cpimask,param) \
 		if(cmd_env->selector & CSPI_ENV_## cpimask ){\
