@@ -58,7 +58,7 @@ namespace icfg {
         bool SetValue(const T &a_value)
         {
             try {
-                m_value = boost::lexical_cast<std::string>(a_value);
+                m_value = ChaosToString(a_value);
                 return true;
             }
             catch (boost::bad_lexical_cast &ex) {
@@ -134,7 +134,7 @@ namespace icfg {
         Element(const std::string &a_name,
                        const T &a_value,
                        const DataType_e &a_type = DataType_e::eCtUndefined)
-          : m_name(a_name), m_value(boost::lexical_cast<std::string>(a_value)),
+          : m_name(a_name), m_value(ChaosToString(a_value)),
             m_type(a_type)
         {
         }
