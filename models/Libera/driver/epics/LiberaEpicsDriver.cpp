@@ -17,12 +17,16 @@ limitations under the License.
  */
 
 #include "LiberaEpicsDriver.h"
+#include <driver/epics/driver/EpicsGenericDriver.h>
+
 #define ILK_PARAMCOUNT 8
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
 
 #define LiberaSoftLAPP_ LAPP_ << "[LiberaEpicsDriver] "
 #define LiberaSoftDBG LDBG_ << "[LiberaEpicsDriver " << __PRETTY_FUNCTION__ << " ]"
 #define LiberaSoftERR LERR_ << "[LiberaEpicsDriver " << __PRETTY_FUNCTION__ << " ]"
+#define MAX_RETRY 0
+
 using namespace chaos::driver::epics;
 using namespace ::driver::daq::libera;
 
@@ -34,13 +38,17 @@ static volatile size_t _event_id = 0;
 static pthread_cond_t  eventc    = PTHREAD_COND_INITIALIZER;
 static pthread_mutex_t eventm    = PTHREAD_MUTEX_INITIALIZER;
 
+OPEN_REGISTER_PLUGIN
+REGISTER_PLUGIN(::driver::daq::libera::LiberaEpicsDriver)
+CLOSE_REGISTER_PLUGIN
+
 // GET_PLUGIN_CLASS_DEFINITION
 // we need to define the driver with alias version and a class that implement it
 // default constructor definition
-LiberaEpicsDriver::LiberaEpicsDriver() {
+DEFAULT_CU_DRIVER_PLUGIN_CONSTRUCTOR_WITH_NS(::driver::daq::libera,LiberaEpicsDriver) {
   int rc;
   cfg.operation = liberaconfig::deinit;
-  
+  LiberaSoftDBG<<"Driver @"<<std::hex<<this;
   /*
       if((rc=initIO(0,0))!=0){
           throw chaos::CException(rc,"Initializing","LiberaEpicsDriver::LiberaEpicsDriver");
@@ -62,11 +70,56 @@ void LiberaEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json
   "sa.SCAN","sa.Va","sa.Vb","sa.Vc","sa.Vd","sa.Sum","sa.Q","sa.X","sa.Y","sa.LMT_l","sa.LMT_i",\
   "pm.ddc_synth.SCAN","pm.ddc_synth.ACQM","pm.ddc_synth.Va","pm.ddc_synth.Vb","pm.ddc_synth.Vc","pm.ddc_synth.Vd","pm.ddc_synth.Sum","pm.ddc_synth.Q","pm.ddc_synth.X","pm.ddc_synth.Y","pm.ddc_synth.PROC","pm.ddc_synth.NGRP"};
   chaos::common::data::CDWUniquePtr newconf=json.clone();
-  addPVListConfig(*(newconf.get()),pvlist);
+  ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()),pvlist);
   LiberaSoftDBG<<"Configuration:"<<newconf->getJSONString();
-  EpicsGenericDriverDD::driverInit(*newconf);
+  devicedriver = new ::driver::epics::common::EpicsGenericDriver(*(newconf.get()));
+  createProperties();
 }
+void LiberaEpicsDriver::createProperties() {
+  std::vector<std::string>           listPV = devicedriver->pvList();
+  std::vector<std::string>::iterator i      = listPV.begin();
+  int retry=MAX_RETRY;
+  while (i != listPV.end()) {
+    LDBG_ << "retriving information of " << *i;  //<<" ="<<r->getJSONString();
 
+    chaos::common::data::CDWUniquePtr r = devicedriver->readRecord(*i);
+    if (r.get()) {
+      chaos::common::data::CDWUniquePtr conf = devicedriver->getPVConfig(*i);
+      if (conf.get()) {
+        std::string cname;
+        if (conf->hasKey(KEY_CNAME) && (r->hasKey(PROPERTY_VALUE_KEY))) {
+          cname = conf->getStringValue(KEY_CNAME);
+          LDBG_ << "create PUBLIC property:" << *i << " CNAME:" << cname;  //<<" ="<<r->getJSONString();
+
+        } else {
+          LDBG_ << "create  property:" << *i;  //<<" ="<<r->getJSONString();
+        }
+        createProperty(
+            *i,
+            [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
+                -> chaos::common::data::CDWUniquePtr {
+              //read handler
+              return ((LiberaEpicsDriver *)thi)->devicedriver->readRecord(name);
+            },
+            [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
+                -> chaos::common::data::CDWUniquePtr {
+              ((LiberaEpicsDriver *)thi)->devicedriver->writeRecord(name, p);
+              return chaos::common::data::CDWUniquePtr();
+            },
+            cname);
+      }
+      i++;
+    } else {
+        if(retry--){
+		      devicedriver->waitChange(*i);
+        } else {
+          i++;
+          retry=MAX_RETRY;
+        }
+
+	}
+  }
+}
 void LiberaEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {
 
   if (initParameter != NULL) {
@@ -88,17 +141,17 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
       libera_sa_t *tt = (libera_sa_t *)buffer;
       uint32_t hi,lo;
       memset(tt, 0, bcount);
-      waitChange();
-      EpicsGenericDriverDD::read("sa.Va",tt->Va );
-      EpicsGenericDriverDD::read("sa.Vb",tt->Vb );
-      EpicsGenericDriverDD::read("sa.Vc",tt->Vc );
-      EpicsGenericDriverDD::read("sa.Vd",tt->Vd );
-      EpicsGenericDriverDD::read("sa.Sum",tt->Sum );
-      EpicsGenericDriverDD::read("sa.Q",tt->Q );
-      EpicsGenericDriverDD::read("sa.X",tt->X );
-      EpicsGenericDriverDD::read("sa.Y",tt->Y );
-      EpicsGenericDriverDD::read("sa.LMT_l",lo );
-      EpicsGenericDriverDD::read("sa.LMT_h",hi );
+      devicedriver->waitChange();
+      devicedriver->read("sa.Va",tt->Va );
+      devicedriver->read("sa.Vb",tt->Vb );
+      devicedriver->read("sa.Vc",tt->Vc );
+      devicedriver->read("sa.Vd",tt->Vd );
+      devicedriver->read("sa.Sum",tt->Sum );
+      devicedriver->read("sa.Q",tt->Q );
+      devicedriver->read("sa.X",tt->X );
+      devicedriver->read("sa.Y",tt->Y );
+      devicedriver->read("sa.LMT_l",lo );
+      devicedriver->read("sa.LMT_h",hi );
 
 
         libera_ts=lo|(((uint64_t)hi)<<32);
@@ -117,20 +170,20 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
       if (cfg.mask & liberaconfig::want_trigger) {
         // wait
     } else {
-        EpicsGenericDriverDD::write("ddc_synth.PROC",1);
+        devicedriver->write("ddc_synth.PROC",1);
 
     }
       libera_dd_t *dd = (libera_dd_t *)buffer;
       for (int cnt = 0; cnt < count; cnt++) {
         memset(&dd[cnt], 0, sizeof(libera_dd_t));
-        EpicsGenericDriverDD::read("ddc_synth.Va",dd[cnt].Va );
-        EpicsGenericDriverDD::read("ddc_synth.Vb",dd[cnt].Vb );
-        EpicsGenericDriverDD::read("ddc_synth.Vc",dd[cnt].Vc );
-        EpicsGenericDriverDD::read("ddc_synth.Vd",dd[cnt].Vd );
-        EpicsGenericDriverDD::read("ddc_synth.Sum",dd[cnt].Sum );
-        EpicsGenericDriverDD::read("ddc_synth.Q",dd[cnt].Q);
-        EpicsGenericDriverDD::read("ddc_synth.X",dd[cnt].X);
-        EpicsGenericDriverDD::read("ddc_synth.Y",dd[cnt].Y );
+        devicedriver->read("ddc_synth.Va",dd[cnt].Va );
+        devicedriver->read("ddc_synth.Vb",dd[cnt].Vb );
+        devicedriver->read("ddc_synth.Vc",dd[cnt].Vc );
+        devicedriver->read("ddc_synth.Vd",dd[cnt].Vd );
+        devicedriver->read("ddc_synth.Sum",dd[cnt].Sum );
+        devicedriver->read("ddc_synth.Q",dd[cnt].Q);
+        devicedriver->read("ddc_synth.X",dd[cnt].X);
+        devicedriver->read("ddc_synth.Y",dd[cnt].Y );
         
         LiberaSoftDBG << " DD[" << cnt << "] VA:" << dd[cnt].Va << " VB:" << dd[cnt].Vb << " VC:" << dd[cnt].Vc << " VD:" << dd[cnt].Vd;
       }
@@ -295,8 +348,8 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
         cfg.mode = CSPI_MODE_DD;
         LiberaSoftDBG << "Acquire Data on Demand";
 
-        EpicsGenericDriverDD::write("ddc_synth.SCAN", scan_mode);
-        EpicsGenericDriverDD::write("ddc_synth.ACQM", trigger_mode);
+        devicedriver->write("ddc_synth.SCAN", scan_mode);
+        devicedriver->write("ddc_synth.ACQM", trigger_mode);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
@@ -304,7 +357,7 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       if (driver_mode & LIBERA_IOP_MODE_SA) {
         cfg.mode = CSPI_MODE_SA;
         LiberaSoftDBG << "Acquire Data on Streaming";
-        EpicsGenericDriverDD::write("ssa.SCAN", 2);
+        devicedriver->write("ssa.SCAN", 2);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_SA_ATOM);
@@ -312,8 +365,8 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       if (driver_mode & LIBERA_IOP_MODE_PM) {
         cfg.mode = CSPI_MODE_PM;
         LiberaSoftDBG << "Acquire Data Post Mortem";
-        EpicsGenericDriverDD::write("pm.ddc_synth.SCAN", scan_mode);
-        EpicsGenericDriverDD::write("pm.ddc_synth.ACQM", trigger_mode);
+        devicedriver->write("pm.ddc_synth.SCAN", scan_mode);
+        devicedriver->write("pm.ddc_synth.ACQM", trigger_mode);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
@@ -323,8 +376,8 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
         LiberaSoftDBG << "Acquire ADC Data";
         cfg.datasize  = sizeof(CSPI_ADC_ATOM);
         cfg.operation = liberaconfig::acquire;
-        EpicsGenericDriverDD::write("adc.SCAN", scan_mode);
-        EpicsGenericDriverDD::write("adc.ACQM", trigger_mode);
+        devicedriver->write("adc.SCAN", scan_mode);
+        devicedriver->write("adc.ACQM", trigger_mode);
 
         if (driver_mode & LIBERA_IOP_MODE_CONTINUOUS) {
           cfg.adc.mode |= liberaconfig::adc_specific::cw;
@@ -360,10 +413,10 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       LiberaSoftDBG << "Setting Samples:" << cfg.atom_count;
       switch (cfg.mode) {
         case CSPI_MODE_DD:
-          EpicsGenericDriverDD::write("ddc_synth.NGRP", cfg.atom_count);
+          devicedriver->write("ddc_synth.NGRP", cfg.atom_count);
           break;
         case CSPI_MODE_PM:
-          EpicsGenericDriverDD::write("pm.ddc_synth.NGRP", cfg.atom_count);
+          devicedriver->write("pm.ddc_synth.NGRP", cfg.atom_count);
           break;
       }
       break;
@@ -372,10 +425,10 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       LiberaSoftDBG << "Setting Offset:" << cfg.dd.offset;
       switch (cfg.mode) {
         case CSPI_MODE_DD:
-          EpicsGenericDriverDD::write("ddc_synth.OFFS", cfg.dd.offset);
+          devicedriver->write("ddc_synth.OFFS", cfg.dd.offset);
           break;
         case CSPI_MODE_PM:
-          EpicsGenericDriverDD::write("pm.ddc_synth.OFFS", cfg.dd.offset);
+          devicedriver->write("pm.ddc_synth.OFFS", cfg.dd.offset);
           break;
       }
       break;
