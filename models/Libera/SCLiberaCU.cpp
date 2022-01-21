@@ -170,7 +170,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 						  DataType::Output);
         addAttributeToDataSet("MT",
 						  "Machine Time",
-						  DataType::TYPE_INT64,
+						  DataType::TYPE_UINT64,
 						  DataType::Bidirectional);
         addAttributeToDataSet("ST",
 						  "System Time",

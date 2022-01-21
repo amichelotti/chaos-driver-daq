@@ -168,7 +168,6 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
   getAttributeCache()->setOutputAttributeNewSize("ADC_SP", 0);
   getAttributeCache()->setInputDomainAsChanged();
   getAttributeCache()->setOutputDomainAsChanged();
-  sleep(1);
   BC_NORMAL_RUNNING_PROPERTY
 }
 
@@ -209,7 +208,27 @@ void CmdLiberaDefault::acquireHandler() {
   if (ret != 0 && (ret != DRV_BYPASS_DEFAULT_CODE)) {
     CMDCUERR_ << " Cannot retrive STATUS";
   }
+		libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
+if((ret=driver->read((void*)&pnt,CHANNEL_SA,sizeof(libera_sa_t)))>=0){
+			bpmpos mm;
+
+			*va = pnt.Va;
+			*vb = pnt.Vb;
+			*vc = pnt.Vc;
+			*vd = pnt.Vd;
+			mm=bpm_voltage_to_mm(u,v,pnt.Va,pnt.Vb,pnt.Vc,pnt.Vd);
+			*x  = mm.x;
+			*y  = mm.y;
+			*q  = pnt.Q;
+			*sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
+			*q1 = pnt.Cx;
+			*q2 = pnt.Cy;
+			*mt = (pnt.reserved[0])|(((uint64_t)pnt.reserved[1])<<32);
+			(*acquire_loops)++;
+}
+		//	x_acq[0] = mm.x;
+		//	y_acq[0] = mm.y;
   /*
             if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 

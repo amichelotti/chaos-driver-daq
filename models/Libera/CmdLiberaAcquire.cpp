@@ -95,7 +95,7 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 			CMDCUDBG_ << "Disable acquire";
 			*pmode=0;
 			getAttributeCache()->setOutputDomainAsChanged();
-			metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"disabling acquire" );
+			//metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"disabling acquire" );
 			*idd=0;
 			*isa=0;
 			*odd=0;
@@ -407,7 +407,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 	} else if((*imode)&LIBERA_IOP_MODE_SA){
 		libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
 
-		if((ret=driver->read((void*)&pnt,0,sizeof(libera_sa_t)))>=0){
+		if((ret=driver->read((void*)&pnt,CHANNEL_SA,sizeof(libera_sa_t)))>=0){
 			bpmpos mm;
 
 			*va = pnt.Va;
@@ -421,6 +421,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			*sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
 			*q1 = pnt.Cx;
 			*q2 = pnt.Cy;
+			*mt = (pnt.reserved[0])|(((uint64_t)pnt.reserved[1])<<32);
 			(*acquire_loops)++;
 		//	x_acq[0] = mm.x;
 		//	y_acq[0] = mm.y;
