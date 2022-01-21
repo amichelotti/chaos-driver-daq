@@ -3,8 +3,11 @@ project(chaos_driver_libera)
 ## dependency on chaoscontroller
 # DafneAccumulatorBPMSync.cpp CmdDefaultDafneAccumulatorBPM.cpp CmdAcquireDafneAccumulatorBPM.cpp CmdEnvDafneAccumulatorBPM.cpp SCDafneAccumulatorBPMSync.cpp  ChaosControllerLibera.cpp)
 SET(DAQ_src LiberaData.cpp  CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaEnv.cpp CmdLiberaTime.cpp SCLiberaCU.cpp driver/soft/LiberaSoftDriver.cpp)
+SET(ADD_LIBS )
+
 IF (CHAOS_EPICS_SUPPORT)
 SET(DAQ_src ${DAQ_src} driver/epics/LiberaEpicsDriver.cpp)
+SET(ADD_LIBS chaos_driver_epics)
 ENDIF()
 ADD_DEFINITIONS(-DEBPP)
 SET(BasicDAQClient_src test/DAQClient.cpp)
@@ -38,8 +41,8 @@ ENDIF()
 
 SET(DAQ_LIBRARY ${PROJECT_NAME} ${DRIVERS_LIB})
 TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial common_misc_wavegenerators ${FrameworkLib})
+TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY}  chaos_cutoolkit chaos_common  common_serial ${ADD_LIBS} ${FrameworkLib})
 
-TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY}  chaos_cutoolkit chaos_common  common_serial chaos_driver_epics ${FrameworkLib})
 # TARGET_LINK_LIBRARIES(daqLiberaClient  chaos_common chaos_driver_misc chaos_metadata_service_client ${DAQ_LIBRARY} ${FrameworkLib} )
 # TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME}  chaos_cutoolkit chaos_common ${FrameworkLib})
 
