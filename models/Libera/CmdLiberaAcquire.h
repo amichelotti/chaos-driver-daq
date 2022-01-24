@@ -36,6 +36,7 @@ namespace driver {
                     int acquire_duration;
                     uint64_t start_acquire,wait_for_us,loop,samples;
 					libera_dd_t* buffer;
+					libera_data_handle_t dd_handle;
 		protected:
 			//implemented handler
 		    //			uint8_t implementedHandler();

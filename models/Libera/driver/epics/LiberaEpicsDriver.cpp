@@ -156,10 +156,6 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
       return 1;
   } else if (addr == CHANNEL_DD){
 
-    if (bcount < (cfg.atom_count * cfg.datasize)) {
-        LiberaSoftERR << "POSSIBLE error, buffer is smaller than required" << rc;
-    }
-      int count = std::min(bcount / cfg.datasize, cfg.atom_count);
       if (cfg.mask & liberaconfig::want_trigger) {
         // wait
         devicedriver->waitChange("ddc_synth.Va");
@@ -167,44 +163,30 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
         devicedriver->write("ddc_synth.PROC",1);
 
     }
-      int32_t va[count],vb[count],vc[count],vd[count],sum[count],q[count],x[count],y[count];
-        devicedriver->readArray("ddc_synth.Va",va,count );
-        devicedriver->readArray("ddc_synth.Vb",vb,count );
-        devicedriver->readArray("ddc_synth.Vc",vc,count);
-        devicedriver->readArray("ddc_synth.Vd",vd,count );
-        devicedriver->readArray("ddc_synth.Sum",sum,count );
-        devicedriver->readArray("ddc_synth.Q",q,count);
-        devicedriver->readArray("ddc_synth.X",x,count);
-        devicedriver->readArray("ddc_synth.Y",y,count);
+  
+     // int32_t va[count],vb[count],vc[count],vd[count],sum[count],q[count],x[count],y[count];
+        libera_data_handle_t *dd = (libera_data_handle_t *)buffer;
 
-      libera_dd_t *dd = (libera_dd_t *)buffer;
+        devicedriver->readArray("ddc_synth.Va",dd->Va,dd->samples );
+        devicedriver->readArray("ddc_synth.Vb",dd->Vb,dd->samples );
+        devicedriver->readArray("ddc_synth.Vc",dd->Vc,dd->samples);
+        devicedriver->readArray("ddc_synth.Vd",dd->Vd,dd->samples );
+        devicedriver->readArray("ddc_synth.Sum",dd->Sum,dd->samples );
+        if(dd->Q){
+          devicedriver->readArray("ddc_synth.Q",dd->Q,dd->samples);
+        }
+        if(dd->X){
+          devicedriver->readArray("ddc_synth.X",dd->X,dd->samples);
+        }
+        if(dd->Y){
+          devicedriver->readArray("ddc_synth.Y",dd->Y,dd->samples);
+        }
+        *dd->ts=0;
+        devicedriver->read("ddc_synth.MT",*(int32_t*)dd->ts);
+        LiberaSoftDBG <<*dd->ts<< " DD[" << 0 << "] VA:" << dd->Va[0] << " VB:" << dd->Vb[0]  << " VC:" << dd->Vc[0]  << " VD:" << dd->Vd[0] <<" Sum:"<<dd->Sum[0];
+        //<<" Q:"<<dd-dd->Q[0]<<" X:"<<dd->X[0]<<" Y:"<<dd->Y[0];
 
-      for (int cnt = 0; cnt < count; cnt++) {
-        /*memset(&dd[cnt], 0, sizeof(libera_dd_t));
-        devicedriver->read("ddc_synth.Va",dd[cnt].Va );
-        devicedriver->read("ddc_synth.Vb",dd[cnt].Vb );
-        devicedriver->read("ddc_synth.Vc",dd[cnt].Vc );
-        devicedriver->read("ddc_synth.Vd",dd[cnt].Vd );
-        devicedriver->read("ddc_synth.Sum",dd[cnt].Sum );
-        devicedriver->read("ddc_synth.Q",dd[cnt].Q);
-        devicedriver->read("ddc_synth.X",dd[cnt].X);
-        devicedriver->read("ddc_synth.Y",dd[cnt].Y );
-        */
-       dd[cnt].Va=va[cnt];
-       dd[cnt].Vb=vb[cnt];
-       dd[cnt].Vc=vc[cnt];
-       dd[cnt].Vd=vd[cnt];
-       dd[cnt].Sum=sum[cnt];
-       dd[cnt].Q=q[cnt];
-       dd[cnt].X=x[cnt];
-       dd[cnt].Y=y[cnt];
-
-
-
-        LiberaSoftDBG << " DD[" << cnt << "] VA:" << dd[cnt].Va << " VB:" << dd[cnt].Vb << " VC:" << dd[cnt].Vc << " VD:" << dd[cnt].Vd;
-      }
-
-      return count;
+      return dd->samples;
     }
 
   

@@ -85,6 +85,17 @@ typedef struct libera_env {
     typedef CSPI_AVERAGE_ATOM libera_avg_t;
     typedef CSPI_TIMESTAMP libera_ts_t;
 
+typedef struct {
+        int* Va, *Vb, *Vc, *Vd;
+	    // Horiz. and vert. beam position
+	    int* X, *Y;
+	    // Quadropole signal
+	    int* Q;
+	    // Sum Va + Vb + Vc + Vd
+	    int* Sum;
+        int64_t *ts;
+        int samples;
+    } libera_data_handle_t;
     class libera_desc{
     protected:
         std::vector<const char*>p;

@@ -121,8 +121,6 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
   }
   odd     = getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "DD");
   osa     = getAttributeCache()->getRWPtr<bool>(DOMAIN_OUTPUT, "SA");
-  mt      = getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
-  st      = getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
   va      = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA");
   vb      = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB");
   vc      = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC");
@@ -134,8 +132,8 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
   q1      = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q1");
   q2      = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "Q2");
   pmode   = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "MODE");
-  mt      = getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "MT");
-  st      = getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "ST");
+  mt      = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "MT");
+  st      = getAttributeCache()->getRWPtr<int64_t>(DOMAIN_OUTPUT, "ST");
   va_acq  = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VA_ACQ");
   vb_acq  = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VB_ACQ");
   vc_acq  = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");

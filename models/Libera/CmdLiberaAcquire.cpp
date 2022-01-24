@@ -276,6 +276,19 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
     vc_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VC_ACQ");
     vd_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "VD_ACQ");
     sum_acq=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SUM_ACQ");
+	dd_handle.Va=va_acq;
+	dd_handle.Vb=vb_acq;
+	dd_handle.Vc=vc_acq;
+	dd_handle.Vd=vd_acq;
+	dd_handle.Sum=sum_acq;
+	dd_handle.ts=mt;
+	dd_handle.X=0;
+	dd_handle.Y=0;
+	dd_handle.Q=0;
+
+	dd_handle.samples=samples;
+	
+
 	//x_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "X_ACQ");
     //y_acq=getAttributeCache()->getRWPtr<double>(DOMAIN_OUTPUT, "Y_ACQ");
 	for(int cnt=0;cnt<samples;cnt++){
@@ -289,11 +302,11 @@ void driver::daq::libera::CmdLiberaAcquire::setHandler(c_data::CDataWrapper *dat
 	}
 
 	getAttributeCache()->setOutputDomainAsChanged();
-	buffer=(libera_dd_t*)malloc(samples*sizeof(libera_dd_t));
+	/*buffer=(libera_dd_t*)malloc(samples*sizeof(libera_dd_t));
 	if(buffer==NULL){
 		throw chaos::CException(ret, "Cannot start acquire bacause lack of resources", __FUNCTION__);
 
-	}
+	}*/
 	*msi=0;
 
 	BC_NORMAL_RUNNING_PROPERTY;
@@ -320,6 +333,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 
 	if((*imode)&LIBERA_IOP_MODE_DD){
 		CMDCUDBG_ << "Acquiring DD samples:"<<samples;
+
 		/*if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 			if(mt)
 				*mt = ts.mt;
@@ -340,9 +354,18 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
             return;
         }*/
 
-		if((ret=driver->read((void*)buffer,0,samples*sizeof(libera_dd_t)))>=0){
-			unsigned long sum_max=0,sum_index=0;
-			*va = buffer[0].Va;
+		if((ret=driver->read((void*)&dd_handle,CHANNEL_DD,samples/**sizeof(libera_dd_t)*/))>=0){
+			*va=dd_handle.Va[samples-1];
+			*vb=dd_handle.Vb[samples-1];
+			*vc=dd_handle.Vc[samples-1];
+			*vd=dd_handle.Vd[samples-1];
+			*sum=dd_handle.Sum[samples-1];
+			*q=dd_handle.Q[samples-1];
+			*x=dd_handle.X[samples-1];
+			*y=dd_handle.Y[samples-1];
+
+			//unsigned long sum_max=0,sum_index=0;
+			/**va = buffer[0].Va;
 			*vb = buffer[0].Vb;
 			*vc = buffer[0].Vc;
 			*vd = buffer[0].Vd;
@@ -363,15 +386,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 					sum_max=buffer[cnt].Sum;
 					sum_index=cnt;
 				}
-				/*if(calc_poly){
-				//mm=bpm_voltage_to_mm(type,buffer[cnt].Va,buffer[cnt].Vb,buffer[cnt].Vc,buffer[cnt].Vd);
-					bpmpos mm=  bpm_voltage_to_mm(u,v,buffer[cnt].Va,buffer[cnt].Vb,buffer[cnt].Vc,buffer[cnt].Vd);
-					x_acq[cnt]=mm.x;
-					y_acq[cnt]=mm.y;
-				} else {
-					x_acq[cnt]=buffer[cnt].X;
-					y_acq[cnt]=buffer[cnt].Y;
-				}*/
+				
 			}
 			if(calc_poly){
 				bpmpos mm;
@@ -388,7 +403,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			*q  = buffer[sum_index].Q;
 
 			CMDCUDBG_ << "["<<(*acquire_loops)<<"] DD read "<<samples<<" [ret="<<std::dec<<ret<<"]:"<<buffer[0];
-
+			*/
 			(*acquire_loops)++;
 		
 
