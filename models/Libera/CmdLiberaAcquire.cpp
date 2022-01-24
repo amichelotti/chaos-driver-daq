@@ -360,9 +360,15 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			*vc=dd_handle.Vc[samples-1];
 			*vd=dd_handle.Vd[samples-1];
 			*sum=dd_handle.Sum[samples-1];
-			*q=dd_handle.Q[samples-1];
-			*x=dd_handle.X[samples-1];
-			*y=dd_handle.Y[samples-1];
+			if(dd_handle.Q){
+				*q=dd_handle.Q[samples-1];
+			}
+			if(dd_handle.X){
+				*x=dd_handle.X[samples-1];
+			}
+			if(dd_handle.Y){
+				*y=dd_handle.Y[samples-1];
+			}
 
 			//unsigned long sum_max=0,sum_index=0;
 			/**va = buffer[0].Va;
@@ -433,7 +439,7 @@ void driver::daq::libera::CmdLiberaAcquire::acquireHandler() {
 			*x  = mm.x;
 			*y  = mm.y;
 			*q  = pnt.Q;
-			*sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
+			*sum  = pnt.Sum;//pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
 			*q1 = pnt.Cx;
 			*q2 = pnt.Cy;
 			*mt = (pnt.reserved[0])|(((uint64_t)pnt.reserved[1])<<32);
