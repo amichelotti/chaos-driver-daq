@@ -1,8 +1,8 @@
 /*
- * LiberaEpicsDriver.h
+ * LiberaBrillianceEpicsDriver.h
  * @author michelo
   Copyright January 2022 Andrea Michelotti
- * epics driver for Libera Brilliance (new model)+
+ * epics driver for Libera Brilliance
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -17,14 +17,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
  */
 
-#ifndef __LiberaEpicsDriver_H__
-#define __LiberaEpicsDriver_H__
+#ifndef __LiberaBrillianceEpicsDriver_H__
+#define __LiberaBrillianceEpicsDriver_H__
 #include <chaos/cu_toolkit/driver_manager/driver/ReadWriteInterface.h>
 #include <driver/epics/driver/EpicsGenericDriverDD.h>
 
 #include <driver/daq/models/Libera/LiberaData.h>
 namespace cu_driver = chaos::cu::driver_manager::driver;
-DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaEpicsDriver);
+DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceEpicsDriver);
 namespace driver {
 namespace epics {
 namespace common {
@@ -37,7 +37,7 @@ namespace driver {
 namespace daq {
 namespace libera {
 
-class LiberaEpicsDriver : public chaos::cu::driver_manager::driver::AbstractDriverPlugin, public chaos::cu::driver_manager::driver::ReadWriteInterface {
+class LiberaBrillianceEpicsDriver : public chaos::cu::driver_manager::driver::AbstractDriverPlugin, public chaos::cu::driver_manager::driver::ReadWriteInterface {
  protected:
   int            driver_mode;
   int            nacquire;
@@ -119,9 +119,9 @@ class LiberaEpicsDriver : public chaos::cu::driver_manager::driver::AbstractDriv
   ::driver::epics::common::EpicsGenericDriver *devicedriver;
 
  public:
-  LiberaEpicsDriver();
+  LiberaBrillianceEpicsDriver();
 
-  ~LiberaEpicsDriver();
+  ~LiberaBrillianceEpicsDriver();
   //! Execute a command
 
   /**
