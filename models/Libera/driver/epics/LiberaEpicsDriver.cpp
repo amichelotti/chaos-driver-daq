@@ -27,7 +27,6 @@ limitations under the License.
 #define LiberaSoftERR LERR_ << "[LiberaEpicsDriver " << __PRETTY_FUNCTION__ << " ]"
 #define MAX_RETRY 0
 
-using namespace chaos::driver::epics;
 using namespace ::driver::daq::libera;
 
 OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaEpicsDriver, 1.0.0, ::driver::daq::libera::LiberaEpicsDriver)
@@ -45,15 +44,11 @@ CLOSE_REGISTER_PLUGIN
 // GET_PLUGIN_CLASS_DEFINITION
 // we need to define the driver with alias version and a class that implement it
 // default constructor definition
-DEFAULT_CU_DRIVER_PLUGIN_CONSTRUCTOR_WITH_NS(::driver::daq::libera,LiberaEpicsDriver) {
+LiberaEpicsDriver::LiberaEpicsDriver() {
   int rc;
   cfg.operation = liberaconfig::deinit;
   LiberaSoftDBG<<"Driver @"<<std::hex<<this;
-  /*
-      if((rc=initIO(0,0))!=0){
-          throw chaos::CException(rc,"Initializing","LiberaEpicsDriver::LiberaEpicsDriver");
-      }
-   */
+  
 }
 
 // default descrutcor
@@ -67,59 +62,15 @@ void LiberaEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json
   std::vector<std::string> pvlist={"adc.ACQM","adc.ChannelA","adc.ChannelB","adc.ChannelC","adc.ChannelD","adc.PROC","adc.NGRP",\
   "ddc_synth.SCAN","ddc_synth.ACQM","ddc_synth.OFFS","ddc_synth.MT","ddc_synth.Va","ddc_synth.Vb","ddc_synth.Vc","ddc_synth.Vd",\
   "ddc_synth.Sum","ddc_synth.Q","ddc_synth.X","ddc_synth.Y","ddc_synth.PROC","ddc_synth.NGRP",\
-  "sa.SCAN","sa.Va","sa.Vb","sa.Vc","sa.Vd","sa.Sum","sa.Q","sa.X","sa.Y","sa.LMT_l","sa.LMT_h",\
-  "pm.ddc_synth.SCAN","pm.ddc_synth.ACQM","pm.ddc_synth.Va","pm.ddc_synth.Vb","pm.ddc_synth.Vc","pm.ddc_synth.Vd","pm.ddc_synth.Sum","pm.ddc_synth.Q","pm.ddc_synth.X","pm.ddc_synth.Y","pm.ddc_synth.PROC","pm.ddc_synth.NGRP"};
+  "sa.SCAN","sa.Va","sa.Vb","sa.Vc","sa.Vd","sa.Sum","sa.Q","sa.X","sa.Y","sa.LMT_l","sa.LMT_h"/*,\
+  "pm.ddc_synth.SCAN","pm.ddc_synth.ACQM","pm.ddc_synth.Va","pm.ddc_synth.Vb","pm.ddc_synth.Vc","pm.ddc_synth.Vd","pm.ddc_synth.Sum","pm.ddc_synth.Q","pm.ddc_synth.X","pm.ddc_synth.Y","pm.ddc_synth.PROC","pm.ddc_synth.NGRP"*/};
   chaos::common::data::CDWUniquePtr newconf=json.clone();
   ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()),pvlist);
   LiberaSoftDBG<<"Configuration:"<<newconf->getJSONString();
   devicedriver = new ::driver::epics::common::EpicsGenericDriver(*(newconf.get()));
   createProperties();
 }
-void LiberaEpicsDriver::createProperties() {
-  std::vector<std::string>           listPV = devicedriver->pvList();
-  std::vector<std::string>::iterator i      = listPV.begin();
-  int retry=MAX_RETRY;
-  while (i != listPV.end()) {
-    LDBG_ << "retriving information of " << *i;  //<<" ="<<r->getJSONString();
 
-    chaos::common::data::CDWUniquePtr r = devicedriver->readRecord(*i);
-    if (r.get()) {
-      chaos::common::data::CDWUniquePtr conf = devicedriver->getPVConfig(*i);
-      if (conf.get()) {
-        std::string cname;
-        if (conf->hasKey(KEY_CNAME) && (r->hasKey(PROPERTY_VALUE_KEY))) {
-          cname = conf->getStringValue(KEY_CNAME);
-          LDBG_ << "create PUBLIC property:" << *i << " CNAME:" << cname;  //<<" ="<<r->getJSONString();
-
-        } else {
-          LDBG_ << "create  property:" << *i;  //<<" ="<<r->getJSONString();
-        }
-        createProperty(
-            *i,
-            [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
-                -> chaos::common::data::CDWUniquePtr {
-              //read handler
-              return ((LiberaEpicsDriver *)thi)->devicedriver->readRecord(name);
-            },
-            [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
-                -> chaos::common::data::CDWUniquePtr {
-              ((LiberaEpicsDriver *)thi)->devicedriver->writeRecord(name, p);
-              return chaos::common::data::CDWUniquePtr();
-            },
-            cname);
-      }
-      i++;
-    } else {
-        if(retry--){
-		      devicedriver->waitChange(*i);
-        } else {
-          i++;
-          retry=MAX_RETRY;
-        }
-
-	}
-  }
-}
 void LiberaEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {
 
   if (initParameter != NULL) {
@@ -200,61 +151,6 @@ int LiberaEpicsDriver::write(void *buffer, int addr, int bcount) {
 }
 // assign MT and ST from a string formatted as [MT]:[YYYYMMDDhhmm.ss]
 
-int LiberaEpicsDriver::assign_time(const char *time) {
-  const char  delim       = ':';
-  const char  delim_phase = '.';
-  std::string s(time);
-
-  size_t p = s.find(delim);
-  if (std::string::npos == p) {
-    LiberaSoftERR << "Invalid argument -- 'TIME' missing delimiter \":\"";
-    return -4;
-  }
-  std::string s2(s.substr(0, p - 0));
-  if (!s2.empty()) {
-    cfg.mask |= liberaconfig::want_setmt;
-
-    size_t p_phase = s2.find(delim_phase);
-    if (std::string::npos == p_phase) {
-      // No LMT Phase specified
-      cfg.time.mt    = atoll(s2.c_str());
-      cfg.time.phase = 0;
-
-    } else {
-      // MT + LMT Phase specified
-      std::string s_mt(s2.substr(0, p_phase - 0));
-      std::string s_phase(s2.substr(p_phase + 1));
-
-      cfg.time.mt = atoll(s_mt.c_str());
-      if (!s_phase.empty())
-        cfg.time.phase = atoll(s_phase.c_str());
-      else
-        cfg.time.phase = 0;
-    }
-  }
-
-  s2 = s.substr(p + 1);
-  if (!s2.empty()) {
-    for (p = 4; p < (s2.size() - 3); ++p)
-      if (p % 3 == 1) s2.insert(p, 1, delim);
-
-    struct tm t;
-    if (!strptime(s2.c_str(), "%Y:%m:%d:%H:%M.%S", &t)) {
-      LiberaSoftERR << "Invalid argument -- 'strptime'";
-      return -1;
-    }
-    cfg.time.st = mktime(&t);
-    if (-1 == cfg.time.st) {
-      LiberaSoftERR << "Invalid argument -- 'mkTIME'";
-
-      return -2;
-    }
-
-    cfg.mask |= liberaconfig::want_setst;
-  }
-
-  return 0;
-}
 // trigger_time,WaveGen:init_params
 
 int LiberaEpicsDriver::initIO(void *buffer, int sizeb) {

@@ -49,7 +49,8 @@ namespace driver {
                     double *x,*y;
 										int32_t* msi;
                     
-                    int32_t *pmode,*imode,*isamples,*ioffset;
+                    int32_t *pmode,*imode,*isamples,*ioffset,*osamples;
+
                     bool*idd,*isa,*itrigger,*odd,*osa;
 										char*status;
                     c_data::CDataWrapper* config;

@@ -27,6 +27,7 @@ using namespace chaos::cu::control_manager::slow_command;
 using namespace driver::daq::libera;
 #include <chaos/common/data/cache/AbstractSharedDomainCache.h>
 using namespace chaos::common::data::cache;
+using namespace chaos::cu::control_manager;
 
 BATCH_COMMAND_OPEN_DESCRIPTION(driver::daq::libera::,
                                CmdLiberaDefault,
@@ -38,8 +39,6 @@ CmdLiberaDefault::CmdLiberaDefault() {
   mt        = NULL;
   st        = NULL;
   calc_poly = true;
-  
-
 }
 
 CmdLiberaDefault::~CmdLiberaDefault() {
@@ -58,11 +57,10 @@ uint8_t CmdLiberaDefault::implementedHandler() {
 // Start the command execution
 void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
   int ret;
-  if(driverAccessorsErogator==NULL){
-        throw chaos::CException(-3, "Cannot retrieve the driver", __FUNCTION__);
-
+  if (driverAccessorsErogator == NULL) {
+    throw chaos::CException(-3, "Cannot retrieve the driver", __FUNCTION__);
   }
- chaos::cu::driver_manager::driver::DriverAccessor *accessor = driverAccessorsErogator->getAccessoInstanceByIndex(0);
+  chaos::cu::driver_manager::driver::DriverAccessor *accessor = driverAccessorsErogator->getAccessoInstanceByIndex(0);
   //	CMDCUDBG_<< "Created accessor:"<<accessor;
   if (accessor == NULL) {
     throw chaos::CException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
@@ -73,17 +71,19 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
     throw chaos::CException(-2, "Cannot allocate driver resources", __FUNCTION__);
   }
   setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
- 
+
   idd       = getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
   isa       = getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
   itrigger  = getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
   imode     = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
   isamples  = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");
+  osamples  = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SAMPLES");
   *idd      = false;
   *isa      = false;
   *itrigger = false;
   *imode    = 0;
   *isamples = 0;
+  *osamples = 0;
 
   ioffset = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "OFFSET");
 
@@ -202,31 +202,47 @@ void CmdLiberaDefault::acquireHandler() {
 
               } */
   *status = 0;
+ /*
   ret     = driver->iop(LIBERA_IOP_CMD_GETENV, status, MAX_STRING);
   if (ret != 0 && (ret != DRV_BYPASS_DEFAULT_CODE)) {
     CMDCUERR_ << " Cannot retrive STATUS";
+  }*/
+  libera_sa_t pnt;  //=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
+  setStateVariableSeverity(StateVariableTypeAlarmDEV, "read_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+  setStateVariableSeverity(StateVariableTypeAlarmDEV, "trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+
+  if ((ret = driver->read((void *)&pnt, CHANNEL_SA, sizeof(libera_sa_t))) >= 0) {
+    bpmpos mm;
+
+    *va = pnt.Va;
+    *vb = pnt.Vb;
+    *vc = pnt.Vc;
+    *vd = pnt.Vd;
+    if (calc_poly) {
+      mm = bpm_voltage_to_mm(u, v, pnt.Va, pnt.Vb, pnt.Vc, pnt.Vd);
+      *x = mm.x;
+      *y = mm.y;
+    } else {
+      *x = pnt.X;
+      *y = pnt.Y;
+    }
+    *q   = pnt.Q;
+    *sum = pnt.Sum;  // pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//;
+    *q1  = pnt.Cx;
+    *q2  = pnt.Cy;
+    *mt  = (pnt.reserved[0]) | (((uint64_t)pnt.reserved[1]) << 32);
+    (*acquire_loops)++;
+
+  } else if (ret == chaos::ErrorCode::EC_GENERIC_TIMEOUT) {
+
+    setStateVariableSeverity(StateVariableTypeAlarmDEV, "trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelWarning);
+
+  } else {
+
+    setStateVariableSeverity(StateVariableTypeAlarmDEV, "read_error", chaos::common::alarm::MultiSeverityAlarmLevelHigh);
   }
-		libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
-
-if((ret=driver->read((void*)&pnt,CHANNEL_SA,sizeof(libera_sa_t)))>=0){
-			bpmpos mm;
-
-			*va = pnt.Va;
-			*vb = pnt.Vb;
-			*vc = pnt.Vc;
-			*vd = pnt.Vd;
-			mm=bpm_voltage_to_mm(u,v,pnt.Va,pnt.Vb,pnt.Vc,pnt.Vd);
-			*x  = mm.x;
-			*y  = mm.y;
-			*q  = pnt.Q;
-			*sum  = pnt.Va + pnt.Vb + pnt.Vc + pnt.Vd;//pnt.Sum;
-			*q1 = pnt.Cx;
-			*q2 = pnt.Cy;
-			*mt = (pnt.reserved[0])|(((uint64_t)pnt.reserved[1])<<32);
-			(*acquire_loops)++;
-}
-		//	x_acq[0] = mm.x;
-		//	y_acq[0] = mm.y;
+  //	x_acq[0] = mm.x;
+  //	y_acq[0] = mm.y;
   /*
             if(driver->iop(LIBERA_IOP_CMD_GET_TS,(void*)&ts,sizeof(ts))==0){
 

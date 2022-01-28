@@ -84,7 +84,6 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
 		throw chaos::CFatalException(-2, "Cannot allocate driver resources", __FUNCTION__);
 	}
     driver->initIO(0,0);
-  SCCULDBG<<"defining commands";
 
 	//install all command
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaDefault), true,true);
@@ -162,7 +161,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("SAMPLES",
 						  "Samples to acquire",
 						  DataType::TYPE_INT32,
-						  DataType::Input);
+						  DataType::Bidirectional);
+                        
 
 	addAttributeToDataSet("ACQUISITION",
 						  "Acquisition number",
@@ -246,8 +246,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addStateVariable(StateVariableTypeAlarmDEV,"trigger_timeout",
             "Notify trigger timeout");
 
-        addStateVariable(StateVariableTypeAlarmDEV,"acquisition_error",
-            "Notify an error");	
+        addStateVariable(StateVariableTypeAlarmDEV,"read_error",
+            "Notify a read error");
+        addStateVariable(StateVariableTypeAlarmDEV,"write_error",
+            "Notify a write error");	
 }
 
 void SCLiberaCU::unitDefineCustomAttribute() {

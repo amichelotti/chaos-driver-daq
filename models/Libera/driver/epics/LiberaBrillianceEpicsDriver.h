@@ -19,9 +19,7 @@ limitations under the License.
 
 #ifndef __LiberaBrillianceEpicsDriver_H__
 #define __LiberaBrillianceEpicsDriver_H__
-#include <chaos/cu_toolkit/driver_manager/driver/ReadWriteInterface.h>
-#include <driver/epics/driver/EpicsGenericDriverDD.h>
-
+#include "LiberaEpicsBase.h"
 #include <driver/daq/models/Libera/LiberaData.h>
 namespace cu_driver = chaos::cu::driver_manager::driver;
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaBrillianceEpicsDriver);
@@ -36,88 +34,15 @@ namespace driver {
 
 namespace daq {
 namespace libera {
+#define DD1_NELM 1000
+#define DD2_NELM 10000
+#define DD3_NELM 30000
+#define DD4_NELM 400000
 
-class LiberaBrillianceEpicsDriver : public chaos::cu::driver_manager::driver::AbstractDriverPlugin, public chaos::cu::driver_manager::driver::ReadWriteInterface {
- protected:
-  int            driver_mode;
-  int            nacquire;
-  char          *raw_data;
-  CSPIHENV       env_handle;
-  CSPIHCON       con_handle;
-  CSPI_LIBPARAMS lib;
-  CSPI_ENVPARAMS ep;
-  CSPI_CONPARAMS p;
-  void           createProperties();
-
-  struct liberaconfig {
-    liberaconfig()
-        : operation(unknown), mode(CSPI_MODE_UNKNOWN), atom_count(0), loop_count(1), mask(0), offset(0) {}
-
-    enum { unknown = 0,
-           init,
-           deinit,
-           acquire,
-           setenv,
-           listenv,
-           settime };
-    size_t operation;  // Main operation mode
-
-    size_t mode;        // Acquisition mode
-    struct dd_specific  // Specifics for DD acq. mode
-    {
-      dd_specific()
-          : decimation(0), offset(0){};
-
-      size_t             decimation;  // 1 or 64, 0=ignore
-      unsigned long long offset;      // history buffer offset in MT units
-    } dd;
-    struct adc_specific {
-      adc_specific()
-          : mode(adc_specific::none), rotate(0){};
-      int mode;
-
-      enum {
-        none = 0x00,
-        cw   = 0x01,
-        sp   = 0x02
-      };
-      int rotate;
-    } adc;
-
-    size_t atom_count;  // number of samples to retrieve
-    size_t loop_count;  // number of iterations (repetitions)
-    size_t offset;
-    size_t datasize;
-    struct settime_specific {
-      settime_specific()
-          : mt(0), st(0) {}
-
-      unsigned long long mt;     // machine time
-      unsigned long      phase;  // LMT phase
-      time_t             st;     // system time (seconds since 1/1/1970)
-    } time;
-
-    enum {
-      want_timestamp = 0x01,
-      want_raw       = 0x02,
-      want_trigger   = 0x04,
-      want_binary    = 0x08,
-      want_setmt     = 0x10,
-      want_setst     = 0x20,
-      want_reserved  = 0x40,
-      want_dcc       = 0x80,
-    };
-    CSPI_BITMASK mask;  // command-line switches (flags)
-  };
-
-  struct liberaconfig cfg;
-  int                 assign_time(const char *time);
-
-  int                                          trigger_time_ms;
-  CSPI_ENVPARAMS                               myenv;
-  uint64_t                                     libera_ts;
-  ::driver::epics::common::EpicsGenericDriver *devicedriver;
-
+class LiberaBrillianceEpicsDriver : public LiberaEpicsBase{
+ 
+  uint32_t maxDDSamples;// epics driver cannot set dinamically size, so the right port is selected on the base of the maxSamples
+  std::string dd_port;
  public:
   LiberaBrillianceEpicsDriver();
 
