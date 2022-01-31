@@ -85,10 +85,8 @@ void LiberaBrillianceEpicsDriver::driverInit(const chaos::common::data::CDataWra
   "SA:SA_A_MONITOR","SA:SA_B_MONITOR","SA:SA_C_MONITOR","SA:SA_D_MONITOR","SA:SA_X_MONITOR","SA:SA_Y_MONITOR","SA:SA_Q_MONITOR","SA:SA_SUM_MONITOR","SA:SA_CX_MONITOR","SA:SA_CY_MONITOR","SA:SA_FINISHED_MONITOR"};
   chaos::common::data::CDWUniquePtr newconf=json.clone();
   ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()),pvlist);
-  LiberaSoftDBG<<"Configuration:"<<newconf->getJSONString();
-  devicedriver = new ::driver::epics::common::EpicsGenericDriver(*(newconf.get()));
   
-  createProperties();
+  LiberaEpicsBase::driverInit(*newconf.get());
 }
 
 void LiberaBrillianceEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {

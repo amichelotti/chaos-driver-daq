@@ -127,7 +127,8 @@ class LiberaEpicsBase:  public chaos::cu::driver_manager::driver::AbstractDriver
   void createProperties();
  public:
   void driverInit(const char *initParameter) throw(chaos::CException);
-  virtual void driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException)=0;
+  virtual void driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException);
+  virtual void driverDeinit();
 
 
   LiberaEpicsBase();

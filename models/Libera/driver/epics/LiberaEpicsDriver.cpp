@@ -66,9 +66,8 @@ void LiberaEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json
   "pm.ddc_synth.SCAN","pm.ddc_synth.ACQM","pm.ddc_synth.Va","pm.ddc_synth.Vb","pm.ddc_synth.Vc","pm.ddc_synth.Vd","pm.ddc_synth.Sum","pm.ddc_synth.Q","pm.ddc_synth.X","pm.ddc_synth.Y","pm.ddc_synth.PROC","pm.ddc_synth.NGRP"*/};
   chaos::common::data::CDWUniquePtr newconf=json.clone();
   ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()),pvlist);
-  LiberaSoftDBG<<"Configuration:"<<newconf->getJSONString();
-  devicedriver = new ::driver::epics::common::EpicsGenericDriver(*(newconf.get()));
-  createProperties();
+  LiberaEpicsBase::driverInit(*newconf.get());
+
 }
 
 void LiberaEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {

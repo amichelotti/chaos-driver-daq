@@ -63,11 +63,7 @@ void LiberaEpicsBase::createProperties() {
         if (conf->hasKey(KEY_CNAME) && (r->hasKey(PROPERTY_VALUE_KEY))) {
           cname = conf->getStringValue(KEY_CNAME);
           LDBG_ << "create PUBLIC property:" << *i << " CNAME:" << cname;  //<<" ="<<r->getJSONString();
-
-        } else {
-          LDBG_ << "create  property:" << *i;  //<<" ="<<r->getJSONString();
-        }
-        createProperty(
+          createProperty(
             *i,
             [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
                 -> chaos::common::data::CDWUniquePtr {
@@ -80,6 +76,11 @@ void LiberaEpicsBase::createProperties() {
               return chaos::common::data::CDWUniquePtr();
             },
             cname);
+
+        }/* else {
+          LDBG_ << "create  property:" << *i;  //<<" ="<<r->getJSONString();
+        }*/
+        
       }
       i++;
     } else {
@@ -91,6 +92,21 @@ void LiberaEpicsBase::createProperties() {
         }
 
 	}
+  }
+}
+void LiberaEpicsBase::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException){
+  LiberaSoftDBG<<"Configuration:"<<json.getJSONString();
+  devicedriver = new ::driver::epics::common::EpicsGenericDriver(json);
+  
+  createProperties();
+
+}
+void LiberaEpicsBase::driverDeinit(){
+  if(devicedriver){
+    LiberaSoftDBG<<"Destroy";
+
+    delete devicedriver;
+    devicedriver=NULL;
   }
 }
 
