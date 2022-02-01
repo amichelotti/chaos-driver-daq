@@ -75,7 +75,16 @@ SCLiberaCU::~SCLiberaCU() {
  Return the default configuration
  */
 void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
-  SCCULDBG<<"defining commands";
+  chaos::cu::driver_manager::driver::DriverAccessor * accessor=AbstractControlUnit::getAccessoInstanceByIndex(0);
+	if(accessor==NULL){
+		throw chaos::CFatalException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
+	}
+	driver = new chaos::cu::driver_manager::driver::BasicIODriverInterface(accessor);
+	if(driver==NULL){
+		throw chaos::CFatalException(-2, "Cannot allocate driver resources", __FUNCTION__);
+	}
+    driver->initIO(0,0);
+
 	//install all command
     installCommand(BATCH_COMMAND_GET_DESCRIPTION(CmdLiberaDefault), true,true);
 	//installCommand<CmdLiberaAcquire>("acquire");
@@ -152,7 +161,8 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addAttributeToDataSet("SAMPLES",
 						  "Samples to acquire",
 						  DataType::TYPE_INT32,
-						  DataType::Input);
+						  DataType::Bidirectional);
+                        
 
 	addAttributeToDataSet("ACQUISITION",
 						  "Acquisition number",
@@ -236,8 +246,10 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         addStateVariable(StateVariableTypeAlarmDEV,"trigger_timeout",
             "Notify trigger timeout");
 
-        addStateVariable(StateVariableTypeAlarmDEV,"acquisition_error",
-            "Notify an error");	
+        addStateVariable(StateVariableTypeAlarmDEV,"read_error",
+            "Notify a read error");
+        addStateVariable(StateVariableTypeAlarmDEV,"write_error",
+            "Notify a write error");	
 }
 
 void SCLiberaCU::unitDefineCustomAttribute() {
@@ -247,19 +259,15 @@ void SCLiberaCU::unitDefineCustomAttribute() {
 // Abstract method for the initialization of the control unit
 void SCLiberaCU::unitInit() throw(CException) {
         metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Initializing");
-	chaos::cu::driver_manager::driver::DriverAccessor * accessor=AbstractControlUnit::getAccessoInstanceByIndex(0);
-	if(accessor==NULL){
-		throw chaos::CFatalException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
-	}
-	driver = new chaos::cu::driver_manager::driver::BasicIODriverInterface(accessor);
-	if(driver==NULL){
-		throw chaos::CFatalException(-2, "Cannot allocate driver resources", __FUNCTION__);
-	}
 	
-        if(driver->initIO(0,0)!=0){
-            throw chaos::CFatalException(-3, "Cannot initialize driver", __FUNCTION__);
+    SCCULDBG << "============= INIT ===========";	
 
-        }
+    if(driver->initIO(0,0)!=0){
+        throw chaos::CFatalException(-3, "Cannot initialize driver", __FUNCTION__);
+
+    }
+    SCCULDBG << "============= END INIT ===========";	
+
 	itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
     imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
     isamples=getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "SAMPLES");

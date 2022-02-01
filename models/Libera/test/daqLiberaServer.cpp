@@ -19,7 +19,6 @@
 */
 
 
-#include <chaos/cu_toolkit/control_manager/IOCU.h>
 #ifdef LIBERA
 #ifdef _LIBERACSPI_
 #include "LiberaBrillianceCSPIDriver.h"
