@@ -216,7 +216,7 @@ int LiberaBrillianceEpicsDriver::deinitIO() {
 int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
   int                       rc;
   CSPI_ENVPARAMS            ep;
-  bool               trigger_mode = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED)?true:false);
+  bool               trigger_mode;
 #define SET_ENV(cpimask, param)                                                                                        \
   if (cmd_env->selector & CSPI_ENV_##cpimask) {                                                                        \
     env.param = cmd_env->value;                                                                                        \
@@ -242,6 +242,8 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
       break;
     case LIBERA_IOP_CMD_ACQUIRE:
       driver_mode = *(int *)data;
+      trigger_mode = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED)?true:false);
+
       LiberaSoftDBG << "IOP Acquire driver mode:" << driver_mode;
       if (driver_mode & LIBERA_IOP_MODE_TRIGGERED) {
         cfg.mask |= cfg.want_trigger;
