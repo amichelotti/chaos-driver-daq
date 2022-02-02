@@ -129,7 +129,9 @@ int LiberaBrillianceEpicsDriver::read(void *buffer, int addr, int bcount) {
       LiberaSoftDBG <<mt <<"- SA VA:" << tt->Va << " VB:" << tt->Vb << " VC:" << tt->Vc << " VD:" << tt->Vd;
       return 1;
   } else if (addr == CHANNEL_DD){
-        devicedriver->waitChange(dd_port+":DD_FINISHED_MONITOR");
+        if((rc=devicedriver->waitChange(dd_port+":DD_FINISHED_MONITOR"))!=0){
+          return rc;
+        }
 
       if ((cfg.mask & liberaconfig::want_trigger)==0) {
           devicedriver->write(dd_port+":DD_REQUEST_CMD",1);

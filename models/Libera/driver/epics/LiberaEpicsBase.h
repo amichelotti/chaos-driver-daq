@@ -38,12 +38,18 @@ namespace daq {
 namespace libera {
 
 #define READPV(pv,val) {\
+int ret; \
+if((ret=devicedriver->read(pv,val))<=0){ LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot read \""<<pv<<"\" , ret:"<<ret; return ret;}}
+
+#define WRITEPV(pv,val) {\
 int ret;\
-if((ret=devicedriver->read(pv,val))<=0){ LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot read \""<<pv<<"\" , ret:"<<ret;}}
+if((ret=devicedriver->write(pv,val))<=0){ LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot write \""<<pv<<"\" = "<<val<<", ret:"<<ret; return ret;}\
+LDBG_<<"["<<__PRETTY_FUNCTION__<<"] write \""<<pv<<"\" ="<<val<<" ret:"<<ret;\
+}
 
 #define READPVARRAY(pv,val,count) {\
 int ret;\
-if((ret=devicedriver->readArray(pv,val,count))<=0){  LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot readarray \""<<pv<<"\" count:"<<count<<", ret:"<<ret;}}
+if((ret=devicedriver->readArray(pv,val,count))<=0){  LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot readarray \""<<pv<<"\" count:"<<count<<", ret:"<<ret; return ret;}}
 
 class LiberaEpicsBase:  public chaos::cu::driver_manager::driver::AbstractDriverPlugin,public chaos::cu::driver_manager::driver::ReadWriteInterface   {
  protected:
