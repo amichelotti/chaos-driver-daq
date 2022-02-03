@@ -1,7 +1,7 @@
 /*
  * LiberaBrillianceEpicsDriver.cpp
  * @author Andrea Michelotti
-Copyright Gen 18, 2022 
+Copyright Gen 18, 2022
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -30,7 +30,8 @@ limitations under the License.
 using namespace ::driver::daq::libera;
 
 OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaBrillianceEpicsDriver, 1.0.0, ::driver::daq::libera::LiberaBrillianceEpicsDriver)
-REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(::driver::daq::libera::LiberaBrillianceEpicsDriver, http_address / dnsname: port)
+REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(::driver::daq::libera::LiberaBrillianceEpicsDriver, http_address / dnsname
+                                               : port)
 CLOSE_CU_DRIVER_PLUGIN_CLASS_DEFINITION
 
 static volatile size_t _event_id = 0;
@@ -47,9 +48,9 @@ CLOSE_REGISTER_PLUGIN
 LiberaBrillianceEpicsDriver::LiberaBrillianceEpicsDriver() {
   int rc;
   cfg.operation = liberaconfig::deinit;
-  maxDDSamples=DD1_NELM;
-  dd_port="DD1";
-  LiberaSoftDBG<<"Driver @"<<std::hex<<this;
+  maxDDSamples  = DD1_NELM;
+  dd_port       = "DD1";
+  LiberaSoftDBG << "Driver @" << std::hex << this;
   /*
       if((rc=initIO(0,0))!=0){
           throw chaos::CException(rc,"Initializing","LiberaBrillianceEpicsDriver::LiberaBrillianceEpicsDriver");
@@ -60,110 +61,124 @@ LiberaBrillianceEpicsDriver::LiberaBrillianceEpicsDriver() {
 // default descrutcor
 
 LiberaBrillianceEpicsDriver::~LiberaBrillianceEpicsDriver() {
- // deinitIO();
+  // deinitIO();
 }
 
-void LiberaBrillianceEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException){
+void LiberaBrillianceEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException) {
   // add pvconfig
-  if(json.hasKey("maxDDSamples")){
-    maxDDSamples=json.getInt32Value("maxDDSamples");
-    if((maxDDSamples>DD1_NELM) &&(maxDDSamples<=DD2_NELM)){
-      maxDDSamples=DD2_NELM;
-      dd_port="DD2";
-    } else if((maxDDSamples>DD2_NELM) &&(maxDDSamples<=DD3_NELM)){
-      maxDDSamples=DD3_NELM;
-      dd_port="DD3";
+  if (json.hasKey("maxDDSamples")) {
+    maxDDSamples = json.getInt32Value("maxDDSamples");
+    if ((maxDDSamples > DD1_NELM) && (maxDDSamples <= DD2_NELM)) {
+      maxDDSamples = DD2_NELM;
+      dd_port      = "DD2";
+    } else if ((maxDDSamples > DD2_NELM) && (maxDDSamples <= DD3_NELM)) {
+      maxDDSamples = DD3_NELM;
+      dd_port      = "DD3";
     } else {
-      maxDDSamples=DD4_NELM;
-      dd_port="DD4";
-
+      maxDDSamples = DD4_NELM;
+      dd_port      = "DD4";
     }
   }
-  std::vector<std::string> pvlist= \
-  {"ADC:ADC_MONITOR","ADC:ADC_A_MONITOR","ADC:ADC_B_MONITOR","ADC:ADC_C_MONITOR","ADC:ADC_D_MONITOR","ADC:ADC_FINISHED_MONITOR","ADC:ADC_IGNORE_TRIG_SP","ADC:ADC_ON_NEXT_TRIG_CMD",\
-  dd_port+":DD_VA_MONITOR",dd_port+":DD_VB_MONITOR",dd_port+":DD_VC_MONITOR",dd_port+":DD_VD_MONITOR",dd_port+":DD_X_MONITOR",dd_port+":DD_Y_MONITOR",dd_port+":DD_Q_MONITOR",dd_port+":DD_SUM_MONITOR",dd_port+":DD_ST_MONITOR",dd_port+":DD_MT_MONITOR",dd_port+":DD_FINISHED_MONITOR",dd_port+":DD_REQUEST_CMD",dd_port+":DD_IGNORE_TRIG_SP",dd_port+":DD_ON_NEXT_TRIG_CMD",dd_port+":DD_ST_OFFSET_SP",dd_port+":DD_MT_OFFSET_SP",dd_port+":DD_SEEK_POINT_SP",\
-  "SA:SA_A_MONITOR","SA:SA_B_MONITOR","SA:SA_C_MONITOR","SA:SA_D_MONITOR","SA:SA_X_MONITOR","SA:SA_Y_MONITOR","SA:SA_Q_MONITOR","SA:SA_SUM_MONITOR","SA:SA_CX_MONITOR","SA:SA_CY_MONITOR","SA:SA_FINISHED_MONITOR"};
-  chaos::common::data::CDWUniquePtr newconf=json.clone();
-  ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()),pvlist);
-  
+  std::vector<std::string> pvlist =
+      {"ADC:ADC_MONITOR", "ADC:ADC_A_MONITOR", "ADC:ADC_B_MONITOR", "ADC:ADC_C_MONITOR", "ADC:ADC_D_MONITOR", "ADC:ADC_FINISHED_MONITOR", "ADC:ADC_IGNORE_TRIG_SP", "ADC:ADC_ON_NEXT_TRIG_CMD", dd_port + ":DD_VA_MONITOR", dd_port + ":DD_VB_MONITOR", dd_port + ":DD_VC_MONITOR", dd_port + ":DD_VD_MONITOR", dd_port + ":DD_X_MONITOR", dd_port + ":DD_Y_MONITOR", dd_port + ":DD_Q_MONITOR", dd_port + ":DD_SUM_MONITOR", dd_port + ":DD_ST_MONITOR", dd_port + ":DD_MT_MONITOR", dd_port + ":DD_FINISHED_MONITOR", dd_port + ":DD_REQUEST_CMD", dd_port + ":DD_IGNORE_TRIG_SP", dd_port + ":DD_ON_NEXT_TRIG_CMD", dd_port + ":DD_ST_OFFSET_SP", dd_port + ":DD_MT_OFFSET_SP", dd_port + ":DD_SEEK_POINT_SP", "SA:SA_A_MONITOR", "SA:SA_B_MONITOR", "SA:SA_C_MONITOR", "SA:SA_D_MONITOR", "SA:SA_X_MONITOR", "SA:SA_Y_MONITOR", "SA:SA_Q_MONITOR", "SA:SA_SUM_MONITOR", "SA:SA_CX_MONITOR", "SA:SA_CY_MONITOR", "SA:SA_FINISHED_MONITOR"};
+  chaos::common::data::CDWUniquePtr newconf = json.clone();
+  ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()), pvlist);
+  std::map<std::string, std::string> pvprprop = {{"ENV:ENV_SWITCHES_MONITOR", "ENV_SWITCHES_MONITOR"},
+                                                 {"ENV:ENV_GAIN_MONITOR", "ENV_GAIN_MONITOR"},
+                                                 {"ENV:ENV_GAIN_MONITOR", "ENV_GAIN_MONITOR"},
+                                                 {"ENV:ENV_AGC_MONITOR", "ENV_AGC_MONITOR"},
+                                                 {"ENV:ENV_DSC_MONITOR", "ENV_DSC_MONITOR"},
+                                                 {"ENV:ENV_TEMP_MONITOR", "ENV_TEMP_MONITOR"},
+                                                 {"ENV:ENV_DDFPGA_ERR_MONITOR", "ENV_DDFPGA_ERR_MONITOR"},
+                                                 {"ENV:ENV_SAFPGA_ERR_MONITOR", "ENV_SAFPGA_ERR_MONITOR"},
+                                                 {"ENV:ENV_SADRV_ERR_MONITOR", "ENV_SADRV_ERR_MONITOR"},
+                                                 {"ENV:ENV_MC_PLL_MONITOR", "ENV_MC_PLL_MONITOR"},
+                                                 {"ENV:ENV_SC_PLL_MONITOR", "ENV_SC_PLL_MONITOR"},
+                                                 {"ENV:ENV_PMOFFSET_SP", "ENV_PMOFFSET_SP"},
+                                                 {"ENV:ENV_TRIGDELAY_MONITOR", "ENV_TRIGDELAY_MONITOR"}
+
+  };
+
+  ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()), pvprprop);
+
   LiberaEpicsBase::driverInit(*newconf.get());
 }
 
 void LiberaBrillianceEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {
-
   if (initParameter != NULL) {
     chaos::common::data::CDataWrapper cw;
     cw.setSerializedJsonData(initParameter);
     driverInit(cw);
-
   }
-  throw chaos::CException(-1,"invalid configuration",__PRETTY_FUNCTION__);
-
+  throw chaos::CException(-1, "invalid configuration", __PRETTY_FUNCTION__);
 }
 
 int LiberaBrillianceEpicsDriver::read(void *buffer, int addr, int bcount) {
   int rc;
   // Allways seek(), not just the first time.
-  if(addr==CHANNEL_SA){
-      libera_sa_t *tt = (libera_sa_t *)buffer;
+  if (addr == CHANNEL_SA) {
+    libera_sa_t *tt = (libera_sa_t *)buffer;
 
-      int ret=devicedriver->waitChange("SA:SA_A_MONITOR");
-      if(ret!=0){
+    int ret = devicedriver->waitChange("SA:SA_A_MONITOR");
+    if (ret != 0) {
+      return ret;
+    }
+    READPV("SA:SA_A_MONITOR", tt->Va);
 
-        return ret;
+    READPV("SA:SA_B_MONITOR", tt->Vb);
+    READPV("SA:SA_C_MONITOR", tt->Vc);
+    READPV("SA:SA_D_MONITOR", tt->Vd);
+    READPV("SA:SA_SUM_MONITOR", tt->Sum);
+    READPV("SA:SA_Q_MONITOR", tt->Q);
+    READPV("SA:SA_X_MONITOR", tt->X);
+    READPV("SA:SA_Y_MONITOR", tt->Y);
+    // READPV("sa.LMT_l",tt->reserved[0] );
+    // READPV("sa.LMT_h",tt->reserved[1] );
+    uint64_t mt = 0;  //(tt->reserved[0])|(((uint64_t)tt->reserved[1])<<32);
+
+    LiberaSoftDBG << mt << "- SA VA:" << tt->Va << " VB:" << tt->Vb << " VC:" << tt->Vc << " VD:" << tt->Vd;
+    return 1;
+  } else if (addr == CHANNEL_DD) {
+    if ((cfg.mask & liberaconfig::want_trigger) == 0) {
+        devicedriver->write(dd_port + ":DD_REQUEST_CMD", 1);
       }
-      READPV("SA:SA_A_MONITOR",tt->Va);
+    if ((rc = devicedriver->waitChange(dd_port + ":DD_FINISHED_MONITOR")) != 0) {
       
-      READPV("SA:SA_B_MONITOR",tt->Vb );
-      READPV("SA:SA_C_MONITOR",tt->Vc );
-      READPV("SA:SA_D_MONITOR",tt->Vd );
-      READPV("SA:SA_SUM_MONITOR",tt->Sum );
-      READPV("SA:SA_Q_MONITOR",tt->Q );
-      READPV("SA:SA_X_MONITOR",tt->X );
-      READPV("SA:SA_Y_MONITOR",tt->Y );
-      //READPV("sa.LMT_l",tt->reserved[0] );
-      //READPV("sa.LMT_h",tt->reserved[1] );
-      uint64_t mt = 0;//(tt->reserved[0])|(((uint64_t)tt->reserved[1])<<32);
-
-
-      LiberaSoftDBG <<mt <<"- SA VA:" << tt->Va << " VB:" << tt->Vb << " VC:" << tt->Vc << " VD:" << tt->Vd;
-      return 1;
-  } else if (addr == CHANNEL_DD){
-        devicedriver->waitChange(dd_port+":DD_FINISHED_MONITOR");
-
-      if ((cfg.mask & liberaconfig::want_trigger)==0) {
-          devicedriver->write(dd_port+":DD_REQUEST_CMD",1);
-
-    } 
-     // int32_t va[count],vb[count],vc[count],vd[count],sum[count],q[count],x[count],y[count];
-        libera_data_handle_t *dd = (libera_data_handle_t *)buffer;
-        uint32_t realsamples=std::min((uint32_t)dd->samples,maxDDSamples);
-
-        READPVARRAY(dd_port+":DD_VA_MONITOR",dd->Va,realsamples );
-        READPVARRAY(dd_port+":DD_VB_MONITOR",dd->Vb,realsamples );
-        READPVARRAY(dd_port+":DD_VC_MONITOR",dd->Vc,realsamples);
-        READPVARRAY(dd_port+":DD_VD_MONITOR",dd->Vd,realsamples );
-        READPVARRAY(dd_port+":DD_SUM_MONITOR",dd->Sum,realsamples );
-        if(dd->Q){
-          READPVARRAY(dd_port+":DD_Q_MONITOR",dd->Q,realsamples);
-        }
-        if(dd->X){
-          READPVARRAY(dd_port+":DD_X_MONITOR",dd->X,realsamples);
-        }
-        if(dd->Y){
-          READPVARRAY(dd_port+":DD_Y_MONITOR",dd->Y,realsamples);
-        }
-        *dd->ts=0;
-        devicedriver->read(dd_port+":DD_MT_MONITOR",*(int32_t*)dd->ts);
-        //devicedriver->waitChange(dd_port+":DD_FINISHED_MONITOR");
-
-        LiberaSoftDBG <<*dd->ts<< " DD[" << 0 << "] VA[0]:" << dd->Va[0] <<"VA["<<realsamples-1<<"]:" << dd->Va[realsamples-1]<< "  VB:" << dd->Vb[0]  << " VC:" << dd->Vc[0]  << " VD:" << dd->Vd[0] <<" Sum:"<<dd->Sum[0];
-        //<<" Q:"<<dd-dd->Q[0]<<" X:"<<dd->X[0]<<" Y:"<<dd->Y[0];
-
-      return realsamples;
+      return rc;
     }
 
-  
+    // int32_t va[count],vb[count],vc[count],vd[count],sum[count],q[count],x[count],y[count];
+    libera_data_handle_t *dd          = (libera_data_handle_t *)buffer;
+    uint32_t              realsamples = std::min((uint32_t)dd->samples, maxDDSamples);
+
+    READPVARRAY(dd_port + ":DD_VA_MONITOR", dd->Va, realsamples);
+    READPVARRAY(dd_port + ":DD_VB_MONITOR", dd->Vb, realsamples);
+    READPVARRAY(dd_port + ":DD_VC_MONITOR", dd->Vc, realsamples);
+    READPVARRAY(dd_port + ":DD_VD_MONITOR", dd->Vd, realsamples);
+    READPVARRAY(dd_port + ":DD_SUM_MONITOR", dd->Sum, realsamples);
+    if (dd->Q) {
+      READPVARRAY(dd_port + ":DD_Q_MONITOR", dd->Q, realsamples);
+    }
+    if (dd->X) {
+      READPVARRAY(dd_port + ":DD_X_MONITOR", dd->X, realsamples);
+    }
+    if (dd->Y) {
+      READPVARRAY(dd_port + ":DD_Y_MONITOR", dd->Y, realsamples);
+    }
+    *dd->ts = 0;
+    devicedriver->read(dd_port + ":DD_MT_MONITOR", *(int32_t *)dd->ts);
+    // devicedriver->waitChange(dd_port+":DD_FINISHED_MONITOR");
+
+    LiberaSoftDBG << *dd->ts << " DD[" << 0 << "] VA[0]:" << dd->Va[0] << "VA[" << realsamples - 1 << "]:" << dd->Va[realsamples - 1] << "  VB:" << dd->Vb[0] << " VC:" << dd->Vc[0] << " VD:" << dd->Vd[0] << " Sum:" << dd->Sum[0];
+    //<<" Q:"<<dd-dd->Q[0]<<" X:"<<dd->X[0]<<" Y:"<<dd->Y[0];
+    if ((cfg.mask & liberaconfig::want_trigger) == 0) {
+      devicedriver->write(dd_port + ":DD_REQUEST_CMD", 1);
+    } else {
+        devicedriver->write(dd_port + ":DD_ON_NEXT_TRIG_CMD", 1);
+
+    }
+    return realsamples;
+  }
 
   return 0;
 }
@@ -174,14 +189,13 @@ int LiberaBrillianceEpicsDriver::write(void *buffer, int addr, int bcount) {
 }
 // assign MT and ST from a string formatted as [MT]:[YYYYMMDDhhmm.ss]
 
-
 int LiberaBrillianceEpicsDriver::initIO(void *buffer, int sizeb) {
-  LiberaSoftLAPP_<<"initIO";
+  LiberaSoftLAPP_ << "initIO";
   return 0;
 }
 
 int LiberaBrillianceEpicsDriver::deinitIO() {
-    LiberaSoftLAPP_<<"deinitIO";
+  LiberaSoftLAPP_ << "deinitIO";
 
   if (cfg.operation == liberaconfig::deinit) {
     LiberaSoftERR << "Already de-initializad";
@@ -212,9 +226,9 @@ int LiberaBrillianceEpicsDriver::deinitIO() {
 
  */
 int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
-  int                       rc;
-  CSPI_ENVPARAMS            ep;
-  bool               trigger_mode = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED)?true:false);
+  int            rc;
+  CSPI_ENVPARAMS ep;
+  bool           trigger_mode;
 #define SET_ENV(cpimask, param)                                                                                        \
   if (cmd_env->selector & CSPI_ENV_##cpimask) {                                                                        \
     env.param = cmd_env->value;                                                                                        \
@@ -234,12 +248,16 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
       break;
     case LIBERA_IOP_CMD_STOP:
       LiberaSoftDBG << "IOP STOP" << driver_mode;
+      devicedriver->write(dd_port + ":DD_IGNORE_TRIG_SP", 1);
+      devicedriver->write("ADC:ADC_IGNORE_TRIG_SP",1);
 
       cfg.operation = liberaconfig::unknown;
 
       break;
     case LIBERA_IOP_CMD_ACQUIRE:
-      driver_mode = *(int *)data;
+      driver_mode  = *(int *)data;
+      trigger_mode = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED) ? true : false);
+
       LiberaSoftDBG << "IOP Acquire driver mode:" << driver_mode;
       if (driver_mode & LIBERA_IOP_MODE_TRIGGERED) {
         cfg.mask |= cfg.want_trigger;
@@ -264,14 +282,22 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
         cfg.mode = CSPI_MODE_DD;
         LiberaSoftDBG << "Acquire Data on Demand";
 
-       
+        if (trigger_mode) {
+          devicedriver->write(dd_port + ":DD_IGNORE_TRIG_SP", 0);
+
+        } else {
+          devicedriver->write(dd_port + ":DD_IGNORE_TRIG_SP", 1);
+          devicedriver->write(dd_port + ":DD_REQUEST_CMD", 1);
+        }
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
       }
       if (driver_mode & LIBERA_IOP_MODE_SA) {
         cfg.mode = CSPI_MODE_SA;
+        devicedriver->write(dd_port + ":DD_IGNORE_TRIG_SP", 1);
+        devicedriver->write("ADC:ADC_IGNORE_TRIG_SP",1);
         LiberaSoftDBG << "Acquire Data on Streaming";
-       // devicedriver->write("ssa.SCAN", 2);
+        // devicedriver->write("ssa.SCAN", 2);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_SA_ATOM);
@@ -279,12 +305,6 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
       if (driver_mode & LIBERA_IOP_MODE_PM) {
         cfg.mode = CSPI_MODE_PM;
         LiberaSoftDBG << "Acquire Data Post Mortem";
-        if(trigger_mode){
-          devicedriver->write(dd_port+":DD_IGNORE_TRIG_SP", 1);
-
-        } else {
-          devicedriver->write(dd_port+":DD_IGNORE_TRIG_SP", 0);
-        }
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
@@ -294,8 +314,8 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
         LiberaSoftDBG << "Acquire ADC Data";
         cfg.datasize  = sizeof(CSPI_ADC_ATOM);
         cfg.operation = liberaconfig::acquire;
-       // devicedriver->write("adc.SCAN", scan_mode);
-       // devicedriver->write("adc.ACQM", trigger_mode);
+        // devicedriver->write("adc.SCAN", scan_mode);
+        // devicedriver->write("adc.ACQM", trigger_mode);
 
         if (driver_mode & LIBERA_IOP_MODE_CONTINUOUS) {
           cfg.adc.mode |= liberaconfig::adc_specific::cw;
@@ -331,21 +351,22 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
       LiberaSoftDBG << "Setting Samples:" << cfg.atom_count;
       switch (cfg.mode) {
         case CSPI_MODE_DD:
-        // NOT SUPPORTED DYNAMIC CHANGE 
-        /*
-        devicedriver->write("DD1:DD_VA_MONITOR.NELM",cfg.atom_count );
-        devicedriver->write("DD1:DD_VB_MONITOR.NELM",cfg.atom_count );
-        devicedriver->write("DD1:DD_VC_MONITOR.NELM",cfg.atom_count);
-        devicedriver->write("DD1:DD_VD_MONITOR.NELM",cfg.atom_count);
-        devicedriver->write("DD1:DD_X_MONITOR.NELM",cfg.atom_count);
-        devicedriver->write("DD1:DD_Y_MONITOR.NELM",cfg.atom_count );
-        devicedriver->write("DD1:DD_Q_MONITOR.NELM",cfg.atom_count );
 
-        devicedriver->write("DD1:DD_SUM_MONITOR.NELM",cfg.atom_count);
-        */
+          // NOT SUPPORTED DYNAMIC CHANGE
+          /*
+          devicedriver->write("DD1:DD_VA_MONITOR.NELM",cfg.atom_count );
+          devicedriver->write("DD1:DD_VB_MONITOR.NELM",cfg.atom_count );
+          devicedriver->write("DD1:DD_VC_MONITOR.NELM",cfg.atom_count);
+          devicedriver->write("DD1:DD_VD_MONITOR.NELM",cfg.atom_count);
+          devicedriver->write("DD1:DD_X_MONITOR.NELM",cfg.atom_count);
+          devicedriver->write("DD1:DD_Y_MONITOR.NELM",cfg.atom_count );
+          devicedriver->write("DD1:DD_Q_MONITOR.NELM",cfg.atom_count );
+
+          devicedriver->write("DD1:DD_SUM_MONITOR.NELM",cfg.atom_count);
+          */
           break;
         case CSPI_MODE_PM:
-        //  devicedriver->write("pm.ddc_synth.NGRP", cfg.atom_count);
+          //  devicedriver->write("pm.ddc_synth.NGRP", cfg.atom_count);
           break;
       }
       break;
@@ -354,10 +375,10 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
       LiberaSoftDBG << "Setting Offset:" << cfg.dd.offset;
       switch (cfg.mode) {
         case CSPI_MODE_DD:
-        //  devicedriver->write("ddc_synth.OFFS", cfg.dd.offset);
+          //  devicedriver->write("ddc_synth.OFFS", cfg.dd.offset);
           break;
         case CSPI_MODE_PM:
-       //   devicedriver->write("pm.ddc_synth.OFFS", cfg.dd.offset);
+          //   devicedriver->write("pm.ddc_synth.OFFS", cfg.dd.offset);
           break;
       }
       break;
@@ -417,7 +438,7 @@ int LiberaBrillianceEpicsDriver::iop(int operation, void *data, int sizeb) {
       // myenv.health.fan[0]=(int)wave->generate();
 
       // ss<<myenv;
-      LiberaSoftDBG<<"GET ENV size:"<<std::min((uint32_t)sizeb,(uint32_t)ss.str().size())<<" val:"<<ss.str();
+      LiberaSoftDBG << "GET ENV size:" << std::min((uint32_t)sizeb, (uint32_t)ss.str().size()) << " val:" << ss.str();
 
       strncpy(pdata, ss.str().c_str(), std::min((uint32_t)sizeb, (uint32_t)ss.str().size()));
       break;

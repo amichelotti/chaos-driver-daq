@@ -87,7 +87,9 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
   if(addr==CHANNEL_SA){
       libera_sa_t *tt = (libera_sa_t *)buffer;
 
-      devicedriver->waitChange("sa.Va");
+      if((rc=devicedriver->waitChange("sa.Va"))!=0){
+        return rc;
+      }
 
       devicedriver->read("sa.Va",tt->Va );
       devicedriver->read("sa.Vb",tt->Vb );
@@ -106,30 +108,28 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
       return 1;
   } else if (addr == CHANNEL_DD){
 
-      if (cfg.mask & liberaconfig::want_trigger) {
-        // wait
-        devicedriver->waitChange("ddc_synth.Va");
-    } else {
-        devicedriver->write("ddc_synth.PROC",1);
-
+      if (!(cfg.mask & liberaconfig::want_trigger)) {
+        WRITEPV("ddc_synth.PROC",0);
     }
-  
+      if((rc=devicedriver->waitChange("ddc_synth.Va"))!=0){
+          return rc;
+        }
      // int32_t va[count],vb[count],vc[count],vd[count],sum[count],q[count],x[count],y[count];
         libera_data_handle_t *dd = (libera_data_handle_t *)buffer;
 
-        devicedriver->readArray("ddc_synth.Va",dd->Va,dd->samples );
-        devicedriver->readArray("ddc_synth.Vb",dd->Vb,dd->samples );
-        devicedriver->readArray("ddc_synth.Vc",dd->Vc,dd->samples);
-        devicedriver->readArray("ddc_synth.Vd",dd->Vd,dd->samples );
-        devicedriver->readArray("ddc_synth.Sum",dd->Sum,dd->samples );
+        READPVARRAY("ddc_synth.Va",dd->Va,dd->samples );
+        READPVARRAY("ddc_synth.Vb",dd->Vb,dd->samples );
+        READPVARRAY("ddc_synth.Vc",dd->Vc,dd->samples);
+        READPVARRAY("ddc_synth.Vd",dd->Vd,dd->samples );
+        READPVARRAY("ddc_synth.Sum",dd->Sum,dd->samples );
         if(dd->Q){
-          devicedriver->readArray("ddc_synth.Q",dd->Q,dd->samples);
+          READPVARRAY("ddc_synth.Q",dd->Q,dd->samples);
         }
         if(dd->X){
-          devicedriver->readArray("ddc_synth.X",dd->X,dd->samples);
+          READPVARRAY("ddc_synth.X",dd->X,dd->samples);
         }
         if(dd->Y){
-          devicedriver->readArray("ddc_synth.Y",dd->Y,dd->samples);
+          READPVARRAY("ddc_synth.Y",dd->Y,dd->samples);
         }
         *dd->ts=0;
         devicedriver->read("ddc_synth.MT",*(int32_t*)dd->ts);
@@ -191,8 +191,8 @@ int LiberaEpicsDriver::deinitIO() {
 int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
   int                       rc;
   CSPI_ENVPARAMS            ep;
-  std::string               trigger_mode = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED) ? "Event" : "Now");
-  int                       scan_mode    = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED) ? 3 : 0);
+  std::string               trigger_mode ;
+  int                       scan_mode ;
 #define SET_ENV(cpimask, param)                                                                                        \
   if (cmd_env->selector & CSPI_ENV_##cpimask) {                                                                        \
     env.param = cmd_env->value;                                                                                        \
@@ -218,6 +218,8 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       break;
     case LIBERA_IOP_CMD_ACQUIRE:
       driver_mode = *(int *)data;
+      trigger_mode = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED) ? "Event" : "Now");
+      scan_mode    = ((driver_mode & LIBERA_IOP_MODE_TRIGGERED) ? 2 : 0);
       LiberaSoftDBG << "IOP Acquire driver mode:" << driver_mode;
       if (driver_mode & LIBERA_IOP_MODE_TRIGGERED) {
         cfg.mask |= cfg.want_trigger;
@@ -241,17 +243,20 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       if (driver_mode & LIBERA_IOP_MODE_DD) {
         cfg.mode = CSPI_MODE_DD;
         LiberaSoftDBG << "Acquire Data on Demand";
-
-        devicedriver->write("ddc_synth.SCAN", scan_mode);
-        devicedriver->write("ddc_synth.ACQM", trigger_mode);
-
+        if ((driver_mode & LIBERA_IOP_MODE_TRIGGERED)==0) {
+          WRITEPV("ddc_synth.PROC",0);
+        }
+        WRITEPV("ddc_synth.NGRP", (int32_t)cfg.atom_count);
+        WRITEPV("ddc_synth.SCAN", scan_mode);
+        WRITEPV("ddc_synth.ACQM", trigger_mode);
+        
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
       }
       if (driver_mode & LIBERA_IOP_MODE_SA) {
         cfg.mode = CSPI_MODE_SA;
         LiberaSoftDBG << "Acquire Data on Streaming";
-        devicedriver->write("ssa.SCAN", 2);
+        WRITEPV("ssa.SCAN", 2);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_SA_ATOM);
@@ -259,8 +264,8 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       if (driver_mode & LIBERA_IOP_MODE_PM) {
         cfg.mode = CSPI_MODE_PM;
         LiberaSoftDBG << "Acquire Data Post Mortem";
-        devicedriver->write("pm.ddc_synth.SCAN", scan_mode);
-        devicedriver->write("pm.ddc_synth.ACQM", trigger_mode);
+        WRITEPV("pm.ddc_synth.SCAN", scan_mode);
+        WRITEPV("pm.ddc_synth.ACQM", trigger_mode);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
@@ -270,8 +275,8 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
         LiberaSoftDBG << "Acquire ADC Data";
         cfg.datasize  = sizeof(CSPI_ADC_ATOM);
         cfg.operation = liberaconfig::acquire;
-        devicedriver->write("adc.SCAN", scan_mode);
-        devicedriver->write("adc.ACQM", trigger_mode);
+        WRITEPV("adc.SCAN", scan_mode);
+        WRITEPV("adc.ACQM", trigger_mode);
 
         if (driver_mode & LIBERA_IOP_MODE_CONTINUOUS) {
           cfg.adc.mode |= liberaconfig::adc_specific::cw;
@@ -307,10 +312,10 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       LiberaSoftDBG << "Setting Samples:" << cfg.atom_count;
       switch (cfg.mode) {
         case CSPI_MODE_DD:
-          devicedriver->write("ddc_synth.NGRP", cfg.atom_count);
+        //  WRITEPV("ddc_synth.NGRP", cfg.atom_count);
           break;
         case CSPI_MODE_PM:
-          devicedriver->write("pm.ddc_synth.NGRP", cfg.atom_count);
+       //   WRITEPV("pm.ddc_synth.NGRP", cfg.atom_count);
           break;
       }
       break;
@@ -319,10 +324,10 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
       LiberaSoftDBG << "Setting Offset:" << cfg.dd.offset;
       switch (cfg.mode) {
         case CSPI_MODE_DD:
-          devicedriver->write("ddc_synth.OFFS", cfg.dd.offset);
+          WRITEPV("ddc_synth.OFFS", (int32_t)cfg.dd.offset);
           break;
         case CSPI_MODE_PM:
-          devicedriver->write("pm.ddc_synth.OFFS", cfg.dd.offset);
+          WRITEPV("pm.ddc_synth.OFFS", (int32_t)cfg.dd.offset);
           break;
       }
       break;

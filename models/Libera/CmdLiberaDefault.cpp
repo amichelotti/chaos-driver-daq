@@ -70,7 +70,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
   if (driver == NULL) {
     throw chaos::CException(-2, "Cannot allocate driver resources", __FUNCTION__);
   }
-  setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
+  //setFeatures(features::FeaturesFlagTypes::FF_SET_SCHEDULER_DELAY, (uint64_t)1000000);
 
   idd       = getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "DD");
   isa       = getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "SA");
@@ -176,7 +176,7 @@ void CmdLiberaDefault::setHandler(c_data::CDataWrapper *data) {
  */
 void CmdLiberaDefault::acquireHandler() {
   libera_ts_t ts;
-  int         ret;
+  int         ret=0;
   // CMDCUDBG_ << "Default Acquiring libera status";
 
   /*libera_sa_t pnt;//=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
@@ -232,6 +232,7 @@ void CmdLiberaDefault::acquireHandler() {
     *q2  = pnt.Cy;
     *mt  = (pnt.reserved[0]) | (((uint64_t)pnt.reserved[1]) << 32);
     (*acquire_loops)++;
+    getAttributeCache()->setOutputDomainAsChanged();
 
   } else if (ret == chaos::ErrorCode::EC_GENERIC_TIMEOUT) {
 
@@ -253,6 +254,5 @@ void CmdLiberaDefault::acquireHandler() {
             *st=ts.st.tv_sec*1000000 + ts.st.tv_nsec/1000;
             }
   */
-  getAttributeCache()->setOutputDomainAsChanged();
   // force output dataset as changed
 }
