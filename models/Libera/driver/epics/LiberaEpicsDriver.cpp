@@ -103,7 +103,6 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
       devicedriver->read("sa.LMT_h",tt->reserved[1] );
       uint64_t mt = (tt->reserved[0])|(((uint64_t)tt->reserved[1])<<32);
 
-
       LiberaSoftDBG <<mt <<"- SA VA:" << tt->Va << " VB:" << tt->Vb << " VC:" << tt->Vc << " VD:" << tt->Vd;
       return 1;
   } else if (addr == CHANNEL_DD){
@@ -133,6 +132,7 @@ int LiberaEpicsDriver::read(void *buffer, int addr, int bcount) {
         }
         *dd->ts=0;
         devicedriver->read("ddc_synth.MT",*(int32_t*)dd->ts);
+        
         LiberaSoftDBG <<*dd->ts<< " DD[" << 0 << "] VA:" << dd->Va[0] << " VB:" << dd->Vb[0]  << " VC:" << dd->Vc[0]  << " VD:" << dd->Vd[0] <<" Sum:"<<dd->Sum[0];
         //<<" Q:"<<dd-dd->Q[0]<<" X:"<<dd->X[0]<<" Y:"<<dd->Y[0];
 
