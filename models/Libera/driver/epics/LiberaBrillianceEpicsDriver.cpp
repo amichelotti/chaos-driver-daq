@@ -85,8 +85,9 @@ void LiberaBrillianceEpicsDriver::driverInit(const chaos::common::data::CDataWra
   ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()), pvlist);
   std::map<std::string, std::string> pvprprop = {{"ENV:ENV_SWITCHES_MONITOR", "ENV_SWITCHES_MONITOR"},
                                                  {"ENV:ENV_GAIN_MONITOR", "ENV_GAIN_MONITOR"},
-                                                 {"ENV:ENV_GAIN_MONITOR", "ENV_GAIN_MONITOR"},
+                                                 {"ENV:ENV_GAIN_SP", "Gain"},
                                                  {"ENV:ENV_AGC_MONITOR", "ENV_AGC_MONITOR"},
+                                                 {"ENV:ENV_AGC_SP", "ENV_AGC_SP"},
                                                  {"ENV:ENV_DSC_MONITOR", "ENV_DSC_MONITOR"},
                                                  {"ENV:ENV_TEMP_MONITOR", "ENV_TEMP_MONITOR"},
                                                  {"ENV:ENV_DDFPGA_ERR_MONITOR", "ENV_DDFPGA_ERR_MONITOR"},
@@ -135,7 +136,7 @@ int LiberaBrillianceEpicsDriver::read(void *buffer, int addr, int bcount) {
     // READPV("sa.LMT_l",tt->reserved[0] );
     // READPV("sa.LMT_h",tt->reserved[1] );
     uint64_t mt = 0;  //(tt->reserved[0])|(((uint64_t)tt->reserved[1])<<32);
-
+    tt->Sum/=4;
     LiberaSoftDBG << mt << "- SA VA:" << tt->Va << " VB:" << tt->Vb << " VC:" << tt->Vc << " VD:" << tt->Vd;
     return 1;
   } else if (addr == CHANNEL_DD) {
