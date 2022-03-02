@@ -56,7 +56,7 @@ int main(int argc, const char *argv[])
 #warning "ADDING LIBERA MCI DRIVER"
 		REGISTER_DRIVER(,LiberaBrilliancePlusDriver);
 #endif
-        REGISTER_DRIVER(,LiberaSoftDriver);
+        REGISTER_DRIVER(::driver::daq::libera,LiberaSoftDriver);
 
 
                 REGISTER_CU(::driver::daq::libera::SCLiberaCU);

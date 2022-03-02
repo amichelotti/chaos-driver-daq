@@ -29,9 +29,10 @@ limitations under the License.
 #define LiberaSoftDBG		LDBG_ << "[LiberaSoftDriver "<<__PRETTY_FUNCTION__<<" ]"
 #define LiberaSoftERR		LERR_ << "[LiberaSoftDriver "<<__PRETTY_FUNCTION__<<" ]"
 using namespace chaos::cu::driver_manager::driver;
+using namespace ::driver::daq::libera;
 static boost::mutex io_mux;
-OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaSoftDriver, 1.0.0, LiberaSoftDriver)
-REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(LiberaSoftDriver, http_address / dnsname : port)
+OPEN_CU_DRIVER_PLUGIN_CLASS_DEFINITION(LiberaSoftDriver, 1.0.0, ::driver::daq::libera::LiberaSoftDriver)
+REGISTER_CU_DRIVER_PLUGIN_CLASS_INIT_ATTRIBUTE(::driver::daq::libera::LiberaSoftDriver, http_address / dnsname : port)
 CLOSE_CU_DRIVER_PLUGIN_CLASS_DEFINITION
 
 
@@ -44,14 +45,12 @@ static pthread_mutex_t eventm = PTHREAD_MUTEX_INITIALIZER;
 //GET_PLUGIN_CLASS_DEFINITION
 //we need to define the driver with alias version and a class that implement it
 //default constructor definition
-LiberaSoftDriver::LiberaSoftDriver() {
+DEFAULT_CU_DRIVER_PLUGIN_CONSTRUCTOR_WITH_NS(::driver::daq::libera,LiberaSoftDriver) {
+
     int rc;
     cfg.operation =liberaconfig::deinit;
-/*
-    if((rc=initIO(0,0))!=0){
-        throw chaos::CException(rc,"Initializing","LiberaSoftDriver::LiberaSoftDriver");    
-    }
- */
+
+LiberaSoftDBG<<"Create";
 }
 
 
@@ -224,6 +223,19 @@ int LiberaSoftDriver::initIO(void *buffer, int sizeb) {
    
     
     return 0;
+}
+void LiberaSoftDriver::driverInit(const char *initParameter) throw(chaos::CException){
+    if(initParameter){
+        initIO(( void*)initParameter,strlen(initParameter));
+    }
+
+}
+void LiberaSoftDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException){
+
+}
+void LiberaSoftDriver::driverDeinit(){
+    deinitIO();
+
 }
 
 int LiberaSoftDriver::deinitIO() {

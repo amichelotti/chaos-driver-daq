@@ -19,14 +19,18 @@ limitations under the License.
 
 #ifndef __LiberaSoftDriver_H__
 #define __LiberaSoftDriver_H__
-#include <chaos/cu_toolkit/driver_manager/driver/BasicIODriver.h>
+#include <chaos/cu_toolkit/driver_manager/driver/ReadWriteInterface.h>
 #define CSPI
 #include <driver/daq/models/Libera/LiberaData.h>
 #include <common/misc/wavegenerators/WaveBase.h>
 DEFINE_CU_DRIVER_DEFINITION_PROTOTYPE(LiberaSoftDriver);
+namespace driver {
+
+namespace daq {
+namespace libera {
 
 
-class LiberaSoftDriver : public chaos::cu::driver_manager::driver::BasicIODriver {
+class LiberaSoftDriver : public chaos::cu::driver_manager::driver::AbstractDriverPlugin,public chaos::cu::driver_manager::driver::ReadWriteInterface {
 protected:
     int driver_mode;
     int nacquire;
@@ -36,6 +40,10 @@ protected:
     CSPI_LIBPARAMS lib;
     CSPI_ENVPARAMS ep;
     CSPI_CONPARAMS p;
+
+void driverInit(const char *initParameter) throw(chaos::CException);
+  virtual void driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException);
+  virtual void driverDeinit();
 
 struct liberaconfig
 {
@@ -134,7 +142,7 @@ public:
      \return 0 if success, error otherwise
      
      */
-    int initIO(void *buffer, int sizeb);
+    virtual int initIO(void *buffer, int sizeb);
 
     /**
      \brief deinit the driver
@@ -153,5 +161,5 @@ public:
     int iop(int operation, void*data, int sizeb);
 
 };
-
+}}}
 #endif //__LiberaBrillianceSlow_H__
