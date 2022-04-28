@@ -258,15 +258,14 @@ void SCLiberaCU::unitDefineCustomAttribute() {
 
 // Abstract method for the initialization of the control unit
 void SCLiberaCU::unitInit() throw(CException) {
-        metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Initializing");
 	
     SCCULDBG << "============= INIT ===========";	
 
-    if(driver->initIO(0,0)!=0){
+   /* if(driver->initIO(0,0)!=0){
         throw chaos::CFatalException(-3, "Cannot initialize driver", __FUNCTION__);
 
-    }
-    SCCULDBG << "============= END INIT ===========";	
+    }*/
+//SCCULDBG << "============= END INIT ===========";	
 
 	itrigger=getAttributeCache()->getRWPtr<bool>(DOMAIN_INPUT, "TRIGGER");
     imode = getAttributeCache()->getRWPtr<int32_t>(DOMAIN_INPUT, "MODE");
