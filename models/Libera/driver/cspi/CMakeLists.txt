@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.9)
 project(chaos_driver_libera_cspi)
 
 ADD_DEFINITIONS(-D_LIBERACSPI_)
