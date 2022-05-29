@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 2.9)
 project(daq)
 IF("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux") 
   message(STATUS "Including Libera")
