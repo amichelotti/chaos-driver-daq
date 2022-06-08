@@ -65,6 +65,8 @@ int _T::size=sizeof(desc)/sizeof(const char*);
 #define CHANNEL_SP 2
 #define CHANNEL_AVG 3
 #define CHANNEL_ENV 4
+#define CHANNEL_ADC 5
+
 #include <cmath>    
 #define FIX_NUM(g) \
 if(std::isnormal(g)==false)g=0;

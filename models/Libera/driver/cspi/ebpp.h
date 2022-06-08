@@ -30,8 +30,9 @@ typedef struct {
 	int Y;
 	// Horiz. and vert. correction factors from the FA Application
 	int Cx, Cy;
-	// 6 values reserved for future use
-	int reserved[6];
+	int counter[2];
+	// 4 values reserved for future use
+	int reserved[4];
 }
 CSPI_SA_ATOM;
 
