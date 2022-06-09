@@ -6,7 +6,7 @@ SET(DAQ_src LiberaData.cpp  CmdLiberaAcquire.cpp CmdLiberaDefault.cpp CmdLiberaE
 SET(ADD_LIBS )
 
 IF (CHAOS_EPICS_SUPPORT)
-SET(DAQ_src ${DAQ_src} driver/epics/LiberaEpicsBase.cpp driver/epics/LiberaEpicsDriver.cpp driver/epics/LiberaBrillianceEpicsDriver.cpp driver/epics/LiberaBrillianceSPEpicsDriver.cpp)
+SET(DAQ_src ${DAQ_src} driver/epics/LiberaEpicsBase.cpp driver/epics/LiberaEpicsDriver.cpp driver/epics/LiberaSPEpicsDriver.cpp driver/epics/LiberaBrillianceEpicsDriver.cpp driver/epics/LiberaBrillianceSPEpicsDriver.cpp)
 SET(ADD_LIBS chaos_driver_epics)
 ENDIF()
 ADD_DEFINITIONS(-DEBPP)
