@@ -13,7 +13,7 @@ ADD_DEFINITIONS(-DEBPP)
 SET(BasicDAQClient_src test/DAQClient.cpp)
 ADD_SUBDIRECTORY(driver/cspi)
 ADD_SUBDIRECTORY(driver/mci)
-# ADD_SUBDIRECTORY(driver/soft)
+ADD_SUBDIRECTORY(driver/soft)
 
 ADD_DEFINITIONS(${DRIVERS_FLAGS})
 
