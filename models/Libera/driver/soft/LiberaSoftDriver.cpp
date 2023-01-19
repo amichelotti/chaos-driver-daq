@@ -186,12 +186,12 @@ int LiberaSoftDriver::initIO(void *buffer, int sizeb) {
 
   return 0;
 }
-void LiberaSoftDriver::driverInit(const char *initParameter) throw(chaos::CException) {
+void LiberaSoftDriver::driverInit(const char *initParameter)  {
   if (initParameter) {
     initIO((void *)initParameter, strlen(initParameter));
   }
 }
-void LiberaSoftDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException) {
+void LiberaSoftDriver::driverInit(const chaos::common::data::CDataWrapper &json)  {
 }
 void LiberaSoftDriver::driverDeinit() {
   deinitIO();

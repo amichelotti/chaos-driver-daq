@@ -39,7 +39,7 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN775)
 
 
 
-void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
+void RTCAEN775::unitDefineActionAndDataset()  {
     ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitDefineActionAndDataset();
 
     addAttributeToDataSet("FSR",
@@ -53,7 +53,7 @@ void RTCAEN775::unitDefineActionAndDataset() throw(chaos::CException) {
 
 
 }
-void  RTCAEN775::unitInit() throw(chaos::CException){
+void  RTCAEN775::unitInit() {
     AttributeSharedCacheWrapper * cc=getAttributeCache();
     ::driver::daq::caen::RTCAEN< ::common::vme::caen::Caen775 >::unitInit();
     fsr = (uint32_t*)(cc->getROPtr< uint32_t >(chaos::common::data::cache::DOMAIN_INPUT, "FSR"));

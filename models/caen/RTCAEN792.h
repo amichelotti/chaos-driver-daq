@@ -42,8 +42,8 @@ protected:
 public:
     uint32_t* iped;
 
-    void unitDefineActionAndDataset() throw(chaos::CException);
-    void unitInit() throw(chaos::CException);
+    void unitDefineActionAndDataset() ;
+    void unitInit() ;
 
 
 };

@@ -57,7 +57,7 @@ LiberaEpicsDriver::~LiberaEpicsDriver() {
  // deinitIO();
 }
 
-void LiberaEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException){
+void LiberaEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) {
   // add pvconfig
   std::vector<std::string> pvlist={"adc.ACQM","adc.ChannelA","adc.ChannelB","adc.ChannelC","adc.ChannelD","adc.PROC","adc.NGRP",\
   "ddc_synth.SCAN","ddc_synth.ACQM","ddc_synth.OFFS","ddc_synth.MT","ddc_synth.Va","ddc_synth.Vb","ddc_synth.Vc","ddc_synth.Vd",\
@@ -70,7 +70,7 @@ void LiberaEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json
 
 }
 
-void LiberaEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {
+void LiberaEpicsDriver::driverInit(const char *initParameter)  {
 
   if (initParameter != NULL) {
     chaos::common::data::CDataWrapper cw;

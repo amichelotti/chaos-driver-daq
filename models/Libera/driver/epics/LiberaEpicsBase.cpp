@@ -94,7 +94,7 @@ void LiberaEpicsBase::createProperties() {
 	}
   }
 }
-void LiberaEpicsBase::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException){
+void LiberaEpicsBase::driverInit(const chaos::common::data::CDataWrapper &json) {
   LiberaSoftDBG<<"Configuration:"<<json.getJSONString();
   devicedriver = new ::driver::epics::common::EpicsCAccessDriver(json);
   
@@ -110,7 +110,7 @@ void LiberaEpicsBase::driverDeinit(){
   }
 }
 
-void LiberaEpicsBase::driverInit(const char *initParameter) throw(chaos::CException) {
+void LiberaEpicsBase::driverInit(const char *initParameter)  {
 
   if (initParameter != NULL) {
     chaos::common::data::CDataWrapper cw;

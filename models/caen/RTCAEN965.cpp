@@ -40,7 +40,7 @@ PUBLISHABLE_CONTROL_UNIT_IMPLEMENTATION(::driver::daq::caen::RTCAEN965)
 
 
 
-void RTCAEN965::unitDefineActionAndDataset() throw(chaos::CException) {
+void RTCAEN965::unitDefineActionAndDataset()  {
 
 	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase>::unitDefineActionAndDataset();
 
@@ -52,7 +52,7 @@ void RTCAEN965::unitDefineActionAndDataset() throw(chaos::CException) {
 }
 
 
-void RTCAEN965::unitInit() throw(chaos::CException){
+void RTCAEN965::unitInit() {
 	AttributeSharedCacheWrapper * cc=getAttributeCache();
 
 	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase >::unitInit();
