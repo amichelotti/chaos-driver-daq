@@ -22,10 +22,10 @@ namespace istd {
     class Exception : public std::exception
     {
     public:
-        Exception(const char* a_what, bool a_tracedump = true) throw();
-        Exception(const std::string &a_what, bool a_tracedump = true) throw();
-        Exception(std::ostringstream &a_what, bool a_tracedump = true) throw();
-        virtual ~Exception() throw() {};
+        Exception(const char* a_what, bool a_tracedump = true);
+        Exception(const std::string &a_what, bool a_tracedump = true);
+        Exception(std::ostringstream &a_what, bool a_tracedump = true);
+        virtual ~Exception() {};
 
         char const *what() const throw();
 
@@ -40,7 +40,7 @@ namespace istd {
            : Exception(a_what, a_tracedump) {};
            ParameterNotFoundException(const std::string &a_what, bool a_tracedump = true)
            : Exception(a_what, a_tracedump) {};
-           virtual ~ParameterNotFoundException() throw() {};
+           virtual ~ParameterNotFoundException() {};
     };
     /**@}*/
 

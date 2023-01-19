@@ -72,7 +72,7 @@ namespace istd {
         {
         };
 
-        virtual ~AnyReference() throw()
+        virtual ~AnyReference()
         {
             delete m_ptrHolder;
         };

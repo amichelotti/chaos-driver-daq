@@ -72,7 +72,7 @@ namespace ireg {
         * for read-only nodes as well.
         */
         template <class T>
-            bool SetValue(const T& v, size_t a_pos = 0) throw()
+            bool SetValue(const T& v, size_t a_pos = 0)
             __attribute__((warn_unused_result));
 
         /**
@@ -455,7 +455,7 @@ namespace ireg {
         }
 
     template <class T>
-        bool RegNode::SetValue(const T& v, const size_t a_pos) throw()
+        bool RegNode::SetValue(const T& v, const size_t a_pos)
         {
             try {
                 Set(v, a_pos);
