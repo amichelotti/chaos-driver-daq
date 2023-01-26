@@ -18,7 +18,7 @@ limitations under the License.
 
 #include "LiberaSoftDriver.h"
 #include <stdlib.h>
-#include <boost/regex.hpp>
+#include <regex>
 #include <boost/thread/mutex.hpp>
 #define ILK_PARAMCOUNT 8
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
@@ -158,10 +158,10 @@ int LiberaSoftDriver::assign_time(const char *time) {
   return 0;
 }
 // trigger_time,WaveGen:init_params
-static boost::regex drv_opt("(\\d+),(.+)");
+static std::regex drv_opt("(\\d+),(.+)");
 
 int LiberaSoftDriver::initIO(void *buffer, int sizeb) {
-  boost::smatch match;
+  std::smatch match;
   const char   *in = (const char *)buffer;
 
   cfg.operation  = liberaconfig::init;
@@ -175,12 +175,12 @@ int LiberaSoftDriver::initIO(void *buffer, int sizeb) {
   }
   LiberaSoftDBG << "init parameter:" << in;
   std::string param = in;
-  if (boost::regex_match(param, match, drv_opt, boost::match_extra)) {
+  if (std::regex_match(param, match, drv_opt)) {
     std::string ttime = match[1];
     wave              = common::misc::wavegenerators::WaveFactory::getGenerator(match[2]);
     trigger_time_ms   = atoi(ttime.c_str());
   } else {
-    LiberaSoftERR << "bad option parameters:" << param << "expected form:" << drv_opt.str();
+    LiberaSoftERR << "bad option parameters:" << param;
     return -1;
   }
 

@@ -18,7 +18,7 @@ limitations under the License.
 
 #include "LiberaBrilliancePlusDriver.h"
 #include <boost/thread/mutex.hpp>
-#include <boost/regex.hpp>
+#include <regex>
 #include <stdlib.h>
 #define ILK_PARAMCOUNT 8
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
@@ -244,7 +244,7 @@ int LiberaBrilliancePlusDriver::assign_time(const char*time ){
 
 }
 // trigger_time,WaveGen:init_params
-static boost::regex drv_opt("(\\d+),(.+)");
+static std::regex drv_opt("(\\d+),(.+)");
 
 int LiberaBrilliancePlusDriver::initIO(void *buffer, int sizeb) {
 	//const char* argv[1];
