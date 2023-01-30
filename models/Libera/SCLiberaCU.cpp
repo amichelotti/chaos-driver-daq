@@ -104,7 +104,7 @@ void SCLiberaCU::unitDefineActionAndDataset()  {
         
         
         //// Configuration
-        addAttributeToDataSet("config","Coefficients for polynomial filtering Voltage to Position",chaos::DataType::TYPE_CLUSTER,chaos::DataType::Input);
+        addAttributeToDataSet("config","Coefficients for polynomial filtering Voltage to Position",chaos::DataType::TYPE_JSON,chaos::DataType::Input);
 
 
        
