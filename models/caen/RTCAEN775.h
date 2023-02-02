@@ -45,8 +45,8 @@ protected:
 
 public:
 
-    void unitDefineActionAndDataset() throw(chaos::CException);
-    void unitInit() throw(chaos::CException);
+    void unitDefineActionAndDataset() ;
+    void unitInit() ;
     //actions
     bool setFsr(const std::string &name,int32_t value,uint32_t size){
     	DPRINT("set FSR 0x%x",value);

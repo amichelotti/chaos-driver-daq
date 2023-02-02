@@ -71,7 +71,8 @@ public:
     int32_t channels;
     int32_t crate_num;
     int32_t timeo_ms;
-    void unitDefineActionAndDataset() throw(chaos::CException){
+    
+	void unitDefineActionAndDataset() {
     	::driver::misc::RTVme::unitDefineActionAndDataset();
 
     		addAttributeToDataSet("CHANNELS",
@@ -128,14 +129,11 @@ public:
     	                                                            &::driver::daq::caen::RTCAEN<CAEN>::setMode,
     	                                                            "BITSET2");
 
-    	   /* addHandlerOnInputAttributeName< ::driver::daq::caen::RTCAEN<CAEN>, int32_t >(this,
-    	                                                                &::driver::daq::caen::RTCAEN<CAEN>::clrMode,
-    	                                                                "BITCLR2");
-*/
+    	
     }
 
 
-    void unitInit() throw(chaos::CException){
+    void unitInit() {
 	    AttributeSharedCacheWrapper * cc=getAttributeCache();
 
     	vme_base_address = *(cc->getROPtr< uint64_t >(chaos::common::data::cache::DOMAIN_INPUT, "VME_BASE"));
@@ -186,7 +184,7 @@ public:
     	DPRINT("SET2 0x%x",*bset);
     }
 
-    void unitStart() throw(chaos::CException){
+    void unitStart() {
 
    	 if(*bset){
    		 DPRINT("setting BITSET2 0x%x",*bset);
@@ -197,10 +195,10 @@ public:
    	 *acq_cycle=0;
    	 last_event=event=0;
     }
-    void unitStop() throw(chaos::CException){
+    void unitStop() {
 
     }
-    void unitDeinit() throw(chaos::CException){
+    void unitDeinit() {
    	 if(caen){
    		 DPRINT("deallocating caen @%p",caen);
    			 caen->close();
@@ -208,7 +206,7 @@ public:
    			 caen=NULL;
    		 }
     }
-    void unitRun() throw(chaos::CException){
+    void unitRun() {
    	 int ret;
 
    	 	 bzero((void*)chp,caen->getNumberOfChannels()*sizeof(uint32_t));

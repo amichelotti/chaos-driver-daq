@@ -41,8 +41,8 @@ protected:
     CSPI_ENVPARAMS ep;
     CSPI_CONPARAMS p;
 
-void driverInit(const char *initParameter) throw(chaos::CException);
-  virtual void driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException);
+void driverInit(const char *initParameter) ;
+  virtual void driverInit(const chaos::common::data::CDataWrapper &json) ;
   virtual void driverDeinit();
 
 struct liberaconfig

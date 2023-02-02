@@ -40,8 +40,8 @@ ELSE()
 ENDIF()
 
 SET(DAQ_LIBRARY ${PROJECT_NAME} ${DRIVERS_LIB})
-TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial common_misc_wavegenerators ${FrameworkLib})
-TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY}  chaos_cutoolkit chaos_common  common_serial ${ADD_LIBS} ${FrameworkLib})
+TARGET_LINK_LIBRARIES(${PROJECT_NAME} chaos_cutoolkit chaos_common common_serial common_misc_wavegenerators  ${ADD_LIBS} ${FrameworkLib})
+TARGET_LINK_LIBRARIES(daqLiberaServer ${DAQ_LIBRARY}  chaos_cutoolkit chaos_common  common_serial ${FrameworkLib})
 
 # TARGET_LINK_LIBRARIES(daqLiberaClient  chaos_common chaos_driver_misc chaos_metadata_service_client ${DAQ_LIBRARY} ${FrameworkLib} )
 # TARGET_LINK_LIBRARIES(BPMSync ${PROJECT_NAME}  chaos_cutoolkit chaos_common ${FrameworkLib})

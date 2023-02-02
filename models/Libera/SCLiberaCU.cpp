@@ -74,7 +74,7 @@ SCLiberaCU::~SCLiberaCU() {
 /*
  Return the default configuration
  */
-void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
+void SCLiberaCU::unitDefineActionAndDataset()  {
   chaos::cu::driver_manager::driver::DriverAccessor * accessor=AbstractControlUnit::getAccessoInstanceByIndex(0);
 	if(accessor==NULL){
 		throw chaos::CFatalException(-1, "Cannot retrieve the requested driver", __FUNCTION__);
@@ -104,7 +104,7 @@ void SCLiberaCU::unitDefineActionAndDataset() throw(chaos::CException) {
         
         
         //// Configuration
-        addAttributeToDataSet("config","Coefficients for polynomial filtering Voltage to Position",chaos::DataType::TYPE_CLUSTER,chaos::DataType::Input);
+        addAttributeToDataSet("config","Coefficients for polynomial filtering Voltage to Position",chaos::DataType::TYPE_JSON,chaos::DataType::Input);
 
 
        
@@ -257,7 +257,7 @@ void SCLiberaCU::unitDefineCustomAttribute() {
 }
 
 // Abstract method for the initialization of the control unit
-void SCLiberaCU::unitInit() throw(CException) {
+void SCLiberaCU::unitInit() {
 	
     SCCULDBG << "============= INIT ===========";	
 
@@ -278,21 +278,21 @@ void SCLiberaCU::unitInit() throw(CException) {
 }
 
 // Abstract method for the start of the control unit
-void SCLiberaCU::unitStart() throw(CException) {
+void SCLiberaCU::unitStart() {
         metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Starting");
 	//setSA("SA", true, 0);
 	
 }
 
 // Abstract method for the stop of the control unit
-void SCLiberaCU::unitStop() throw(CException) {
+void SCLiberaCU::unitStop() {
             metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Stopping");
 
 	
 }
 
 // Abstract method for the deinit of the control unit
-void SCLiberaCU::unitDeinit() throw(CException) {
+void SCLiberaCU::unitDeinit() {
             metadataLogging(chaos::common::metadata_logging::StandardLoggingChannel::LogLevelInfo,"Deinit");
 
     if(driver!=NULL){

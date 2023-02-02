@@ -82,8 +82,8 @@ class LiberaSPEpicsDriver : public LiberaEpicsBase {
    \return 0 if success, error otherwise
    */
   virtual int  iop(int operation, void *data, int sizeb);
-  virtual void driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException);
-  virtual void driverInit(const char *initParameter) throw(chaos::CException);
+  virtual void driverInit(const chaos::common::data::CDataWrapper &json) ;
+  virtual void driverInit(const char *initParameter) ;
 };
 }  // namespace libera
 }  // namespace daq

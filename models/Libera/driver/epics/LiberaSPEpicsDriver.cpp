@@ -57,7 +57,7 @@ LiberaSPEpicsDriver::~LiberaSPEpicsDriver() {
  // deinitIO();
 }
 
-void LiberaSPEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException){
+void LiberaSPEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) {
   // add pvconfig
   std::vector<std::string> pvlist={"adc.ACQM","adc.A","adc.B","adc.C","adc.D","adc.PROC","adc.NGRP",\
   "spe.SCAN","spe.va","spe.vb","spe.vc","spe.vd","spe.sum","spe.q","spe.x","spe.y","spe.trigger_cnt","spe.bunch_cnt","spe.status","spe.mode"};
@@ -67,7 +67,7 @@ void LiberaSPEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &js
 
 }
 
-void LiberaSPEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {
+void LiberaSPEpicsDriver::driverInit(const char *initParameter)  {
 
   if (initParameter != NULL) {
     chaos::common::data::CDataWrapper cw;

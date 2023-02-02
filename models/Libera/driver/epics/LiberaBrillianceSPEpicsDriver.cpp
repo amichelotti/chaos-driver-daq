@@ -64,7 +64,7 @@ LiberaBrillianceSPEpicsDriver::~LiberaBrillianceSPEpicsDriver() {
   // deinitIO();
 }
 
-void LiberaBrillianceSPEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json) throw(chaos::CException) {
+void LiberaBrillianceSPEpicsDriver::driverInit(const chaos::common::data::CDataWrapper &json)  {
   // add pvconfig
   if (json.hasKey("maxSamples")) {
     maxSamples = json.getInt32Value("maxSamples");
@@ -106,7 +106,7 @@ void LiberaBrillianceSPEpicsDriver::driverInit(const chaos::common::data::CDataW
   LiberaEpicsBase::driverInit(*newconf.get());
 }
 
-void LiberaBrillianceSPEpicsDriver::driverInit(const char *initParameter) throw(chaos::CException) {
+void LiberaBrillianceSPEpicsDriver::driverInit(const char *initParameter)  {
   if (initParameter != NULL) {
     chaos::common::data::CDataWrapper cw;
     cw.setSerializedJsonData(initParameter);

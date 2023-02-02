@@ -50,7 +50,7 @@ RTCAEN< ::common::vme::caen::CaenDaqBase>(_control_unit_id,
 
 
 }
-void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
+void RTCAEN792::unitDefineActionAndDataset()  {
 	::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase>::unitDefineActionAndDataset();
 
 
@@ -61,7 +61,7 @@ void RTCAEN792::unitDefineActionAndDataset() throw(chaos::CException) {
 }
 
 
- void RTCAEN792::unitInit() throw(chaos::CException){
+ void RTCAEN792::unitInit() {
 	 AttributeSharedCacheWrapper * cc=getAttributeCache();
 
 	 	 ::driver::daq::caen::RTCAEN< ::common::vme::caen::CaenDaqBase >::unitInit();

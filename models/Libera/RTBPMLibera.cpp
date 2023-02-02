@@ -52,7 +52,7 @@ The api that can be called withi this method are listed into
 "Control Unit Definition Public API" module into html documentation
 (chaosframework/Documentation/html/group___control___unit___definition___api.html)
 */
-void RTBPMLibera::unitDefineActionAndDataset() throw(chaos::CException) {
+void RTBPMLibera::unitDefineActionAndDataset()  {
     //insert your definition code here
    
 addAttributeToDataSet("BPBA1001X","BPBA1001 X",chaos::DataType::TYPE_DOUBLE,chaos::DataType::Output);
@@ -99,7 +99,7 @@ void RTBPMLibera::unitDefineCustomAttribute() {
 }
 
 //!Initialize the Custom Control Unit
-void RTBPMLibera::unitInit() throw(chaos::CException) {
+void RTBPMLibera::unitInit()  {
 
   //check the value set on MDS for in_1 channel
   //int32_t in_1 = getAttributeCache()->getValue<int32_t>(DOMAIN_INPUT, "in_1");
@@ -107,28 +107,28 @@ void RTBPMLibera::unitInit() throw(chaos::CException) {
 }
 
 //!Execute the work, this is called with a determinated delay, it must be as fast as possible
-void RTBPMLibera::unitStart() throw(chaos::CException) {
+void RTBPMLibera::unitStart()  {
 
 }
 
 //!Execute the Control Unit work
-void RTBPMLibera::unitRun() throw(chaos::CException) {
+void RTBPMLibera::unitRun()  {
   //get the output attribute pointer form the internal cache
  
 }
 
 //!Execute the Control Unit work
-void RTBPMLibera::unitStop() throw(chaos::CException) {
+void RTBPMLibera::unitStop()  {
 
 }
 
 //!Deinit the Control Unit
-void RTBPMLibera::unitDeinit() throw(chaos::CException) {
+void RTBPMLibera::unitDeinit()  {
 
 }
 
 //! attribute changed handler
-void RTBPMLibera::unitInputAttributeChangedHandler() throw(chaos::CException) {
+void RTBPMLibera::unitInputAttributeChangedHandler()  {
 
   
 }

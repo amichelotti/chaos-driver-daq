@@ -196,7 +196,7 @@ RTBTFdaqCU::~RTBTFdaqCU() {}
 /*
  Return the default configuration
  */
-void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
+void RTBTFdaqCU::unitDefineActionAndDataset()  {
   SCCULDBG << "defining dataset timeout ms:" << timeout_ms << " latch:" << pio_latch << " veto:" << veto_enable;
 
   addAttributeToDataSet("ACQUISITION", "Acquisition number", DataType::TYPE_INT64, DataType::Output);
@@ -259,7 +259,7 @@ void RTBTFdaqCU::unitDefineActionAndDataset() throw(chaos::CException) {
 void RTBTFdaqCU::unitDefineCustomAttribute() {}
 
 // Abstract method for the initialization of the control unit
-void RTBTFdaqCU::unitInit() throw(CException) {
+void RTBTFdaqCU::unitInit() {
   SCCULDBG << "Initializating";
   int cnt;
   counter = counter_old = 0;
@@ -344,7 +344,7 @@ void RTBTFdaqCU::unitInit() throw(CException) {
 }
 
 // Abstract method for the start of the control unit
-void RTBTFdaqCU::unitStart() throw(CException) {
+void RTBTFdaqCU::unitStart() {
   
   loop        = 0;
   counter_old = counter = 0;
@@ -371,7 +371,7 @@ void RTBTFdaqCU::unitStart() throw(CException) {
   *trigger_lost = counter_all - loop;
 }
 // Abstract method for the start of the control unit
-void RTBTFdaqCU::unitRun() throw(CException) {
+void RTBTFdaqCU::unitRun() {
   int      ret, cnt;
   uint64_t cycle0, cycle1;
   counter_old = counter;
@@ -493,12 +493,12 @@ void RTBTFdaqCU::unitRun() throw(CException) {
 }
 
 // Abstract method for the stop of the control unit
-void RTBTFdaqCU::unitStop() throw(CException) {
+void RTBTFdaqCU::unitStop() {
   DPRINT("ACQUISITION STOP SW %lu HW %u", loop, counter);
 }
 
 // Abstract method for the deinit of the control unit
-void RTBTFdaqCU::unitDeinit() throw(CException) {
+void RTBTFdaqCU::unitDeinit() {
   if (caen513_handle) {
     caen513_close(caen513_handle);
   }

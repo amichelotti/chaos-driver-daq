@@ -26,7 +26,7 @@ namespace bmc {
 
         };
 
-        virtual ~IpmiException() throw() {};
+        virtual ~IpmiException() {};
 
         int GetCode();
 
