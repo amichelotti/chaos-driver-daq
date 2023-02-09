@@ -208,8 +208,6 @@ void CmdLiberaDefault::acquireHandler() {
     CMDCUERR_ << " Cannot retrive STATUS";
   }*/
   libera_sa_t pnt;  //=(libera_sa_t*)getAttributeCache()->getRWPtr<int32_t>(DOMAIN_OUTPUT, "SA");
-  setStateVariableSeverity(StateVariableTypeAlarmDEV, "read_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
-  setStateVariableSeverity(StateVariableTypeAlarmDEV, "trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
   if ((ret = driver->read((void *)&pnt, CHANNEL_SA, sizeof(libera_sa_t))) >= 0) {
     bpmpos mm;
@@ -233,6 +231,8 @@ void CmdLiberaDefault::acquireHandler() {
     *mt  = (pnt.reserved[0]) | (((uint64_t)pnt.reserved[1]) << 32);
     (*acquire_loops)++;
     getAttributeCache()->setOutputDomainAsChanged();
+    setStateVariableSeverity(StateVariableTypeAlarmDEV, "trigger_timeout", chaos::common::alarm::MultiSeverityAlarmLevelClear);
+    setStateVariableSeverity(StateVariableTypeAlarmDEV, "read_error", chaos::common::alarm::MultiSeverityAlarmLevelClear);
 
   } else if (ret == chaos::ErrorCode::EC_GENERIC_TIMEOUT) {
 

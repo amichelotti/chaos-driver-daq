@@ -79,24 +79,61 @@ void LiberaBrillianceEpicsDriver::driverInit(const chaos::common::data::CDataWra
       dd_port      = "DD4";
     }
   }
-  std::vector<std::string> pvlist =
-      {"ADC:ADC_MONITOR", "ADC:ADC_A_MONITOR", "ADC:ADC_B_MONITOR", "ADC:ADC_C_MONITOR", "ADC:ADC_D_MONITOR", "ADC:ADC_FINISHED_MONITOR", "ADC:ADC_IGNORE_TRIG_SP", "ADC:ADC_ON_NEXT_TRIG_CMD", dd_port + ":DD_VA_MONITOR", dd_port + ":DD_VB_MONITOR", dd_port + ":DD_VC_MONITOR", dd_port + ":DD_VD_MONITOR", dd_port + ":DD_X_MONITOR", dd_port + ":DD_Y_MONITOR", dd_port + ":DD_Q_MONITOR", dd_port + ":DD_SUM_MONITOR", dd_port + ":DD_ST_MONITOR", dd_port + ":DD_MT_MONITOR", dd_port + ":DD_FINISHED_MONITOR", dd_port + ":DD_REQUEST_CMD", dd_port + ":DD_IGNORE_TRIG_SP", dd_port + ":DD_ON_NEXT_TRIG_CMD", dd_port + ":DD_ST_OFFSET_SP", dd_port + ":DD_MT_OFFSET_SP", dd_port + ":DD_SEEK_POINT_SP", "SA:SA_A_MONITOR", "SA:SA_B_MONITOR", "SA:SA_C_MONITOR", "SA:SA_D_MONITOR", "SA:SA_X_MONITOR", "SA:SA_Y_MONITOR", "SA:SA_Q_MONITOR", "SA:SA_SUM_MONITOR", "SA:SA_CX_MONITOR", "SA:SA_CY_MONITOR", "SA:SA_FINISHED_MONITOR"};
+ // std::vector<std::string> pvlist =
+ //     {"ADC:ADC_MONITOR", "ADC:ADC_A_MONITOR", "ADC:ADC_B_MONITOR", "ADC:ADC_C_MONITOR", "ADC:ADC_D_MONITOR", "ADC:ADC_FINISHED_MONITOR", "ADC:ADC_IGNORE_TRIG_SP", "ADC:ADC_ON_NEXT_TRIG_CMD", dd_port + ":DD_VA_MONITOR", dd_port + ":DD_VB_MONITOR", dd_port + ":DD_VC_MONITOR", dd_port + ":DD_VD_MONITOR", dd_port + ":DD_X_MONITOR", dd_port + ":DD_Y_MONITOR", dd_port + ":DD_Q_MONITOR", dd_port + ":DD_SUM_MONITOR", dd_port + ":DD_ST_MONITOR", dd_port + ":DD_MT_MONITOR", dd_port + ":DD_FINISHED_MONITOR", dd_port + ":DD_REQUEST_CMD", dd_port + ":DD_IGNORE_TRIG_SP", dd_port + ":DD_ON_NEXT_TRIG_CMD", dd_port + ":DD_ST_OFFSET_SP", dd_port + ":DD_MT_OFFSET_SP", dd_port + ":DD_SEEK_POINT_SP", "SA:SA_A_MONITOR", "SA:SA_B_MONITOR", "SA:SA_C_MONITOR", "SA:SA_D_MONITOR", "SA:SA_X_MONITOR", "SA:SA_Y_MONITOR", "SA:SA_Q_MONITOR", "SA:SA_SUM_MONITOR", "SA:SA_CX_MONITOR", "SA:SA_CY_MONITOR", "SA:SA_FINISHED_MONITOR"};
   chaos::common::data::CDWUniquePtr newconf = json.clone();
-  ::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()), pvlist);
-  std::map<std::string, std::string> pvprprop = {{"ENV:ENV_SWITCHES_MONITOR", "ENV_SWITCHES_MONITOR"},
-                                                 {"ENV:ENV_GAIN_MONITOR", "ENV_GAIN_MONITOR"},
-                                                 {"ENV:ENV_GAIN_SP", "Gain"},
-                                                 {"ENV:ENV_AGC_MONITOR", "ENV_AGC_MONITOR"},
-                                                 {"ENV:ENV_AGC_SP", "ENV_AGC_SP"},
-                                                 {"ENV:ENV_DSC_MONITOR", "ENV_DSC_MONITOR"},
-                                                 {"ENV:ENV_TEMP_MONITOR", "ENV_TEMP_MONITOR"},
-                                                 {"ENV:ENV_DDFPGA_ERR_MONITOR", "ENV_DDFPGA_ERR_MONITOR"},
-                                                 {"ENV:ENV_SAFPGA_ERR_MONITOR", "ENV_SAFPGA_ERR_MONITOR"},
-                                                 {"ENV:ENV_SADRV_ERR_MONITOR", "ENV_SADRV_ERR_MONITOR"},
-                                                 {"ENV:ENV_MC_PLL_MONITOR", "ENV_MC_PLL_MONITOR"},
-                                                 {"ENV:ENV_SC_PLL_MONITOR", "ENV_SC_PLL_MONITOR"},
-                                                 {"ENV:ENV_PMOFFSET_SP", "ENV_PMOFFSET_SP"},
-                                                 {"ENV:ENV_TRIGDELAY_MONITOR", "ENV_TRIGDELAY_MONITOR"}
+  //::driver::epics::common::EpicsGenericDriver::addPVListConfig(*(newconf.get()), pvlist);
+  std::map<std::string, std::string> pvprprop = {
+    {"ADC:ADC_MONITOR", ""},
+    {"ADC:ADC_A_MONITOR", ""},
+    {"ADC:ADC_B_MONITOR", ""},
+    {"ADC:ADC_C_MONITOR", ""},
+    {"ADC:ADC_D_MONITOR", ""},
+    {"ADC:ADC_FINISHED_MONITOR",""},
+    {"ADC:ADC_IGNORE_TRIG_SP", ""},
+    {"ADC:ADC_ON_NEXT_TRIG_CMD",""},
+    {dd_port + ":DD_VA_MONITOR", ""},
+    {dd_port + ":DD_VB_MONITOR",""},
+    {dd_port + ":DD_VC_MONITOR", ""},
+    {dd_port + ":DD_VD_MONITOR", ""},
+    {dd_port + ":DD_X_MONITOR", ""},
+    {dd_port + ":DD_Y_MONITOR", ""},
+    {dd_port + ":DD_Q_MONITOR", ""},
+    {dd_port + ":DD_SUM_MONITOR", ""},
+    {dd_port + ":DD_ST_MONITOR", ""},
+    {dd_port + ":DD_MT_MONITOR", ""},
+    {dd_port + ":DD_FINISHED_MONITOR", ""},
+    {dd_port + ":DD_REQUEST_CMD", ""},
+    {dd_port + ":DD_IGNORE_TRIG_SP", ""},
+    {dd_port + ":DD_ON_NEXT_TRIG_CMD", ""},
+    {dd_port + ":DD_ST_OFFSET_SP", ""},
+    {dd_port + ":DD_MT_OFFSET_SP", ""},
+    {dd_port + ":DD_SEEK_POINT_SP", ""},
+    {"SA:SA_A_MONITOR", ""},
+    {"SA:SA_B_MONITOR", ""},
+    {"SA:SA_C_MONITOR", ""},
+    {"SA:SA_D_MONITOR", ""},
+    {"SA:SA_X_MONITOR", ""},
+    {"SA:SA_Y_MONITOR", ""},
+    {"SA:SA_Q_MONITOR", ""},
+    {"SA:SA_SUM_MONITOR", ""},
+    {"SA:SA_CX_MONITOR", ""},
+    {"SA:SA_CY_MONITOR", ""},
+    {"SA:SA_FINISHED_MONITOR",""},
+    {"ENV:ENV_SWITCHES_MONITOR", "ENV_SWITCHES_MONITOR"},
+    {"ENV:ENV_GAIN_MONITOR", "ENV_GAIN_MONITOR"},
+    {"ENV:ENV_GAIN_SP", "Gain"},
+    {"ENV:ENV_AGC_MONITOR", "ENV_AGC_MONITOR"},
+    {"ENV:ENV_AGC_SP", "ENV_AGC_SP"},
+    {"ENV:ENV_DSC_MONITOR", "ENV_DSC_MONITOR"},
+    {"ENV:ENV_TEMP_MONITOR", "ENV_TEMP_MONITOR"},
+    {"ENV:ENV_DDFPGA_ERR_MONITOR", "ENV_DDFPGA_ERR_MONITOR"},
+    {"ENV:ENV_SAFPGA_ERR_MONITOR", "ENV_SAFPGA_ERR_MONITOR"},
+    {"ENV:ENV_SADRV_ERR_MONITOR", "ENV_SADRV_ERR_MONITOR"},
+    {"ENV:ENV_MC_PLL_MONITOR", "ENV_MC_PLL_MONITOR"},
+    {"ENV:ENV_SC_PLL_MONITOR", "ENV_SC_PLL_MONITOR"},
+    {"ENV:ENV_PMOFFSET_SP", "ENV_PMOFFSET_SP"},
+    {"ENV:ENV_TRIGDELAY_MONITOR", "ENV_TRIGDELAY_MONITOR"}
 
   };
 
@@ -144,7 +181,9 @@ int LiberaBrillianceEpicsDriver::read(void *buffer, int addr, int bcount) {
         devicedriver->write(dd_port + ":DD_REQUEST_CMD", 1);
       }
     if ((rc = devicedriver->waitChange(dd_port + ":DD_FINISHED_MONITOR")) != 0) {
-      
+      if ((cfg.mask & liberaconfig::want_trigger) == 0) {
+        devicedriver->write(dd_port + ":DD_REQUEST_CMD", 1);
+      }
       return rc;
     }
 
@@ -175,7 +214,7 @@ int LiberaBrillianceEpicsDriver::read(void *buffer, int addr, int bcount) {
     if ((cfg.mask & liberaconfig::want_trigger) == 0) {
       devicedriver->write(dd_port + ":DD_REQUEST_CMD", 1);
     } else {
-        devicedriver->write(dd_port + ":DD_ON_NEXT_TRIG_CMD", 1);
+      devicedriver->write(dd_port + ":DD_ON_NEXT_TRIG_CMD", 1);
 
     }
     return realsamples;
