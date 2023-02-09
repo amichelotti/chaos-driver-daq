@@ -49,7 +49,7 @@ LDBG_<<"["<<__PRETTY_FUNCTION__<<"] write \""<<pv<<"\" ="<<val<<" ret:"<<ret;\
 
 #define READPVARRAY(pv,val,count) {\
 int ret;\
-if((ret=devicedriver->readArray(pv,val,count))<=0){  LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot readarray \""<<pv<<"\" count:"<<count<<", ret:"<<ret; return ret;}}
+if((ret=devicedriver->readArray(pv,val,count,1,-1))<=0){  LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot readarray \""<<pv<<"\" count:"<<count<<", ret:"<<ret; return ret;}}
 
 class LiberaEpicsBase:  public chaos::cu::driver_manager::driver::AbstractDriverPlugin,public chaos::cu::driver_manager::driver::ReadWriteInterface   {
  protected:

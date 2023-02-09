@@ -17,7 +17,7 @@ limitations under the License.
  */
 
 #include "LiberaEpicsBase.h"
-#include <driver/epics/driver/EpicsCAccessDriver.h>
+#include <driver/epics/driver/EpicsPVAccessDriver.h>
 
 #define ILK_PARAMCOUNT 8
 #include <chaos/cu_toolkit/driver_manager/driver/AbstractDriverPlugin.h>
@@ -96,7 +96,11 @@ void LiberaEpicsBase::createProperties() {
 }
 void LiberaEpicsBase::driverInit(const chaos::common::data::CDataWrapper &json) {
   LiberaSoftDBG<<"Configuration:"<<json.getJSONString();
-  devicedriver = new ::driver::epics::common::EpicsCAccessDriver(json);
+  chaos::common::data::CDataWrapper params;
+  json.copyAllTo(params);
+  params.addStringValue("provider","ca");
+
+  devicedriver = new ::driver::epics::common::EpicsPVAccessDriver(params);
   
   createProperties();
 
