@@ -53,7 +53,7 @@ void LiberaEpicsBase::createProperties() {
   std::vector<std::string>::iterator i      = listPV.begin();
   int retry=MAX_RETRY;
   while (i != listPV.end()) {
-    LDBG_ << "retriving information of " << *i;  //<<" ="<<r->getJSONString();
+    LDBG_ << "retrieving information of " << *i;  //<<" ="<<r->getJSONString();
 
     chaos::common::data::CDWUniquePtr r = devicedriver->readRecord(*i);
     if (r.get()) {

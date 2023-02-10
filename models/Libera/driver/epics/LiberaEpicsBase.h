@@ -47,6 +47,13 @@ if((ret=devicedriver->write(pv,val))<=0){ LERR_<<"["<<__PRETTY_FUNCTION__<<"] ca
 LDBG_<<"["<<__PRETTY_FUNCTION__<<"] write \""<<pv<<"\" ="<<val<<" ret:"<<ret;\
 }
 
+#define WRITENUMPV(pv,val) {\
+int ret;\
+if((ret=devicedriver->writeEnum(pv,val))<=0){ LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot write \""<<pv<<"\" = "<<val<<", ret:"<<ret; return ret;}\
+LDBG_<<"["<<__PRETTY_FUNCTION__<<"] write \""<<pv<<"\" ="<<val<<" ret:"<<ret;\
+}
+
+
 #define READPVARRAY(pv,val,count) {\
 int ret;\
 if((ret=devicedriver->readArray(pv,val,count,1,-1))<=0){  LERR_<<"["<<__PRETTY_FUNCTION__<<"] cannot readarray \""<<pv<<"\" count:"<<count<<", ret:"<<ret; return ret;}}

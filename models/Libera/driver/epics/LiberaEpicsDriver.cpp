@@ -248,8 +248,9 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
         }
         WRITEPV("ddc_synth.NGRP", (int32_t)cfg.atom_count);
         WRITEPV("ddc_synth.SCAN", scan_mode);
-        WRITEPV("ddc_synth.ACQM", trigger_mode);
-        
+        WRITENUMPV("ddc_synth.ACQM", trigger_mode);
+        LiberaSoftDBG << "Acquire Data on Demand, configured "<<cfg.atom_count<< " scan_mode "<<scan_mode<<" trigger mode "<<trigger_mode;
+
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
       }
@@ -265,7 +266,7 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
         cfg.mode = CSPI_MODE_PM;
         LiberaSoftDBG << "Acquire Data Post Mortem";
         WRITEPV("pm.ddc_synth.SCAN", scan_mode);
-        WRITEPV("pm.ddc_synth.ACQM", trigger_mode);
+        WRITENUMPV("pm.ddc_synth.ACQM", trigger_mode);
 
         cfg.operation = liberaconfig::acquire;
         cfg.datasize  = sizeof(CSPI_DD_ATOM);
@@ -276,7 +277,7 @@ int LiberaEpicsDriver::iop(int operation, void *data, int sizeb) {
         cfg.datasize  = sizeof(CSPI_ADC_ATOM);
         cfg.operation = liberaconfig::acquire;
         WRITEPV("adc.SCAN", scan_mode);
-        WRITEPV("adc.ACQM", trigger_mode);
+        WRITENUMPV("adc.ACQM", trigger_mode);
 
         if (driver_mode & LIBERA_IOP_MODE_CONTINUOUS) {
           cfg.adc.mode |= liberaconfig::adc_specific::cw;
