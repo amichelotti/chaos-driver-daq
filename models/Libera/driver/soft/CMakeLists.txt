@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 2.8)
 project(chaos_driver_libera_soft)
 
 MESSAGE(STATUS "Enabling compilation Libera Soft")

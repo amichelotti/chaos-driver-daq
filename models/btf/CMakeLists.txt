@@ -1,4 +1,3 @@
-cmake_minimum_required(VERSION 2.6)
 project(chaos_driver_daq_btf)
 SET(DAQ_src RTBTFdaqCU.cpp RTBTFdaqSimCU.cpp )
 ADD_DEFINITIONS(-fpermissive -DDEBUG)

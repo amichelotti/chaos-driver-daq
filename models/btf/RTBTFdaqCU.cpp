@@ -243,10 +243,10 @@ void RTBTFdaqCU::unitDefineActionAndDataset()  {
           "QDC792", "Vector of Channels ", chaos::DataType::SUB_TYPE_INT32, caen792_chans * sizeof(int32_t), chaos::DataType::Output);
     }
   }
-  /* if (sis3800_handle) {
-    addBinaryAttributeAsSubtypeToDataSet(
-        "SCALER", "Vector of 32 Counters ", chaos::DataType::SUB_TYPE_INT32, 32 * sizeof(int32_t), chaos::DataType::Output);
-  }*/
+   if (sis3800_handle) {
+   /* addBinaryAttributeAsSubtypeToDataSet(
+        "SCALER", "Vector of 32 Counters ", chaos::DataType::SUB_TYPE_INT32, 32 * sizeof(int32_t), chaos::DataType::Output);*/
+  }
   if (pio_latch) {
     addStateVariable(StateVariableTypeAlarmCU, "missing_pio_trigger", "No PIO trigger received", 5000);
   }
@@ -292,9 +292,9 @@ void RTBTFdaqCU::unitInit() {
     }
   }
 
-  /* if (sis3800_handle) {
-    counters = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "SCALER");
-  }*/
+   if (sis3800_handle) {
+   // counters = getAttributeCache()->getRWPtr<uint32_t>(DOMAIN_OUTPUT, "SCALER");
+  }
   trigger_lost =
       getAttributeCache()->getRWPtr<uint64_t>(DOMAIN_OUTPUT, "TRIGGER_LOST");
 
@@ -330,7 +330,9 @@ void RTBTFdaqCU::unitInit() {
   if (caen792_handle) {
     caen792_init(caen792_handle, 0, 1);
   }
-  sis3800_init(sis3800_handle);
+  if(sis3800_handle){
+    sis3800_init(sis3800_handle);
+  }
 
   // resetTM(caen513_handle);
 
@@ -362,7 +364,7 @@ void RTBTFdaqCU::unitStart() {
   last_eval         = chaos::common::utility::TimingUtil::getTimeStamp();
   last_eval_trigger = last_eval;
   if (sis3800_handle) {
-    //   sis3800_readCounter(sis3800_handle, counters, 32);
+    //sis3800_readCounter(sis3800_handle, counters, 32);
     counter     = sis3800_readCounter(sis3800_handle, COUNTER_VALID_TRIGGER);
     counter_all = sis3800_readCounter(sis3800_handle, COUNTER_ALL_TRIGGER);
   }
