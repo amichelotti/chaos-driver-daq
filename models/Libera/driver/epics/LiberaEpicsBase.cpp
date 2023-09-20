@@ -37,6 +37,7 @@ DEFAULT_CU_DRIVER_PLUGIN_CONSTRUCTOR_WITH_NS(::driver::daq::libera,LiberaEpicsBa
   cfg.operation = liberaconfig::deinit;
   devicedriver=NULL;
   LiberaSoftDBG<<"Driver @"<<std::hex<<this;
+  timeo=-1;
  
 }
 
@@ -55,7 +56,7 @@ void LiberaEpicsBase::createProperties() {
   while (i != listPV.end()) {
     LDBG_ << "retrieving information of " << *i;  //<<" ="<<r->getJSONString();
 
-    chaos::common::data::CDWUniquePtr r = devicedriver->readRecord(*i);
+    chaos::common::data::CDWUniquePtr r = devicedriver->readRecord(*i,timeo);
     if (r.get()) {
       chaos::common::data::CDWUniquePtr conf = devicedriver->getPVConfig(*i);
       if (conf.get()) {
@@ -68,7 +69,7 @@ void LiberaEpicsBase::createProperties() {
             [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
                 -> chaos::common::data::CDWUniquePtr {
               //read handler
-              return ((LiberaEpicsBase *)thi)->devicedriver->readRecord(name);
+              return ((LiberaEpicsBase *)thi)->devicedriver->readRecord(name,((LiberaEpicsBase *)thi)->timeo);
             },
             [](AbstractDriver *thi, const std::string &name, const chaos::common::data::CDataWrapper &p)
                 -> chaos::common::data::CDWUniquePtr {
@@ -98,6 +99,12 @@ void LiberaEpicsBase::driverInit(const chaos::common::data::CDataWrapper &json) 
   LiberaSoftDBG<<"Configuration:"<<json.getJSONString();
   chaos::common::data::CDataWrapper params;
   json.copyAllTo(params);
+  timeo=-1;
+  if(json.hasKey("timeout")){
+    timeo=json.getInt32Value("timeout");
+    LiberaSoftDBG<<"SET TIMEOUT:"<<timeo;
+
+  }
   params.addStringValue("provider","ca");
 
   devicedriver = new ::driver::epics::common::EpicsPVAccessDriver(params);

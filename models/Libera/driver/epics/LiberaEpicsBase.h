@@ -138,7 +138,10 @@ class LiberaEpicsBase:  public chaos::cu::driver_manager::driver::AbstractDriver
   uint64_t                                     libera_ts;
   ::driver::epics::common::EpicsGenericDriver *devicedriver;
   void createProperties();
+
  public:
+  int timeo;
+
   void driverInit(const char *initParameter) ;
   virtual void driverInit(const chaos::common::data::CDataWrapper &json) ;
   virtual void driverDeinit();
